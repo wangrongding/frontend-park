@@ -193,6 +193,7 @@
                 "
                 :http-request="itemForm.httpRequest"
                 :limit="itemForm.limit || 1"
+                :on-change="itemForm.onChange"
             >
                 <i v-if="itemForm.listType === 'picture-card'" class="el-icon-plus"></i>
                 <el-button
@@ -212,7 +213,7 @@
                 </el-button>
                 <span v-show="itemForm.uploadLoading">上传中...</span>
                 <div v-if="itemForm.listType === 'file-list'" slot="tip" class="el-upload__tip">
-                    {{ itemForm.tip ? itemForm.tip : "只能上传jpg/png文件，且不超过500kb" }}
+                    {{ itemForm.tip ? itemForm.tip : "" }}
                 </div>
             </el-upload>
             <el-rate v-if="itemForm.type === 'rate'" v-model="formParams.data[key]"></el-rate>

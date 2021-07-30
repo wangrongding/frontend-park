@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <div class="content">
+        <div class="content" :style="`background:${background}`">
             <canvas id="canvas" ref="canvas" width="800" height="800"></canvas>
         </div>
         <div class="operations">
@@ -84,7 +84,7 @@ export default {
                 labelWidth: "90px",
                 rules: {},
             },
-            inputfile: null,
+            background: "white",
         };
     },
     mounted() {},
@@ -95,16 +95,16 @@ export default {
         initCanvas() {},
         getColorCount(canvas, img) {
             let colorList = colorCount(canvas, img);
-            document.body.style.background = colorList[0].color;
+            // this.background = colorList[0].color;
         },
         getAverageColor(canvas, img) {
             let averageColor = getAverageColor(canvas, img);
-            // document.body.style.background = averageColor;
+            this.background = averageColor;
         },
         fileChange(file, fileList) {
             let tempUrl = window.URL.createObjectURL(file.raw);
             this.drawImage(tempUrl);
-            this.createImage(this.getColorCount, tempUrl);
+            // this.createImage(this.getColorCount, tempUrl);
             this.createImage(this.getAverageColor, tempUrl);
         },
         createImage(cb, url) {
