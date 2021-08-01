@@ -104,8 +104,6 @@ export default {
         fileChange(file, fileList) {
             let tempUrl = window.URL.createObjectURL(file.raw);
             this.drawImage(tempUrl);
-            // this.createImage(this.getColorCount, tempUrl);
-            this.createImage(this.getAverageColor, tempUrl);
         },
         createImage(cb, url) {
             const canvas = this.$refs.canvas;
@@ -119,6 +117,8 @@ export default {
             const canvas = this.$refs.canvas;
             const img = new Image(); // 创建img元素
             img.src = url;
+            img.style.cssText = "object-fit: cover";
+            // img.height = "100%";
             img.onload = () => {
                 const context = canvas.getContext("2d");
                 context.drawImage(
@@ -128,6 +128,8 @@ export default {
                     img.width,
                     img.height
                 );
+                this.createImage(this.getColorCount, url);
+                // this.createImage(this.getAverageColor, url);
             };
         },
     },
@@ -155,5 +157,6 @@ export default {
 }
 #canvas {
     border: 2px dashed green;
+    // object-fit: fill;
 }
 </style>
