@@ -87,7 +87,9 @@ export default {
             background: "white",
         };
     },
-    mounted() {},
+    mounted() {
+        this.drawLine();
+    },
     methods: {
         reload() {
             window.location.reload();
@@ -113,22 +115,51 @@ export default {
                 cb(canvas, img);
             };
         },
+        drawLine() {
+            /* const canvas = this.$refs.canvas;
+            const ctx = canvas.getContext("2d");
+            for (let i = 0; i <= canvas.width / 20; i++) {
+                ctx.beginPath();
+                ctx.lineCap = "round";
+                ctx.moveTo(i * 20, 0);
+                ctx.lineTo(i * 20, canvas.height);
+                ctx.stroke();
+                ctx.moveTo(0, i * 20);
+                ctx.lineTo(canvas.width, i * 20);
+                ctx.stroke();
+            } */
+        },
         drawImage(url) {
             const canvas = this.$refs.canvas;
             const img = new Image(); // 创建img元素
             img.src = url;
-            img.style.cssText = "object-fit: cover";
-            // img.height = "100%";
             img.onload = () => {
-                const context = canvas.getContext("2d");
-                context.drawImage(
+                console.log(img.width, img.height);
+                // img.width = canvas.width;
+                let scaleH = canvas.height / img.height;
+                img.height = canvas.height;
+                img.width = img.width * scaleH;
+                // img.height = "100%";
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(
                     img,
                     canvas.width / 2 - img.width / 2,
                     canvas.height / 2 - img.height / 2,
                     img.width,
                     img.height
                 );
-                this.createImage(this.getColorCount, url);
+                for (let i = 0; i <= canvas.width / 20; i++) {
+                    ctx.beginPath();
+                    ctx.lineCap = "round";
+                    //竖线
+                    ctx.moveTo(i * 20, 0);
+                    ctx.lineTo(i * 20, canvas.height);
+                    //横线
+                    ctx.moveTo(0, i * 20);
+                    ctx.lineTo(canvas.width, i * 20);
+                    ctx.stroke();
+                }
+                // this.createImage(this.getColorCount, url);
                 // this.createImage(this.getAverageColor, url);
             };
         },
@@ -157,6 +188,6 @@ export default {
 }
 #canvas {
     border: 2px dashed green;
-    // object-fit: fill;
+    object-fit: fill;
 }
 </style>

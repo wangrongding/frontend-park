@@ -12,7 +12,7 @@
                 </template> -->
             </EasyForm>
             <el-button type="primary" size="default" @click="reload">重置</el-button>
-            <el-button type="primary" size="default" @click="initCanvas">生成图片</el-button>
+            <el-button type="primary" size="default" @click="generateImg">生成图片</el-button>
         </div>
     </div>
 </template>
@@ -20,23 +20,20 @@
 <script>
 /* eslint-disable */
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
-import { colorCount } from "@utils/colorCount.js";
-import { getAverageColor } from "@utils/getAverageColor.js";
+import { getMostColor } from "@utils/mostColor.js";
+import { getAverageColor } from "@utils/averageColor.js";
 export default {
     name: "Home",
-    components: {
-        HelloWorld,
-    },
+    components: {},
     data() {
         return {
+            imgList: [],
             src: require("../assets/rd.png"),
             formParams: {
                 data: {}, // 表单数据对象
                 formList: {
                     filasde: {
                         type: "upload",
-                        name: "work",
                         label: "目标图片",
                         limit: 1,
                         action: "#",
@@ -44,6 +41,16 @@ export default {
                         fileList: [],
                         autoUpload: false,
                         onChange: this.fileChange,
+                    },
+                    filasde2: {
+                        type: "upload",
+                        label: "素材图片",
+                        limit: 1000,
+                        action: "#",
+                        listType: "file-list",
+                        fileList: [],
+                        autoUpload: false,
+                        onChange: this.imgListChange,
                     },
                     paperId: {
                         type: "select",
@@ -87,12 +94,28 @@ export default {
             background: "white",
         };
     },
-    mounted() {},
+    mounted() {
+        this.drawLine();
+    },
     methods: {
         reload() {
             window.location.reload();
         },
-        initCanvas() {},
+        generateImg() {
+            const canvas = this.$refs.canvas;
+            const ctx = canvas.getContext("2d");
+            this.imgList.forEach((item, index) => {
+                const img = new Image();
+                img.src = item.url;
+                img.onload = () => {
+                    console.log(img.width, img.height);
+                    /* let scaleH = canvas.height / img.height;
+                    img.height = canvas.height;
+                    img.width = img.width * scaleH; */
+                    ctx.drawImage(img, 0, 0, 20, 20);
+                };
+            });
+        },
         getColorCount(canvas, img) {
             let colorList = colorCount(canvas, img);
             // this.background = colorList[0].color;
@@ -105,6 +128,13 @@ export default {
             let tempUrl = window.URL.createObjectURL(file.raw);
             this.drawImage(tempUrl);
         },
+        async imgListChange(file, fileList) {
+            let tempUrl = window.URL.createObjectURL(file.raw);
+            // getAverageColor(tempUrl);
+            let mostColor = await getMostColor(tempUrl);
+            this.imgList.push({ url: tempUrl, color: mostColor });
+            console.log(this.imgList);
+        },
         createImage(cb, url) {
             const canvas = this.$refs.canvas;
             const img = new Image(); // 创建img元素
@@ -112,6 +142,20 @@ export default {
             img.onload = () => {
                 cb(canvas, img);
             };
+        },
+        drawLine() {
+            /* const canvas = this.$refs.canvas;
+            const ctx = canvas.getContext("2d");
+            for (let i = 0; i <= canvas.width / 20; i++) {
+                ctx.beginPath();
+                ctx.lineCap = "round";
+                ctx.moveTo(i * 20, 0);
+                ctx.lineTo(i * 20, canvas.height);
+                ctx.stroke();
+                ctx.moveTo(0, i * 20);
+                ctx.lineTo(canvas.width, i * 20);
+                ctx.stroke();
+            } */
         },
         drawImage(url) {
             const canvas = this.$refs.canvas;
@@ -132,11 +176,16 @@ export default {
                     img.width,
                     img.height
                 );
-                for (let i = 0; i <= 20; i++) {
+                const blockPixel = 5;
+                for (let i = 0; i <= canvas.width / blockPixel; i++) {
                     ctx.beginPath();
                     ctx.lineCap = "round";
-                    ctx.moveTo(i * 20, i * 20);
-                    ctx.lineTo(i * 20, canvas.height);
+                    //竖线
+                    ctx.moveTo(i * blockPixel, 0);
+                    ctx.lineTo(i * blockPixel, canvas.height);
+                    //横线
+                    ctx.moveTo(0, i * blockPixel);
+                    ctx.lineTo(canvas.width, i * blockPixel);
                     ctx.stroke();
                 }
                 // this.createImage(this.getColorCount, url);

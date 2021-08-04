@@ -193,6 +193,7 @@
                 "
                 :http-request="itemForm.httpRequest"
                 :limit="itemForm.limit || 1"
+                :multiple="itemForm.limit && itemForm.limit != 1 ? true : false"
                 :on-change="itemForm.onChange"
             >
                 <i v-if="itemForm.listType === 'picture-card'" class="el-icon-plus"></i>
