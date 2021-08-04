@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <div class="content">
+        <div class="content" :style="`background:${background}`">
             <canvas id="canvas" ref="canvas" width="800" height="800"></canvas>
         </div>
         <div class="operations">
@@ -84,7 +84,7 @@ export default {
                 labelWidth: "90px",
                 rules: {},
             },
-            inputfile: null,
+            background: "white",
         };
     },
     mounted() {},
@@ -95,17 +95,15 @@ export default {
         initCanvas() {},
         getColorCount(canvas, img) {
             let colorList = colorCount(canvas, img);
-            document.body.style.background = colorList[0].color;
+            // this.background = colorList[0].color;
         },
         getAverageColor(canvas, img) {
             let averageColor = getAverageColor(canvas, img);
-            // document.body.style.background = averageColor;
+            this.background = averageColor;
         },
         fileChange(file, fileList) {
             let tempUrl = window.URL.createObjectURL(file.raw);
             this.drawImage(tempUrl);
-            this.createImage(this.getColorCount, tempUrl);
-            this.createImage(this.getAverageColor, tempUrl);
         },
         createImage(cb, url) {
             const canvas = this.$refs.canvas;
@@ -120,14 +118,29 @@ export default {
             const img = new Image(); // 创建img元素
             img.src = url;
             img.onload = () => {
-                const context = canvas.getContext("2d");
-                context.drawImage(
+                console.log(img.width, img.height);
+                // img.width = canvas.width;
+                let scaleH = canvas.height / img.height;
+                img.height = canvas.height;
+                img.width = img.width * scaleH;
+                // img.height = "100%";
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(
                     img,
                     canvas.width / 2 - img.width / 2,
                     canvas.height / 2 - img.height / 2,
                     img.width,
                     img.height
                 );
+                for (let i = 0; i <= 20; i++) {
+                    ctx.beginPath();
+                    ctx.lineCap = "round";
+                    ctx.moveTo(i * 20, i * 20);
+                    ctx.lineTo(i * 20, canvas.height);
+                    ctx.stroke();
+                }
+                // this.createImage(this.getColorCount, url);
+                // this.createImage(this.getAverageColor, url);
             };
         },
     },
@@ -155,5 +168,6 @@ export default {
 }
 #canvas {
     border: 2px dashed green;
+    object-fit: fill;
 }
 </style>
