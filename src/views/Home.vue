@@ -92,14 +92,20 @@ export default {
                 rules: {},
             },
             background: "white",
+            ctx: null,
+            canvas: null,
         };
     },
     mounted() {
+        this.canvas = this.$refs.canvas;
+        this.ctx = this.canvas.getContext("2d");
         this.drawLine();
     },
     methods: {
         reload() {
-            window.location.reload();
+            // window.location.reload();
+            this.ctx.clearRect(0, 0, 100, 100);
+            this.ctx.clearRect(199, 0, 2, this.canvas.height);
         },
         generateImg() {
             const canvas = this.$refs.canvas;
@@ -144,18 +150,16 @@ export default {
             };
         },
         drawLine() {
-            /* const canvas = this.$refs.canvas;
-            const ctx = canvas.getContext("2d");
             for (let i = 0; i <= canvas.width / 20; i++) {
-                ctx.beginPath();
-                ctx.lineCap = "round";
-                ctx.moveTo(i * 20, 0);
-                ctx.lineTo(i * 20, canvas.height);
-                ctx.stroke();
-                ctx.moveTo(0, i * 20);
-                ctx.lineTo(canvas.width, i * 20);
-                ctx.stroke();
-            } */
+                this.ctx.beginPath();
+                this.ctx.lineCap = "round";
+                this.ctx.moveTo(i * 20, 0);
+                this.ctx.lineTo(i * 20, canvas.height);
+                this.ctx.stroke();
+                this.ctx.moveTo(0, i * 20);
+                this.ctx.lineTo(canvas.width, i * 20);
+                this.ctx.stroke();
+            }
         },
         drawImage(url) {
             const canvas = this.$refs.canvas;
@@ -179,7 +183,6 @@ export default {
                 const blockPixel = 5;
                 for (let i = 0; i <= canvas.width / blockPixel; i++) {
                     ctx.beginPath();
-                    ctx.lineCap = "round";
                     //竖线
                     ctx.moveTo(i * blockPixel, 0);
                     ctx.lineTo(i * blockPixel, canvas.height);
