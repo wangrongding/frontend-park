@@ -22,6 +22,7 @@
 // @ is an alias to /src
 import { getMostColor } from "@utils/mostColor.js";
 import { getAverageColor } from "@utils/averageColor.js";
+import { fabric } from "fabric";
 export default {
     name: "Home",
     components: {},
@@ -97,9 +98,10 @@ export default {
         };
     },
     mounted() {
-        this.canvas = this.$refs.canvas;
-        this.ctx = this.canvas.getContext("2d");
-        this.drawLine();
+        this.canvas = new fabric.Canvas("canvas");
+        this.canvas.isDrawingMode = true;
+        this.canvas.freeDrawingBrush.color = "blue";
+        this.canvas.freeDrawingBrush.width = 5;
     },
     methods: {
         reload() {
@@ -108,18 +110,21 @@ export default {
             this.ctx.clearRect(199, 0, 2, this.canvas.height);
         },
         generateImg() {
-            const canvas = this.$refs.canvas;
-            const ctx = canvas.getContext("2d");
+            let canvas = new fabric.Canvas("canvas");
             this.imgList.forEach((item, index) => {
-                const img = new Image();
-                img.src = item.url;
-                img.onload = () => {
-                    console.log(img.width, img.height);
-                    /* let scaleH = canvas.height / img.height;
-                    img.height = canvas.height;
-                    img.width = img.width * scaleH; */
-                    ctx.drawImage(img, 0, 0, 20, 20);
-                };
+                // const img = new Image();
+                // img.src = item.url;
+                // img.onload = () => {
+                //     console.log(img.width, img.height);
+                //     /* let scaleH = canvas.height / img.height;
+                //     img.height = canvas.height;
+                //     img.width = img.width * scaleH; */
+                //     ctx.drawImage(img, 0, 0, 20, 20);
+                // };
+                fabric.Image.fromURL(item.url, function (img) {
+                    img.scale(0.5);
+                    canvas.add(img);
+                });
             });
         },
         getColorCount(canvas, img) {
@@ -141,59 +146,39 @@ export default {
             this.imgList.push({ url: tempUrl, color: mostColor });
             console.log(this.imgList);
         },
-        createImage(cb, url) {
-            const canvas = this.$refs.canvas;
-            const img = new Image(); // 创建img元素
-            img.src = url; // 设置图片源地址
-            img.onload = () => {
-                cb(canvas, img);
-            };
-        },
         drawLine() {
-            for (let i = 0; i <= canvas.width / 20; i++) {
-                this.ctx.beginPath();
-                this.ctx.lineCap = "round";
-                this.ctx.moveTo(i * 20, 0);
-                this.ctx.lineTo(i * 20, canvas.height);
-                this.ctx.stroke();
-                this.ctx.moveTo(0, i * 20);
-                this.ctx.lineTo(canvas.width, i * 20);
-                this.ctx.stroke();
+            const blockPixel = 8;
+            for (let i = 0; i <= this.canvas.width / blockPixel; i++) {
+                this.canvas.add(
+                    new fabric.Line([i * blockPixel, 0, i * blockPixel, this.canvas.height], {
+                        left: i * blockPixel,
+                        stroke: "black",
+                        selectable: false, //是否可被选中
+                    })
+                );
+                this.canvas.add(
+                    new fabric.Line([0, i * blockPixel, this.canvas.height, i * blockPixel], {
+                        top: i * blockPixel,
+                        stroke: "black",
+                        selectable: false, //是否可被选中
+                    })
+                );
             }
         },
         drawImage(url) {
-            const canvas = this.$refs.canvas;
-            const img = new Image(); // 创建img元素
-            img.src = url;
-            img.onload = () => {
-                console.log(img.width, img.height);
-                // img.width = canvas.width;
-                let scaleH = canvas.height / img.height;
-                img.height = canvas.height;
-                img.width = img.width * scaleH;
-                // img.height = "100%";
-                const ctx = canvas.getContext("2d");
-                ctx.drawImage(
-                    img,
-                    canvas.width / 2 - img.width / 2,
-                    canvas.height / 2 - img.height / 2,
-                    img.width,
-                    img.height
-                );
-                const blockPixel = 5;
-                for (let i = 0; i <= canvas.width / blockPixel; i++) {
-                    ctx.beginPath();
-                    //竖线
-                    ctx.moveTo(i * blockPixel, 0);
-                    ctx.lineTo(i * blockPixel, canvas.height);
-                    //横线
-                    ctx.moveTo(0, i * blockPixel);
-                    ctx.lineTo(canvas.width, i * blockPixel);
-                    ctx.stroke();
-                }
-                // this.createImage(this.getColorCount, url);
-                // this.createImage(this.getAverageColor, url);
-            };
+            fabric.Image.fromURL(url, (img) => {
+                img.set({
+                    left: this.canvas.height / 2,
+                    originX: "center",
+                    top: 0,
+                    scaleX: this.canvas.height / img.height,
+                    scaleY: this.canvas.height / img.height,
+                    selectable: false, //是否可被选中
+                });
+                console.log(img.width, img.width, "img.width");
+                this.canvas.add(img);
+                this.drawLine();
+            });
         },
     },
 };

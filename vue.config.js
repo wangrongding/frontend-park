@@ -1,6 +1,16 @@
 const path = require("path");
 const resolve = (dir) => path.join(__dirname, dir);
 module.exports = {
+    devServer: {
+        port: 9425,
+        hot: true,
+        open: true,
+        overlay: {
+            warnings: false,
+            errors: true,
+        },
+        host: "0.0.0.0",
+    },
     chainWebpack: (config) => {
         config.resolve.alias
             .set("@", resolve("src"))
