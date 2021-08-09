@@ -99,6 +99,7 @@ export default {
     },
     mounted() {
         this.canvas = new fabric.Canvas("canvas");
+        this.ctx = canvas.getContext("2d");
         this.canvas.isDrawingMode = true;
         this.canvas.freeDrawingBrush.color = "blue";
         this.canvas.freeDrawingBrush.width = 5;
@@ -109,18 +110,10 @@ export default {
             this.ctx.clearRect(0, 0, 100, 100);
             this.ctx.clearRect(199, 0, 2, this.canvas.height);
         },
+        //生成图片
         generateImg() {
             let canvas = new fabric.Canvas("canvas");
             this.imgList.forEach((item, index) => {
-                // const img = new Image();
-                // img.src = item.url;
-                // img.onload = () => {
-                //     console.log(img.width, img.height);
-                //     /* let scaleH = canvas.height / img.height;
-                //     img.height = canvas.height;
-                //     img.width = img.width * scaleH; */
-                //     ctx.drawImage(img, 0, 0, 20, 20);
-                // };
                 fabric.Image.fromURL(item.url, function (img) {
                     img.scale(0.5);
                     canvas.add(img);
@@ -135,10 +128,12 @@ export default {
             let averageColor = getAverageColor(canvas, img);
             this.background = averageColor;
         },
+        //目标图片选择回调
         fileChange(file, fileList) {
             let tempUrl = window.URL.createObjectURL(file.raw);
             this.drawImage(tempUrl);
         },
+        //素材图片选择回调
         async imgListChange(file, fileList) {
             let tempUrl = window.URL.createObjectURL(file.raw);
             // getAverageColor(tempUrl);
@@ -146,6 +141,7 @@ export default {
             this.imgList.push({ url: tempUrl, color: mostColor });
             console.log(this.imgList);
         },
+        //栅格线
         drawLine() {
             const blockPixel = 8;
             for (let i = 0; i <= this.canvas.width / blockPixel; i++) {
@@ -165,19 +161,39 @@ export default {
                 );
             }
         },
+        //绘制图片
         drawImage(url) {
-            fabric.Image.fromURL(url, (img) => {
-                img.set({
-                    left: this.canvas.height / 2,
-                    originX: "center",
-                    top: 0,
-                    scaleX: this.canvas.height / img.height,
-                    scaleY: this.canvas.height / img.height,
-                    selectable: false, //是否可被选中
-                });
-                console.log(img.width, img.width, "img.width");
-                this.canvas.add(img);
-                this.drawLine();
+            fabric.Image.fromURL(
+                url,
+                async (img) => {
+                    img.set({
+                        crossOrigin: "anonymous",
+                        left: this.canvas.height / 2,
+                        originX: "center",
+                        top: 0,
+                        scaleX: this.canvas.height / img.height,
+                        scaleY: this.canvas.height / img.height,
+                        selectable: false, //是否可被选中
+                    });
+                    console.log(this.canvas.add(img), "this.canvas.add(img)");
+                    await this.canvas.add(img);
+                    console.log(
+                        this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height).data
+                    );
+                    this.drawLine();
+                    this.addCanvasEvent();
+                },
+                { crossOrigin: "anonymous" }
+            );
+        },
+        //添加画布事件
+        addCanvasEvent() {
+            this.canvas.on("mouse:move", (e) => {
+                let mouse = this.canvas.getPointer(e.e);
+                let x = parseInt(mouse.x);
+                let y = parseInt(mouse.y);
+                let px = this.ctx.getImageData(x, y, 1, 1).data;
+                console.log(`x,y:(${x},${y})/rgba(${px[0]},${px[1]},${px[2]},${px[3]})`);
             });
         },
     },
