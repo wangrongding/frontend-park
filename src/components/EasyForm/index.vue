@@ -323,7 +323,7 @@ export default {
     methods: {
         //文件改变钩子函数
         onFileChange() {
-            console.log(this.$refs);
+            // console.log(this.$refs);
             this.$refs["upload"][0].clearFiles();
         },
         //删除文件列表中文件的钩子

@@ -11,7 +11,7 @@
                     </el-button>
                 </template> -->
             </EasyForm>
-            <el-button type="primary" size="default" @click="reload">重置</el-button>
+            <el-button type="primary" size="default" @click="getCanvasData">重置</el-button>
             <el-button type="primary" size="default" @click="generateImg">生成图片</el-button>
         </div>
     </div>
@@ -103,6 +103,7 @@ export default {
         this.canvas.isDrawingMode = true;
         this.canvas.freeDrawingBrush.color = "blue";
         this.canvas.freeDrawingBrush.width = 5;
+        this.addCanvasEvent();
     },
     methods: {
         reload() {
@@ -161,11 +162,37 @@ export default {
                 );
             }
         },
+        //获取画布像素数据
+        getCanvasData() {
+            let tempImageData = this.ctx.getImageData(
+                0,
+                0,
+                this.canvas.width,
+                this.canvas.height
+            ).data;
+            let colorList = [];
+            for (let i = 0; i < tempImageData.length; i += 4) {
+                colorList.push(
+                    `rgba(${tempImageData[i]},${tempImageData[i + 1]},${tempImageData[i + 2]},${
+                        tempImageData[i + 3]
+                    })`
+                );
+            }
+            let pixelList = [];
+            for (let i = 0; i < colorList.length / this.canvas.width; i++) {
+                pixelList[i] = [];
+                for (let j = i * 800; j < (i + 1) * 800; j++) {
+                    pixelList[i].push(colorList[i * 800 + j]);
+                }
+            }
+            console.log(colorList);
+            console.log(pixelList);
+        },
         //绘制图片
         drawImage(url) {
             fabric.Image.fromURL(
                 url,
-                async (img) => {
+                (img) => {
                     img.set({
                         crossOrigin: "anonymous",
                         left: this.canvas.height / 2,
@@ -175,26 +202,43 @@ export default {
                         scaleY: this.canvas.height / img.height,
                         selectable: false, //是否可被选中
                     });
-                    console.log(this.canvas.add(img), "this.canvas.add(img)");
-                    await this.canvas.add(img);
-                    console.log(
-                        this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height).data
-                    );
-                    this.drawLine();
-                    this.addCanvasEvent();
+                    this.canvas.add(img);
+                    // this.drawLine();
+                    setTimeout(() => {
+                        this.getCanvasData();
+                    }, 1000);
                 },
                 { crossOrigin: "anonymous" }
             );
         },
         //添加画布事件
         addCanvasEvent() {
-            this.canvas.on("mouse:move", (e) => {
+            this.canvas.on("object:added", (e) => {
+                // console.log(e);
+            });
+            /* this.canvas.on("mouse:move", (e) => {
                 let mouse = this.canvas.getPointer(e.e);
                 let x = parseInt(mouse.x);
                 let y = parseInt(mouse.y);
                 let px = this.ctx.getImageData(x, y, 1, 1).data;
                 console.log(`x,y:(${x},${y})/rgba(${px[0]},${px[1]},${px[2]},${px[3]})`);
-            });
+            }); */
+            // 滚轮缩放 (alt + whell 缩放)
+            /* this.fCanvas.on("mouse:wheel", (options) => {
+                if (!options.e.altKey) {
+                    return;
+                }
+                const delta = options.e.deltaY;
+                let zoom = this.fCanvas.getZoom();
+                zoom = zoom + delta / 10000;
+                this.set_zoom(zoom);
+                this.fCanvas.zoomToPoint(
+                    { x: options.e.offsetX, y: options.e.offsetY },
+                    this.canvas_zoom
+                );
+                options.e.preventDefault();
+                options.e.stopPropagation();
+            }); */
         },
     },
 };
