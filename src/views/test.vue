@@ -19,6 +19,7 @@ export default {
     methods: {
         generate() {
             let canvas = new fabric.Canvas("canvas");
+            let ctx = canvas.getContext("2d");
             // canvas.isDrawingMode = true;
             // canvas.freeDrawingBrush.color = "blue";
             // canvas.freeDrawingBrush.width = 5;
@@ -104,20 +105,15 @@ export default {
             //绘制图片
 
             fabric.Image.fromURL(
-                "https://pic4.zhimg.com/80/v2-27c3b4fd622b90d6d52c51ebdc5e77fb_720w.jpg",
+                "https://img2.baidu.com/it/u=2067045147,1367384486&fm=26&fmt=auto&gp=0.jpg",
                 (img) => {
-                    img.scale(0.5);
                     // 添加滤镜
-                    img.filters.push(
-                        new fabric.Image.filters.Grayscale(),
-                        new fabric.Image.filters.Sepia(), //色偏
-                        new fabric.Image.filters.Brightness({ brightness: 0.2 }) //亮度
-                    );
+                    img.filters.push(new fabric.Image.filters.Grayscale());
                     // 图片加载完成之后，应用滤镜效果
                     img.applyFilters();
                     img.set({
-                        left: 300,
-                        top: 250,
+                        left: 0,
+                        top: 0,
                     });
                     canvas.add(img);
                 },

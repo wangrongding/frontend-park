@@ -13,6 +13,7 @@
             </EasyForm>
             <el-button type="primary" size="default" @click="getCanvasData">重置</el-button>
             <el-button type="primary" size="default" @click="generateImg">生成图片</el-button>
+            <el-button type="success" size="default" @click="exportCanvas">导出图片</el-button>
         </div>
     </div>
 </template>
@@ -98,9 +99,14 @@ export default {
         };
     },
     mounted() {
-        this.canvas = new fabric.Canvas("canvas");
+        this.canvas = new fabric.Canvas("canvas", {
+            isDrawingMode: false, //自由绘画模式
+            selectable: false,
+            selection: false,
+            hoverCursor: "pointer",
+            devicePixelRatio: true, //Retina 高清屏 屏幕支持
+        });
         this.ctx = canvas.getContext("2d");
-        this.canvas.isDrawingMode = true;
         this.canvas.freeDrawingBrush.color = "blue";
         this.canvas.freeDrawingBrush.width = 5;
         this.addCanvasEvent();
@@ -194,19 +200,18 @@ export default {
                 url,
                 (img) => {
                     img.set({
-                        crossOrigin: "anonymous",
                         left: this.canvas.height / 2,
                         originX: "center",
                         top: 0,
                         scaleX: this.canvas.height / img.height,
                         scaleY: this.canvas.height / img.height,
-                        selectable: false, //是否可被选中
+                        // selectable: false,
                     });
                     this.canvas.add(img);
-                    // this.drawLine();
                     setTimeout(() => {
                         this.getCanvasData();
-                    }, 1000);
+                    }, 500);
+                    // this.drawLine();
                 },
                 { crossOrigin: "anonymous" }
             );
@@ -216,29 +221,75 @@ export default {
             this.canvas.on("object:added", (e) => {
                 // console.log(e);
             });
-            /* this.canvas.on("mouse:move", (e) => {
+            //获取当前光标处像素的值
+            this.canvas.on("mouse:down", (e) => {
+                if (!e.e.ctrlKey) {
+                    return;
+                }
                 let mouse = this.canvas.getPointer(e.e);
                 let x = parseInt(mouse.x);
                 let y = parseInt(mouse.y);
                 let px = this.ctx.getImageData(x, y, 1, 1).data;
                 console.log(`x,y:(${x},${y})/rgba(${px[0]},${px[1]},${px[2]},${px[3]})`);
-            }); */
+            });
             // 滚轮缩放 (alt + whell 缩放)
-            /* this.fCanvas.on("mouse:wheel", (options) => {
-                if (!options.e.altKey) {
+            this.canvas.on("mouse:wheel", (e) => {
+                if (!e.e.altKey) {
                     return;
                 }
-                const delta = options.e.deltaY;
-                let zoom = this.fCanvas.getZoom();
-                zoom = zoom + delta / 10000;
-                this.set_zoom(zoom);
-                this.fCanvas.zoomToPoint(
-                    { x: options.e.offsetX, y: options.e.offsetY },
-                    this.canvas_zoom
-                );
-                options.e.preventDefault();
-                options.e.stopPropagation();
-            }); */
+                console.log(e);
+                this.zoom = (e.e.deltaY > 0 ? -0.05 : 0.05) + this.canvas.getZoom();
+                this.zoom = Math.max(0.05, this.zoom); //最小为原来的0.05倍
+                this.zoom = Math.min(10, this.zoom); //最大是原来的10倍
+                this.zoomPoint = new fabric.Point(e.pointer.x, e.pointer.y);
+                this.canvas.zoomToPoint(this.zoomPoint, this.zoom);
+                e.e.preventDefault();
+                e.e.stopPropagation();
+            });
+            //画布随着鼠标移动。
+            this.canvas.on({
+                "mouse:down": (e) => {
+                    if (!e.e.altKey) {
+                        return;
+                    }
+                    this.panning = true;
+                    this.canvas.selection = false;
+                },
+                "mouse:up": (e) => {
+                    this.panning = false;
+                    this.canvas.selection = true;
+                },
+                "mouse:move": (e) => {
+                    if (this.panning && e && e.e) {
+                        let delta = new fabric.Point(e.e.movementX, e.e.movementY);
+                        this.canvas.relativePan(delta);
+                    }
+                },
+            });
+            this.canvas.on({
+                "object:moving": function (e) {
+                    e.target.opacity = 0.5;
+                },
+                "object:modified": function (e) {
+                    e.target.opacity = 1;
+                },
+            });
+        },
+        //导出图片
+        exportCanvas() {
+            const dataURL = this.canvas.toDataURL({
+                width: this.canvas.width,
+                height: this.canvas.height,
+                left: 0,
+                top: 0,
+                format: "png",
+            });
+            const link = document.createElement("a");
+            link.download = "canvas.png";
+            link.href = dataURL;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         },
     },
 };
