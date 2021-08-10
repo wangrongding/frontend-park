@@ -11,7 +11,7 @@
                     </el-button>
                 </template> -->
             </EasyForm>
-            <el-button type="primary" size="default" @click="getCanvasData">重置</el-button>
+            <el-button type="primary" size="default" @click="reload">重置</el-button>
             <el-button type="primary" size="default" @click="generateImg">生成图片</el-button>
             <el-button type="success" size="default" @click="exportCanvas">导出图片</el-button>
         </div>
@@ -114,8 +114,8 @@ export default {
     methods: {
         reload() {
             // window.location.reload();
-            this.ctx.clearRect(0, 0, 100, 100);
-            this.ctx.clearRect(199, 0, 2, this.canvas.height);
+            console.log(this.canvas.getWidth(), this.canvas.getHeight());
+            this.canvas.clear(); // 清空画布
         },
         //生成图片
         generateImg() {
@@ -147,6 +147,21 @@ export default {
             let mostColor = await getMostColor(tempUrl);
             this.imgList.push({ url: tempUrl, color: mostColor });
             console.log(this.imgList);
+            for (let i = 0; i < 100; i++) {
+                for (let j = 0; j < 100; j++) {
+                    fabric.Image.fromURL(tempUrl, (img) => {
+                        img.scale(8 / img.height);
+                        img.set({
+                            left: j * 8,
+                            top: i * 8,
+                            originX: "center",
+                            scaleX: 8 / img.height,
+                            scaleY: 8 / img.height,
+                        });
+                        this.canvas.add(img);
+                    });
+                }
+            }
         },
         //栅格线
         drawLine() {
@@ -230,21 +245,29 @@ export default {
                 let x = parseInt(mouse.x);
                 let y = parseInt(mouse.y);
                 let px = this.ctx.getImageData(x, y, 1, 1).data;
-                console.log(`x,y:(${x},${y})/rgba(${px[0]},${px[1]},${px[2]},${px[3]})`);
+                console.log(
+                    `%c x,y:(${x},${y})/rgba(${px[0]},${px[1]},${px[2]},${px[3]})
+                                                                        `,
+                    `background: rgba(${px[0]},${px[1]},${px[2]},${px[3]});`
+                );
             });
             // 滚轮缩放 (alt + whell 缩放)
             this.canvas.on("mouse:wheel", (e) => {
+                e.e.preventDefault();
+                e.e.stopPropagation();
+                let ZOOM = 0.05;
                 if (!e.e.altKey) {
                     return;
+                } else if (e.e.altKey && e.e.ctrlKey) {
+                    ZOOM = 1;
+                } else if (e.e.altKey) {
                 }
                 console.log(e);
-                this.zoom = (e.e.deltaY > 0 ? -0.05 : 0.05) + this.canvas.getZoom();
+                this.zoom = (e.e.deltaY > 0 ? -ZOOM : ZOOM) + this.canvas.getZoom();
                 this.zoom = Math.max(0.05, this.zoom); //最小为原来的0.05倍
                 this.zoom = Math.min(10, this.zoom); //最大是原来的10倍
                 this.zoomPoint = new fabric.Point(e.pointer.x, e.pointer.y);
                 this.canvas.zoomToPoint(this.zoomPoint, this.zoom);
-                e.e.preventDefault();
-                e.e.stopPropagation();
             });
             //画布随着鼠标移动。
             this.canvas.on({

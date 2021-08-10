@@ -37,7 +37,6 @@ export function getAverageColor(imgUrl) {
                 g = Math.round(g);
                 b = Math.round(b);
                 a = Math.round(a);
-                // console.log("rgba(" + r + "," + g + "," + b + "," + a + ")");
                 console.log(
                     `%c ${"rgba(" + r + "," + g + "," + b + "," + a + ")"}
                                                                         `,
