@@ -114,8 +114,9 @@ export default {
     methods: {
         reload() {
             // window.location.reload();
-            console.log(this.canvas.getWidth(), this.canvas.getHeight());
-            this.canvas.clear(); // 清空画布
+            console.log(this.canvas.viewportTransform);
+            //http://fabricjs.com/fabric-intro-part-5#pan_zoom
+            // this.canvas.clear(); // 清空画布
         },
         //生成图片
         generateImg() {
@@ -289,6 +290,7 @@ export default {
                     }
                 },
             });
+            //对象被移动时,添加透明效果
             this.canvas.on({
                 "object:moving": function (e) {
                     e.target.opacity = 0.5;
