@@ -1,13 +1,35 @@
 export function inputFile() {
-    this.inputfile = document.createElement("input");
-    this.inputfile.setAttribute("id", "file");
-    this.inputfile.setAttribute("type", "file");
-    this.inputfile.setAttribute("name", "file");
-    this.inputfile.setAttribute("style", "visibility:hidden");
-    document.querySelector("#file").addEventListener("change", (e) => {
-        console.log(e.target.files[0]);
-        // let tempUrl = URL.createObjectURL(e.target.files[0]);
-        // console.log(tempUrl);
+    return new Promise(function (resolve, reject) {
+        if (document.getElementById("myInput")) {
+            let inputFile = document.getElementById("myInput");
+            inputFile.onchange = (e) => {
+                let urlArr = [];
+                for (let i = 0; i < e.target.files.length; i++) {
+                    urlArr.push(URL.createObjectURL(e.target.files[i]));
+                }
+                resolve(urlArr);
+            };
+            inputFile.click();
+        } else {
+            let inputFile = document.createElement("input");
+            inputFile.setAttribute("id", "myInput");
+            inputFile.setAttribute("type", "file");
+            inputFile.setAttribute("name", "file");
+            inputFile.setAttribute("multiple", "multiple");
+            inputFile.setAttribute("style", "display: none");
+            inputFile.onchange = (e) => {
+                // console.log(e.target.files[0]);
+                // console.log(e.target.files);
+                // let tempUrl = URL.createObjectURL(e.target.files[0]);
+                // console.log(tempUrl);
+                let urlArr = [];
+                for (let i = 0; i < e.target.files.length; i++) {
+                    urlArr.push(URL.createObjectURL(e.target.files[i]));
+                }
+                resolve(urlArr);
+            };
+            document.body.appendChild(inputFile);
+            inputFile.click();
+        }
     });
-    this.inputfile.click();
 }

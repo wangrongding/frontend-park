@@ -2,8 +2,6 @@ export function getMostColor(imgUrl) {
     return new Promise((resolve, reject) => {
         try {
             const canvas = document.createElement("canvas");
-            canvas.width = 20;
-            canvas.height = 20;
             const img = new Image(); // 创建img元素
             img.src = imgUrl; // 设置图片源地址
             img.onload = () => {
@@ -47,13 +45,14 @@ export function getMostColor(imgUrl) {
                 arr.sort((a, b) => {
                     return b.count - a.count;
                 });
-                arr[0].url = imgUrl;
+                // console.log("arr", arr[0].color);
+                // document.body.style.background = arr[0].color;
                 console.log(
                     `%c ${arr[0].color}
                                                                         `,
                     `background: ${arr[0].color};`
                 );
-                resolve(arr[0]);
+                resolve(arr[0].color);
             };
         } catch (e) {
             reject(e);

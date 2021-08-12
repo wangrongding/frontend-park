@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <div class="content" :style="`background:${background}`">
+        <div class="content" :style="`background:${background}`" v-loading="loading">
             <canvas id="canvas" ref="canvas" width="800" height="800"></canvas>
         </div>
         <div class="operations">
@@ -14,6 +14,7 @@
             <el-button type="primary" size="default" @click="reload">重置</el-button>
             <el-button type="primary" size="default" @click="generateImg">生成图片</el-button>
             <el-button type="success" size="default" @click="exportCanvas">导出图片</el-button>
+            <el-button type="success" size="default" @click="inputFile">导ru图片</el-button>
         </div>
     </div>
 </template>
@@ -22,7 +23,7 @@
 /* eslint-disable */
 // @ is an alias to /src
 import { getMostColor } from "@utils/mostColor.js";
-import { getAverageColor } from "@utils/averageColor.js";
+import { inputFile } from "@utils/inputFile.js";
 import { fabric } from "fabric";
 export default {
     name: "Home",
@@ -30,6 +31,7 @@ export default {
     data() {
         return {
             imgList: [],
+            loading: false,
             src: require("../assets/rd.png"),
             formParams: {
                 data: {}, // 表单数据对象
@@ -128,27 +130,29 @@ export default {
                 });
             });
         },
-        getColorCount(canvas, img) {
-            let colorList = colorCount(canvas, img);
-            // this.background = colorList[0].color;
-        },
-        getAverageColor(canvas, img) {
-            let averageColor = getAverageColor(canvas, img);
-            this.background = averageColor;
-        },
         //目标图片选择回调
         fileChange(file, fileList) {
             let tempUrl = window.URL.createObjectURL(file.raw);
             this.drawImage(tempUrl);
         },
+        async inputFile() {
+            let files = await inputFile();
+            this.loading = true;
+            console.log(files);
+            for (let i = 0; i < files.length; i++) {
+                let image = await getMostColor(files[i]);
+                this.imgList.push(image);
+            }
+            console.log(this.imgList);
+            this.loading = false;
+        },
         //素材图片选择回调
         async imgListChange(file, fileList) {
             let tempUrl = window.URL.createObjectURL(file.raw);
-            // getAverageColor(tempUrl);
             let mostColor = await getMostColor(tempUrl);
             this.imgList.push({ url: tempUrl, color: mostColor });
             console.log(this.imgList);
-            for (let i = 0; i < 100; i++) {
+            /* for (let i = 0; i < 100; i++) {
                 for (let j = 0; j < 100; j++) {
                     fabric.Image.fromURL(tempUrl, (img) => {
                         img.scale(8 / img.height);
@@ -162,7 +166,7 @@ export default {
                         this.canvas.add(img);
                     });
                 }
-            }
+            } */
         },
         //栅格线
         drawLine() {
