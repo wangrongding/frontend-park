@@ -232,6 +232,14 @@ export default {
                 { crossOrigin: "anonymous" }
             );
         },
+        //计算颜色差异
+        colorDiff(color1, color2) {
+            let d = 0;
+            for (let i = 0; i < color1.length; i++) {
+                d += (color1[i] - color2[i]) ** 2;
+            }
+            return Math.sqrt(d);
+        },
         //添加画布事件
         addCanvasEvent() {
             this.canvas.on("object:added", (e) => {
