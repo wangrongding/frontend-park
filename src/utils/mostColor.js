@@ -48,11 +48,7 @@ export function getMostColor(imgUrl) {
                     return b.count - a.count;
                 });
                 arr[0].url = imgUrl;
-                console.log(
-                    `%c ${arr[0].color}
-                                                                        `,
-                    `background: ${arr[0].color};`
-                );
+                console.log(`%c ${arr[0].color}`, `background: ${arr[0].color};`);
                 resolve(arr[0]);
             };
         } catch (e) {

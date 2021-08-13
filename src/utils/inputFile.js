@@ -14,6 +14,7 @@ export function inputFile() {
             let inputFile = document.createElement("input");
             inputFile.setAttribute("id", "myInput");
             inputFile.setAttribute("type", "file");
+            inputFile.setAttribute("accept", "image/*");
             inputFile.setAttribute("name", "file");
             inputFile.setAttribute("multiple", "multiple");
             inputFile.setAttribute("style", "display: none");
