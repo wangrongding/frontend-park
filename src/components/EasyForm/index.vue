@@ -93,6 +93,7 @@
             <el-input-number
                 v-if="itemForm.type === 'input-number'"
                 v-model="formParams.data[key]"
+                :disabled="itemForm.disabled"
             ></el-input-number>
             <el-select
                 v-if="itemForm.type === 'select'"
@@ -102,6 +103,7 @@
                 :style="`${itemForm.width ? 'width:' + itemForm.width : ''}`"
                 clearable
                 :placeholder="itemForm.placeholder"
+                :disabled="itemForm.disabled"
                 filterable
                 @change="
                     () => {
@@ -136,6 +138,7 @@
                 v-if="itemForm.type === 'cascader'"
                 v-model="formParams.data[key]"
                 :options="itemForm.cascaderOptions"
+                :disabled="itemForm.disabled"
                 :placeholder="itemForm.placeholder"
                 clearable
                 filterable
@@ -143,19 +146,26 @@
             <el-switch
                 v-if="itemForm.type === 'switch'"
                 v-model="formParams.data[key]"
+                :disabled="itemForm.disabled"
                 :active-text="itemForm.activeText"
                 :inactive-text="itemForm.inactiveText"
             ></el-switch>
-            <el-slider v-if="itemForm.type === 'slider'" v-model="formParams.data[key]"></el-slider>
+            <el-slider
+                v-if="itemForm.type === 'slider'"
+                :disabled="itemForm.disabled"
+                v-model="formParams.data[key]"
+            ></el-slider>
             <el-time-select
                 v-if="itemForm.type === 'time-select'"
                 v-model="formParams.data[key]"
+                :disabled="itemForm.disabled"
                 :placeholder="itemForm.placeholder"
             ></el-time-select>
             <el-time-picker
                 v-if="itemForm.type === 'time-picker'"
                 v-model="formParams.data[key]"
                 :placeholder="itemForm.placeholder"
+                :disabled="itemForm.disabled"
                 start-placeholder="开始时间"
                 end-placeholder="结束时间"
                 :is-range="itemForm.isRange"
@@ -165,6 +175,7 @@
                 v-if="itemForm.type === 'date-picker'"
                 :style="itemForm.style"
                 v-model="formParams.data[key]"
+                :disabled="itemForm.disabled"
                 :placeholder="itemForm.placeholder"
                 :picker-options="itemForm.pickerOptions"
                 start-placeholder="开始日期"
@@ -179,6 +190,7 @@
                 :accept="itemForm.accept"
                 :action="itemForm.action"
                 :list-type="itemForm.listType"
+                :disabled="itemForm.disabled"
                 :auto-upload="itemForm.autoUpload ? itemForm.autoUpload : false"
                 :file-list="itemForm.fileList"
                 :before-remove="
@@ -217,13 +229,19 @@
                     {{ itemForm.tip ? itemForm.tip : "" }}
                 </div>
             </el-upload>
-            <el-rate v-if="itemForm.type === 'rate'" v-model="formParams.data[key]"></el-rate>
+            <el-rate
+                v-if="itemForm.type === 'rate'"
+                :disabled="itemForm.disabled"
+                v-model="formParams.data[key]"
+            ></el-rate>
             <el-color-picker
                 v-if="itemForm.type === 'color-picker'"
+                :disabled="itemForm.disabled"
                 v-model="formParams.data[key]"
             ></el-color-picker>
             <el-transfer
                 v-if="itemForm.type === 'transfer'"
+                :disabled="itemForm.disabled"
                 v-model="formParams.data[key]"
                 :data="itemForm.transferData"
             ></el-transfer>

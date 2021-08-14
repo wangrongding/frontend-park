@@ -2,6 +2,9 @@ export function getAverageColor(imgUrl) {
     return new Promise((resolve, reject) => {
         try {
             const canvas = document.createElement("canvas");
+            //设置canvas的宽高都为20,越小越快,但是越小越不精确
+            canvas.width = 20;
+            canvas.height = 20;
             const img = new Image(); // 创建img元素
             img.src = imgUrl; // 设置图片源地址
             img.onload = () => {
@@ -42,7 +45,7 @@ export function getAverageColor(imgUrl) {
                                                                         `,
                     `background: ${"rgba(" + r + "," + g + "," + b + "," + a + ")"};`
                 );
-                resolve("rgba(" + r + "," + g + "," + b + ")");
+                resolve({ color: [r, g, b, a], url: imgUrl });
             };
         } catch (e) {
             reject(e);

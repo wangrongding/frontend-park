@@ -2,6 +2,7 @@ export function getMostColor(imgUrl) {
     return new Promise((resolve, reject) => {
         try {
             const canvas = document.createElement("canvas");
+            //设置canvas的宽高都为20,越小越快,但是越小越不精确
             canvas.width = 20;
             canvas.height = 20;
             const img = new Image(); // 创建img元素
@@ -15,41 +16,39 @@ export function getMostColor(imgUrl) {
                 console.log(img.width, img.height);
                 // 获取像素数据
                 let pixelData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-                // console.log(pixelData);
                 let colorList = [];
-                let rgba = [];
-                let rgbaStr = "";
+                let color = [];
+                let colorKey = "";
+                let colorArr = [];
                 // 分组循环
                 for (let i = 0; i < pixelData.length; i += 4) {
-                    rgba[0] = pixelData[i];
-                    rgba[1] = pixelData[i + 1];
-                    rgba[2] = pixelData[i + 2];
-                    rgba[3] = pixelData[i + 3];
-                    if (rgba.indexOf(undefined) !== -1 || pixelData[i + 3] === 0) {
-                        continue;
-                    }
-                    rgbaStr = rgba.join(",");
-                    if (rgbaStr in colorList) {
-                        ++colorList[rgbaStr];
+                    color[0] = pixelData[i];
+                    color[1] = pixelData[i + 1];
+                    color[2] = pixelData[i + 2];
+                    color[3] = pixelData[i + 3];
+                    colorKey = color.join(",");
+                    if (colorKey in colorList) {
+                        ++colorList[colorKey];
                     } else {
-                        colorList[rgbaStr] = 1;
+                        colorList[colorKey] = 1;
                     }
                 }
-                let arr = [];
                 for (let prop in colorList) {
-                    arr.push({
-                        // 如果只获取rgb,则为`rgb(${prop})`
-                        color: `rgba(${prop})`,
+                    colorArr.push({
+                        color: prop.split(","),
                         count: colorList[prop],
                     });
                 }
-                // 数组排序
-                arr.sort((a, b) => {
+                // 对所有颜色数组排序,取第一个为主色调
+                colorArr.sort((a, b) => {
                     return b.count - a.count;
                 });
-                arr[0].url = imgUrl;
-                console.log(`%c ${arr[0].color}`, `background: ${arr[0].color};`);
-                resolve(arr[0]);
+                colorArr[0].url = imgUrl;
+                console.log(
+                    `%c rgba(${colorArr[0].color.join(",")})`,
+                    `background: rgba(${colorArr[0].color.join(",")})`
+                );
+                resolve(colorArr[0]);
             };
         } catch (e) {
             reject(e);

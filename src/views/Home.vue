@@ -1,4 +1,5 @@
 <template>
+    <!--  -->
     <div class="home">
         <div class="content" :style="`background:${background}`" v-loading="loading">
             <div style="text-align: left; width: 800px">
@@ -31,16 +32,19 @@
 /* eslint-disable */
 // @ is an alias to /src
 import { getMostColor } from "@utils/mostColor.js";
+import { getAverageColor } from "@utils/averageColor.js";
 import { inputFile } from "@utils/inputFile.js";
+import { mostBlockColor } from "@utils/mostBlockColor.js";
 import { fabric } from "fabric";
 export default {
     name: "Home",
     components: {},
     data() {
         return {
-            imgList: [],
+            imgList: [], //素材图
+            blockList: [], //画布数据
+            blockMainColors: [], //每个格子的主色调
             loading: false,
-            src: require("../assets/rd.png"),
             formParams: {
                 data: {}, // 表单数据对象
                 formList: {
@@ -52,7 +56,7 @@ export default {
                         listType: "file-list",
                         fileList: [],
                         autoUpload: false,
-                        onChange: this.fileChange,
+                        onChange: this.slectFile,
                     },
                     inputFile: {
                         type: "customItem",
@@ -69,34 +73,41 @@ export default {
                         label: "分布方式",
                         placeholder: "请选择",
                         selectOptions: [],
+                        disabled: true,
                     },
                     bbb: {
                         type: "select",
                         label: "高清程度",
                         placeholder: "请选择",
                         selectOptions: [],
+                        disabled: true,
                     },
                     ccc: {
                         type: "switch",
                         label: "连续重复:",
                         placeholder: "请选择",
+                        disabled: true,
                     },
                     ddd: {
                         type: "switch",
                         label: "按比例调整",
+                        disabled: true,
                     },
                     eee: {
                         type: "select",
                         label: "方向／比例",
                         selectOptions: [],
+                        disabled: true,
                     },
                     fff: {
                         type: "slider",
                         label: "贴片高度",
+                        disabled: true,
                     },
                     ggg: {
                         type: "slider",
                         label: "贴片宽度",
+                        disabled: true,
                     },
                 },
 
@@ -126,7 +137,7 @@ export default {
             this.ctx = canvas.getContext("2d");
             this.canvas.freeDrawingBrush.color = "blue";
             this.canvas.freeDrawingBrush.width = 5;
-            this.addCanvasEvent();
+            this.addCanvasEvent(); //给画布添加事件
         },
         //重置
         reload() {
@@ -138,16 +149,49 @@ export default {
         },
         //生成图片
         generateImg() {
-            let canvas = new fabric.Canvas("canvas");
-            this.imgList.forEach((item, index) => {
-                fabric.Image.fromURL(item.url, function (img) {
-                    img.scale(0.5);
-                    canvas.add(img);
+            this.loading = true;
+            let diffColorList = [];
+            //遍历所有方块
+            for (let i = 0; i < this.blockMainColors.length; i++) {
+                diffColorList[i] = { diffs: [] };
+                //遍历所有图片
+                for (let j = 0; j < this.imgList.length; j++) {
+                    diffColorList[i].diffs.push({
+                        url: this.imgList[j].url,
+                        diff: this.colorDiff(this.blockMainColors[i].color, this.imgList[j].color),
+                        color: this.imgList[j].color,
+                    });
+                }
+                //对比较过的图片进行排序,差异最小的放最前面
+                diffColorList[i].diffs.sort((a, b) => {
+                    return a.diff - b.diff;
+                });
+                //取第0个图片信息
+                diffColorList[i].url = diffColorList[i].diffs[0].url;
+                diffColorList[i].position = this.blockMainColors[i].position;
+                diffColorList[i].Acolor = this.blockMainColors[i].color;
+                diffColorList[i].Bcolor = diffColorList[i].diffs[0].color;
+            }
+            this.loading = false;
+            console.log(diffColorList);
+            //便利每一个方块,对其渲染
+            diffColorList.forEach((item) => {
+                fabric.Image.fromURL(item.url, (img) => {
+                    let scale = img.height > img.width ? 8 / img.width : 8 / img.height;
+                    // img.scale(8 / img.height);
+                    img.set({
+                        left: item.position[0] * 8,
+                        top: item.position[1] * 8,
+                        originX: "center",
+                        scaleX: scale,
+                        scaleY: scale,
+                    });
+                    this.canvas.add(img);
                 });
             });
         },
         //目标图片选择回调
-        fileChange(file, fileList) {
+        slectFile(file, fileList) {
             let tempUrl = window.URL.createObjectURL(file.raw);
             this.drawImage(tempUrl);
         },
@@ -155,40 +199,11 @@ export default {
         async inputFile() {
             let files = await inputFile();
             this.loading = true;
-            console.log(files);
             for (let i = 0; i < files.length; i++) {
-                let image = await getMostColor(files[i]);
+                let image = await getAverageColor(files[i]);
                 this.imgList.push(image);
             }
             console.log(this.imgList);
-            for (let k = 0; k < this.imgList.length; k++) {
-                fabric.Image.fromURL(this.imgList[k].url, (img) => {
-                    img.scale(8 / img.height);
-                    img.set({
-                        left: k * 8,
-                        top: k * 8,
-                        originX: "center",
-                        scaleX: 8 / img.height,
-                        scaleY: 8 / img.height,
-                    });
-                    this.canvas.add(img);
-                });
-            }
-            /* for (let i = 0; i < 100; i++) {
-                for (let j = 0; j < 100; j++) {
-                    fabric.Image.fromURL(tempUrl, (img) => {
-                        img.scale(8 / img.height);
-                        img.set({
-                            left: j * 8,
-                            top: i * 8,
-                            originX: "center",
-                            scaleX: 8 / img.height,
-                            scaleY: 8 / img.height,
-                        });
-                        this.canvas.add(img);
-                    });
-                }
-            } */
             this.loading = false;
         },
         //栅格线
@@ -198,14 +213,14 @@ export default {
                 this.canvas.add(
                     new fabric.Line([i * blockPixel, 0, i * blockPixel, this.canvas.height], {
                         left: i * blockPixel,
-                        stroke: "black",
+                        stroke: "gray",
                         selectable: false, //是否可被选中
                     })
                 );
                 this.canvas.add(
                     new fabric.Line([0, i * blockPixel, this.canvas.height, i * blockPixel], {
                         top: i * blockPixel,
-                        stroke: "black",
+                        stroke: "gray",
                         selectable: false, //是否可被选中
                     })
                 );
@@ -213,15 +228,16 @@ export default {
         },
         //获取画布像素数据
         getCanvasData() {
-            let pixelList = [];
-            for (let Y = 0; Y < this.canvas.height; Y += 8) {
-                for (let X = 0; X < this.canvas.width; X += 8) {
+            // let blockList = [];
+            for (let Y = 0; Y < this.canvas.height / 8; Y++) {
+                for (let X = 0; X < this.canvas.width / 8; X++) {
                     //每8*8像素的一块区域一组
                     let tempColorData = this.ctx.getImageData(X * 8, Y * 8, 8, 8).data;
+                    // console.log(X, Y, tempColorData);
                     //将获取到数据每4个一组,每组都是一个像素
-                    pixelList[(Y / 8) * 100 + X / 8] = [];
+                    this.blockList[Y * 100 + X] = { position: [X, Y], color: [] };
                     for (let i = 0; i < tempColorData.length; i += 4) {
-                        pixelList[(Y / 8) * 100 + X / 8].push([
+                        this.blockList[Y * 100 + X].color.push([
                             tempColorData[i],
                             tempColorData[i + 1],
                             tempColorData[i + 2],
@@ -230,33 +246,99 @@ export default {
                     }
                 }
             }
-            console.log(pixelList);
+            console.log(mostBlockColor(this.blockList));
+            this.mostBlockColor(this.blockList);
+            this.loading = false;
         },
         //绘制目标图片
         drawImage(url) {
-            fabric.Image.fromURL(
-                url,
-                (img) => {
-                    img.set({
-                        left: this.canvas.height / 2,
-                        originX: "center",
-                        top: 0,
-                        scaleX: this.canvas.height / img.height,
-                        scaleY: this.canvas.height / img.height,
-                        selectable: false,
+            this.loading = true;
+            fabric.Image.fromURL(url, (img) => {
+                //设置缩放比例,长图的缩放比为this.canvas.width / img.width,宽图的缩放比为this.canvas.height / img.height
+                let scale =
+                    img.height > img.width
+                        ? this.canvas.width / img.width
+                        : this.canvas.height / img.height;
+                img.set({
+                    left: this.canvas.width / 2, //距离左边的距离
+                    originX: "center", //图片在原点的对齐方式
+                    originY: "center",
+                    top: this.canvas.height / 2,
+                    scaleX: scale, //横向缩放
+                    scaleY: scale, //纵向缩放
+                    selectable: false, //可交互
+                });
+                img.on("added", (e) => {
+                    //这里有个问题,added后获取的是之前的画布像素数据,其他手动触发的事件,不会有这种问题
+                    //故用一个异步解决
+                    setTimeout(() => {
+                        this.getCanvasData();
+                    }, 500);
+                });
+                this.canvas.add(img); //将图片添加到画布
+                // this.drawLine(); //绘制网格线条
+            });
+        },
+        //获取每个格子的主色调
+        mostBlockColor(blockList) {
+            //所有颜色的平均值为主色调
+            for (let i = 0; i < blockList.length; i++) {
+                let r = 0,
+                    g = 0,
+                    b = 0,
+                    a = 0;
+                for (let j = 0; j < blockList[i].color[j].length; j++) {
+                    r += blockList[i].color[j][0];
+                    g += blockList[i].color[j][1];
+                    b += blockList[i].color[j][2];
+                    a += blockList[i].color[j][3];
+                }
+
+                // 求取平均值
+                r /= blockList[i].color[0].length;
+                g /= blockList[i].color[0].length;
+                b /= blockList[i].color[0].length;
+                a /= blockList[i].color[0].length;
+                // 将最终的值取整
+                r = Math.round(r);
+                g = Math.round(g);
+                b = Math.round(b);
+                a = Math.round(a);
+                this.blockMainColors.push({
+                    position: blockList[i].position,
+                    color: [r, g, b, a],
+                });
+            }
+            console.log(this.blockMainColors);
+            //最多颜色为主色调
+            /* for (let i = 0; i < blockList.length; i++) {
+                let colorList = [];
+                let rgbaStr = "";
+                for (let k = 0; k < blockList[k].color.length; k++) {
+                    rgbaStr = blockList[i].color[k];
+                    if (rgbaStr in colorList) {
+                        ++colorList[rgbaStr];
+                    } else {
+                        colorList[rgbaStr] = 1;
+                    }
+                }
+                let arr = [];
+                for (let prop in colorList) {
+                    arr.push({
+                        // 如果只获取rgb,则为`rgb(${prop})`
+                        color: prop.split(","),
+                        // color: `rgba(${prop})`,
+                        count: colorList[prop],
                     });
-                    img.on("added", (e) => {
-                        //这里有个问题,added后获取的是之前的画布像素数据,其他手动触发的事件,不会有这种问题
-                        //故用一个异步解决
-                        setTimeout(() => {
-                            this.getCanvasData();
-                        }, 500);
-                    });
-                    this.canvas.add(img);
-                    this.drawLine();
-                },
-                { crossOrigin: "anonymous" }
-            );
+                }
+                // 数组排序
+                arr.sort((a, b) => {
+                    return b.count - a.count;
+                });
+                arr[0].position = blockList[i].position;
+                this.blockMainColors.push(arr[0]);
+            } */
+            // console.log(this.blockMainColors);
         },
         //计算颜色差异
         colorDiff(color1, color2) {
@@ -291,18 +373,19 @@ export default {
                 e.e.preventDefault();
                 e.e.stopPropagation();
                 let ZOOM = 0.05;
+                let point = new fabric.Point(this.canvas.width / 2 - 1, this.canvas.height / 2 - 1);
                 //(alt + whell 缩放)
                 if (!e.e.ctrlKey) {
                     return;
                 } else if (e.e.altKey && e.e.ctrlKey) {
                     //(ctrl + alt + whell 加速缩放)
-                    ZOOM = 1;
+                    // ZOOM = 0.1;
+                    point = new fabric.Point(e.pointer.x, e.pointer.y);
                 }
-                console.log(e);
                 this.zoom = (e.e.deltaY > 0 ? -ZOOM : ZOOM) + this.canvas.getZoom();
-                this.zoom = Math.max(0.1, this.zoom); //最小为原来的0.05倍
+                this.zoom = Math.max(0.1, this.zoom); //最小为原来的0.1倍
                 this.zoom = Math.min(10, this.zoom); //最大是原来的10倍
-                this.canvas.zoomToPoint(new fabric.Point(e.pointer.x, e.pointer.y), this.zoom);
+                this.canvas.zoomToPoint(point, this.zoom);
             });
             //画布随着鼠标移动。
             this.canvas.on({
@@ -360,6 +443,9 @@ export default {
 ::v-deep .el-upload-list {
     max-width: 200px;
     overflow: hidden;
+    .el-upload-list__item-name {
+        color: white;
+    }
 }
 .home {
     transition: width 0.28s;
