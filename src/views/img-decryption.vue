@@ -5,16 +5,16 @@
         </div>
         <div class="operations">
             <div style="height: 800px; margin: 0 auto">
-                1.选择需要加密的文件,或手绘后再执行第二步
+                1.选择需要解密的文件
                 <el-button
                     type="success"
                     style="width: 100%; margin: 10px auto"
                     size="default"
                     @click="inputFile"
                 >
-                    选择加密内容(图片)
+                    选择解密的图片
                 </el-button>
-                2.保存加密画布信息
+                2.解析图片中的隐藏数据
                 <el-button
                     type="primary"
                     style="width: 100%; margin: 10px auto"
@@ -22,33 +22,6 @@
                     @click="getCanvasData('hiddenData')"
                 >
                     保存隐写的信息
-                </el-button>
-                3.选择需要隐写到的目标图片
-                <el-button
-                    type="success"
-                    style="width: 100%; margin: 10px auto"
-                    size="default"
-                    @click="inputFile"
-                >
-                    选择文件
-                </el-button>
-                4.开始加密
-                <el-button
-                    type="primary"
-                    style="width: 100%; margin: 10px auto"
-                    size="default"
-                    @click="inputFile"
-                >
-                    开始加密
-                </el-button>
-                5.加密完成,点击生成图片下载加密后的图片
-                <el-button
-                    type="primary"
-                    style="width: 100%; margin: 10px auto"
-                    size="default"
-                    @click="exportCanvas"
-                >
-                    生成图片
                 </el-button>
             </div>
         </div>
@@ -58,7 +31,6 @@
 /* eslint-disable */
 import { fabric } from "fabric";
 import { inputFile } from "@utils/inputFile.js";
-
 export default {
     name: "Home",
     components: {},
@@ -172,68 +144,6 @@ export default {
             this.loading = false;
         },
         drawHiddenData() {},
-        processData(originalData) {
-            let data = originalData.data;
-            for (let i = 0; i < data.length; i++) {
-                if (i % 4 == 0) {
-                    // 红色分量
-                    if (data[i] % 2 == 0) {
-                        data[i] = 0;
-                    } else {
-                        data[i] = 255;
-                    }
-                } else if (i % 4 == 3) {
-                    // alpha通道不做处理
-                    continue;
-                } else {
-                    // 关闭其他分量，不关闭也不影响答案，甚至更美观 o(^▽^)o
-                    data[i] = 0;
-                }
-            }
-            // 将结果绘制到画布
-            ctx.putImageData(originalData, 0, 0);
-        },
-        merge() {
-            let oData = originalData.data;
-            let bit, offset; // offset的作用是找到alpha通道值，这里需要大家自己动动脑筋
-
-            switch (color) {
-                case "R":
-                    bit = 0;
-                    offset = 3;
-                    break;
-                case "G":
-                    bit = 1;
-                    offset = 2;
-                    break;
-                case "B":
-                    bit = 2;
-                    offset = 1;
-                    break;
-            }
-
-            for (let i = 0; i < oData.length; i++) {
-                if (i % 4 == bit) {
-                    // 只处理目标通道
-                    if (newData[i + offset] === 0 && oData[i] % 2 === 1) {
-                        // 没有信息的像素，该通道最低位置0，但不要越界
-                        if (oData[i] === 255) {
-                            oData[i]--;
-                        } else {
-                            oData[i]++;
-                        }
-                    } else if (newData[i + offset] !== 0 && oData[i] % 2 === 0) {
-                        // // 有信息的像素，该通道最低位置1，可以想想上面的斑点效果是怎么实现的
-                        if (oData[i] === 255) {
-                            oData[i]--;
-                        } else {
-                            oData[i]++;
-                        }
-                    }
-                }
-            }
-            ctx.putImageData(originalData, 0, 0);
-        },
         //导出图片
         exportCanvas() {
             const dataURL = this.canvas.toDataURL({
@@ -249,7 +159,7 @@ export default {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-        }, 
+        },
         //重置
         reload() {
             // window.location.reload();
