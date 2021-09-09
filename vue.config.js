@@ -1,6 +1,7 @@
 const path = require("path");
 const resolve = (dir) => path.join(__dirname, dir);
 module.exports = {
+    publicPath: "./",
     outputDir: "docs", // 输出文件目录
     devServer: {
         port: 9425,
