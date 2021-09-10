@@ -10,11 +10,23 @@
 import { fabric } from "fabric";
 export default {
     data() {
-        return { text: "???" };
+        return { text: "???", ctx: null, canvas: null };
     },
     created() {},
     mounted() {
         this.generate();
+        //初始化画布
+        this.canvas = new fabric.Canvas("canvas", {
+            isDrawingMode: false, //自由绘画模式
+            selectable: false,
+            selection: false,
+            hoverCursor: "pointer",
+            devicePixelRatio: true, //Retina 高清屏 屏幕支持
+            stroke: "lightgreen",
+            strokeWidth: 4,
+        });
+        this.ctx = canvas.getContext("2d");
+        this.addCanvasEvent(); //给画布添加事件
     },
     methods: {
         generate() {
@@ -76,7 +88,7 @@ export default {
             canvas.add(rect); */
             // let canvas = new fabric.StaticCanvas("canvas");
             // 创建一个矩形对象
-            /* let rect = new fabric.Rect({
+            let rect = new fabric.Rect({
                 left: 200, //距离左边的距离
                 top: 200, //距离上边的距离
                 fill: "green", //填充的颜色
@@ -100,7 +112,7 @@ export default {
             });
             // 将图形形添加到canvas画布上
             canvas.add(rect);
-            canvas.add(circle, triangle); */
+            canvas.add(circle, triangle);
 
             //绘制图片
 
@@ -155,9 +167,9 @@ export default {
                 canvas.add(text);
                 console.log(options.e.clientX, options.e.clientY);
             }); */
-            canvas.isDrawingMode = true;
-            canvas.freeDrawingBrush.color = "blue";
-            canvas.freeDrawingBrush.width = 5;
+            // canvas.isDrawingMode = true;
+            // canvas.freeDrawingBrush.color = "blue";
+            // canvas.freeDrawingBrush.width = 5;
         },
         exportCanvas() {
             const dataURL = this.canvas.toDataURL({
@@ -173,6 +185,75 @@ export default {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }, //添加画布事件
+        addCanvasEvent() {
+            //画布重绘
+            this.canvas.on("after:render", (e) => {});
+            //有对象添加进来
+            this.canvas.on("object:added", (e) => {});
+            //鼠标单击
+            this.canvas.on("mouse:down", (e) => {
+                //ALT键盘+单击,获取当前光标处像素的值
+                if (e.e.ctrlKey) {
+                    let mouse = this.canvas.getPointer(e.e);
+                    let x = parseInt(mouse.x);
+                    let y = parseInt(mouse.y);
+                    let px = this.ctx.getImageData(x, y, 1, 1).data;
+                    console.log(
+                        `%c x,y:(${x},${y})/rgba(${px[0]},${px[1]},${px[2]},${px[3]})`,
+                        `background: rgba(${px[0]},${px[1]},${px[2]},${px[3]});`
+                    );
+                }
+            });
+            // 滚轮事件
+            this.canvas.on("mouse:wheel", (e) => {
+                e.e.preventDefault();
+                e.e.stopPropagation();
+                let ZOOM = 0.05;
+                let point = new fabric.Point(this.canvas.width / 2 - 1, this.canvas.height / 2 - 1);
+                //(alt + whell 缩放)
+                if (!e.e.ctrlKey) {
+                    return;
+                } else if (e.e.altKey && e.e.ctrlKey) {
+                    //(ctrl + alt + whell 加速缩放)
+                    // ZOOM = 0.1;
+                    point = new fabric.Point(e.pointer.x, e.pointer.y);
+                }
+                this.zoom = (e.e.deltaY > 0 ? -ZOOM : ZOOM) + this.canvas.getZoom();
+                this.zoom = Math.max(0.1, this.zoom); //最小为原来的0.1倍
+                this.zoom = Math.min(10, this.zoom); //最大是原来的10倍
+                this.canvas.zoomToPoint(point, this.zoom);
+            });
+            //画布随着鼠标移动。
+            this.canvas.on({
+                "mouse:down": (e) => {
+                    if (e.e.altKey) {
+                        this.panning = true;
+                        this.canvas.selection = false;
+                    }
+                },
+                "mouse:up": (e) => {
+                    this.panning = false;
+                    this.canvas.selection = true;
+                },
+                "mouse:move": (e) => {
+                    if (this.panning && e && e.e) {
+                        let delta = new fabric.Point(e.e.movementX, e.e.movementY);
+                        this.canvas.relativePan(delta);
+                    }
+                },
+            });
+            this.canvas.on({
+                //对象被移动时,添加透明效果
+                "object:moving": function (e) {
+                    console.log(123);
+                    e.target.opacity = 0.5;
+                },
+                //对象被改变后
+                "object:modified": function (e) {
+                    e.target.opacity = 1;
+                },
+            });
         },
     },
 };

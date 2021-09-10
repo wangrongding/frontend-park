@@ -49,7 +49,6 @@
 /* eslint-disable */
 import { fabric } from "fabric";
 export default {
-    name: "Home",
     components: {},
     data() {
         return { loading: false, ctx: null, canvas: null, watermark: null };

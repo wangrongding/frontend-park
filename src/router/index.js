@@ -9,11 +9,23 @@ const routes = [
     {
         path: "/",
         component: layout,
-        redirect: "/text",
+        name: "首页",
+        redirect: "/home",
+        children: [
+            {
+                path: "home",
+                component: () => import("../views/home.vue"),
+            },
+        ],
+    },
+    {
+        path: "/text",
+        component: layout,
+        redirect: "/text/index",
         name: "文字隐写",
         children: [
             {
-                path: "text",
+                path: "index",
                 component: () => import("../views/text-steganography.vue"),
             },
         ],
@@ -23,7 +35,6 @@ const routes = [
         redirect: "/enImg/index",
         component: layout,
         name: "图片隐写",
-
         children: [
             {
                 path: "index",
@@ -43,6 +54,7 @@ const routes = [
             },
         ],
     },
+
     {
         path: "/pixel-image",
         redirect: "/pixel-image/index",
@@ -52,6 +64,18 @@ const routes = [
             {
                 path: "index",
                 component: () => import("../views/pixel-image.vue"),
+            },
+        ],
+    },
+    {
+        path: "/test",
+        redirect: "/test/index",
+        name: "测试",
+        component: layout,
+        children: [
+            {
+                path: "index",
+                component: () => import("../views/test.vue"),
             },
         ],
     },

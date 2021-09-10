@@ -60,7 +60,6 @@ import { fabric } from "fabric";
 import { inputFile } from "@utils/inputFile.js";
 
 export default {
-    name: "Home",
     components: {},
     data() {
         return { loading: false, ctx: null, canvas: null, blockList: [], hiddenData: null };

@@ -23,6 +23,7 @@
             </el-menu-item>
         </el-menu>
         <div class="content">
+            <!-- <div class="content" :style="`background: ${contentBackground};`"> -->
             <transition name="fade" mode="out-in">
                 <router-view v-if="isRouterAlive" />
             </transition>
@@ -31,15 +32,22 @@
 </template>
 
 <script>
+import { color } from "@/utils/china-color.js";
 export default {
     components: {},
     props: {},
     data() {
-        return { activeIndex: "1", isRouterAlive: true };
+        return { activeIndex: "1", isRouterAlive: true, color };
     },
-    computed: {},
+    computed: {
+        contentBackground() {
+            return "#41ae3c";
+        },
+    },
     watch: {},
-    created() {},
+    created() {
+        console.log(color);
+    },
     mounted() {},
     provide() {
         return {

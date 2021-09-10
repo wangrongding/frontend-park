@@ -36,7 +36,6 @@ import { inputFile } from "@utils/inputFile.js";
 import { mostBlockColor } from "@utils/mostBlockColor.js";
 import { fabric } from "fabric";
 export default {
-    name: "Home",
     components: {},
     data() {
         return {
@@ -408,6 +407,7 @@ export default {
             this.canvas.on({
                 //对象被移动时,添加透明效果
                 "object:moving": function (e) {
+                    console.log(e);
                     e.target.opacity = 0.5;
                 },
                 //对象被改变后
