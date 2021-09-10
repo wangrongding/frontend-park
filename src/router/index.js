@@ -14,7 +14,7 @@ const routes = [
         children: [
             {
                 path: "home",
-                component: () => import("../views/home.vue"),
+                component: () => import("@/views/home.vue"),
             },
         ],
     },
@@ -26,7 +26,7 @@ const routes = [
         children: [
             {
                 path: "index",
-                component: () => import("../views/text-steganography.vue"),
+                component: () => import("@/views/text-steganography.vue"),
             },
         ],
     },
@@ -38,7 +38,7 @@ const routes = [
         children: [
             {
                 path: "index",
-                component: () => import("../views/img-steganography.vue"),
+                component: () => import("@/views/img-steganography.vue"),
             },
         ],
     },
@@ -50,7 +50,7 @@ const routes = [
         children: [
             {
                 path: "index",
-                component: () => import("../views/img-decryption.vue"),
+                component: () => import("@/views/img-decryption.vue"),
             },
         ],
     },
@@ -63,7 +63,7 @@ const routes = [
         children: [
             {
                 path: "index",
-                component: () => import("../views/pixel-image.vue"),
+                component: () => import("@/views/pixel-image.vue"),
             },
         ],
     },
@@ -75,7 +75,7 @@ const routes = [
         children: [
             {
                 path: "index",
-                component: () => import("../views/test.vue"),
+                component: () => import("@/views/test.vue"),
             },
         ],
     },

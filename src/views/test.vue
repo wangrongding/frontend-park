@@ -97,15 +97,15 @@ export default {
             });
             // 创建一个圆形对象
             let circle = new fabric.Circle({
-                left: 0, //距离左边的距离
-                top: 0, //距离上边的距离
+                left: 500, //距离左边的距离
+                top: 300, //距离上边的距离
                 fill: "red", //填充的颜色
                 radius: 50, //圆的半径
             });
             // 创建一个三角形对象
             let triangle = new fabric.Triangle({
-                left: 200, //距离左边的距离
-                top: 0, //距离上边的距离
+                left: 400, //距离左边的距离
+                top: 50, //距离上边的距离
                 fill: "blue", //填充的颜色
                 width: 100, //宽度
                 height: 100, //高度
@@ -115,8 +115,7 @@ export default {
             canvas.add(circle, triangle);
 
             //绘制图片
-
-            fabric.Image.fromURL(
+            /* fabric.Image.fromURL(
                 "https://img2.baidu.com/it/u=2067045147,1367384486&fm=26&fmt=auto&gp=0.jpg",
                 (img) => {
                     // 添加滤镜
@@ -130,12 +129,16 @@ export default {
                     canvas.add(img);
                 },
                 { crossOrigin: "anonymous" }
-            );
+            ); */
 
-            /* fabric.Image.fromURL("../assets/rd.png", function (img) {
+            fabric.Image.fromURL(require("../assets/qr.jpg"), function (img) {
                 img.scale(0.5);
+                img.set({
+                    left: 50,
+                    top: 50,
+                });
                 canvas.add(img);
-            }); */
+            });
 
             /* let customPath = new fabric.Path(
                 "M 0 0 L 300 100 L 170 100 L 70 300 L 20 200 C136.19,2.98,128.98,0,121.32,0 z"
