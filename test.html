@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <style>
+            .around {
+                position: relative;
+                width: 200px;
+                height: 300px;
+                margin: 50px auto;
+                background-color: #000005;
+                cursor: pointer;
+            }
+            .around::before,
+            .around::after {
+                content: "";
+                position: absolute;
+                border: 10px dotted green;
+                animation: move 5s linear infinite;
+                opacity: 1;
+            }
+            .around::after {
+                animation-delay: -2.5s;
+            }
+            @keyframes move {
+                0% {
+                    top: -51px;
+                    left: -51px;
+                    width: 440px;
+                    height: 0;
+                }
+                25% {
+                    top: -51px;
+                    left: -51px;
+                    width: 0;
+                    height: 340px;
+                }
+                50% {
+                    top: 318px;
+                    left: -51px;
+                    width: 440px;
+                    height: 0;
+                }
+                75% {
+                    top: -51px;
+                    left: 218px;
+                    width: 0;
+                    height: 340px;
+                }
+                100% {
+                    top: -51px;
+                    left: -51px;
+                    width: 440px;
+                    height: 0;
+                }
+            }
+        </style>
+        <div class="around"></div>
+    </body>
+</html>

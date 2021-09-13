@@ -32,12 +32,12 @@
 </template>
 
 <script>
-import { color } from "@/utils/china-color.js";
+// import { color } from "@/utils/china-color.js";
 export default {
     components: {},
     props: {},
     data() {
-        return { activeIndex: "1", isRouterAlive: true, color };
+        return { activeIndex: "1", isRouterAlive: true /* color */ };
     },
     computed: {
         contentBackground() {
@@ -46,7 +46,7 @@ export default {
     },
     watch: {},
     created() {
-        console.log(color);
+        // console.log(color);
     },
     mounted() {},
     provide() {
@@ -68,8 +68,11 @@ export default {
 <style scoped lang="scss">
 .page-container {
     .content {
-        height: calc(100vh - 62px);
+        height: calc(100vh - 60px);
         overflow: hidden;
     }
+}
+.el-menu.el-menu--horizontal {
+    border: none;
 }
 </style>

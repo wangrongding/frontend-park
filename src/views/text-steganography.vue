@@ -30,7 +30,7 @@ export default {
                 this.hiddenText
                     .split("")
                     //['荣', '顶' ]
-                    .map((char) => char.charCodeAt(0).toString(2))
+                    .map((char) => char.codePointAt(0).toString(2))
                     // ['1000001101100011','1001100001110110']
                     .join(" ")
                     //"1000001101100011 1001100001110110"
@@ -118,7 +118,7 @@ export default {
 </script>
 <template>
     <div class="steganography">
-        <h2>加密:</h2>
+        <h2>加密:🔒</h2>
         <p>将要嵌入密文的明文:</p>
         <el-input v-model="text" placeholder="输入文本" size="normal" clearable></el-input>
         <p>嵌入的密文</p>
@@ -143,8 +143,8 @@ export default {
             size="normal"
             clearable
         ></el-input>
-        <h2 style="margin-top: 100px">解密:</h2>
-        <p>将-上方的文本-复制黏贴到下方输入框:</p>
+        <h2 style="margin-top: 100px">解密:🔓</h2>
+        <p>将隐写后的文本-复制黏贴到这里👇:</p>
         <el-input
             v-model="tempText"
             placeholder="将生成的隐写文本-复制黏贴到我里面来!"

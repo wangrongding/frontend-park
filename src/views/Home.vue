@@ -29,9 +29,15 @@ export default {
     watch: {},
     created() {},
     mounted() {
-        this.windowInnerHeight = window.innerHeight;
+        this.setIFrameSize();
+        window.addEventListener("resize", this.setIFrameSize);
     },
-    methods: {},
+    methods: {
+        setIFrameSize() {
+            console.log("resize", window.innerHeight);
+            this.windowInnerHeight = window.innerHeight;
+        },
+    },
 };
 </script>
 
