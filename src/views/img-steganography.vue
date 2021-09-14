@@ -10,7 +10,7 @@ export default {
             loading: false,
             ctx: null,
             canvas: null,
-            blockList: [],
+            targetData: null,
             hiddenData: null,
             canvasJson: {},
         };
@@ -42,7 +42,7 @@ export default {
             this.ctx = this.canvas.getContext("2d");
             // this.canvas.isDrawingMode = true;
             this.canvas.freeDrawingBrush.color = "blue";
-            this.canvas.freeDrawingBrush.width = 5;
+            this.canvas.freeDrawingBrush.width = 20;
             // this.addCanvasEvent(); //给画布添加事件
         },
         //素材图片选择回调
@@ -87,13 +87,17 @@ export default {
             //因为需要八个像素的最低位才可以表示一个小画布的像素的RGBA值
             tempCanvas.width = Math.floor(Math.sqrt((this.canvas.width * this.canvas.height) / 8));
             tempCanvas.height = Math.floor(Math.sqrt((this.canvas.width * this.canvas.height) / 8));
-
             var image = new Image();
             image.src = this.canvas.toDataURL("image/png");
             image.onload = () => {
+                //绘制图像到临时的小画布
                 tempCtx.drawImage(image, 0, 0, tempCanvas.width, tempCanvas.height);
                 this.hiddenData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
-                console.log(this.hiddenData);
+                this.hiddenData.binaryList = Array.from(this.hiddenData.data, (color) => {
+                    color = color.toString(2).padStart(8, "0").split("");
+                    return color;
+                });
+                console.log(this.hiddenData, "hiddenData");
                 this.$message({
                     type: "success",
                     message: "保存成功!请选择目标图片~",
@@ -101,55 +105,66 @@ export default {
                 this.canvas.clear();
             };
         },
+
         //获取画布像素数据
         getCanvasData() {
-            this.blockList = [];
-            let tempColorData = this.ctx.getImageData(
-                0,
-                0,
-                this.canvas.width,
-                this.canvas.height
-            ).data;
+            this.targetData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+            //将数字化为非奇数
             function evenNum(num) {
                 num = num > 254 ? num - 1 : num;
                 num = num % 2 == 1 ? num - 1 : num;
                 return num;
             }
-            for (let i = 0; i < tempColorData.length; i++) {
-                this.blockList.push(
-                    // evenNum(tempColorData[i]),
-                    evenNum(tempColorData[i]).toString(2).padStart(8, "0").split("")
-                );
-            }
-            // for (let i = 0; i < tempColorData.length; i += 4) {
-            //     this.blockList.push([
-            //         evenNum(tempColorData[i]).toString(2).padStart(8, "0").split(""),
-            //         evenNum(tempColorData[i + 1])
-            //             .toString(2)
-            //             .padStart(8, "0")
-            //             .split(""),
-            //         evenNum(tempColorData[i + 2])
-            //             .toString(2)
-            //             .padStart(8, "0")
-            //             .split(""),
-            //         evenNum(tempColorData[i + 3])
-            //             .toString(2)
-            //             .padStart(8, "0")
-            //             .split(""),
-            //         // evenNum(tempColorData[i]),
-            //         // evenNum(tempColorData[i + 1]),
-            //         // evenNum(tempColorData[i + 2]),
-            //         // evenNum(tempColorData[i + 3]),
-            //         // tempColorData[i],
-            //         // tempColorData[i + 1],
-            //         // tempColorData[i + 2],
-            //         // tempColorData[i + 3],
-            //     ]);
-            // }
-            console.log(this.blockList);
+            //存一个二进制的数值表示
+            this.targetData.binaryList = Array.from(this.targetData.data, (color, index) => {
+                this.targetData.data[index] = evenNum(this.targetData.data[index]);
+                color = evenNum(color).toString(2).padStart(8, "0").split("");
+                return color;
+            });
+            console.log(this.targetData);
             this.loading = false;
         },
-        drawHiddenData() {},
+        //将隐写的资源图片数据存到目标图片的二进制最低位中
+        drawHiddenData() {
+            //将隐藏的数据的二进制全部放到一个数组里面
+            let bigHiddenList = [];
+            for (let i = 0; i < this.hiddenData.binaryList.length; i++) {
+                bigHiddenList.push(...this.hiddenData.binaryList[i]);
+            }
+            console.log(bigHiddenList, "bigHiddenList");
+            this.targetData.binaryList.forEach((item, index) => {
+                bigHiddenList[index] && (item[7] = bigHiddenList[index]);
+            });
+            this.canvas.clear();
+            this.targetData.data.forEach((item, index) => {
+                this.targetData.data[index] = parseInt(
+                    this.targetData.binaryList[index].join(""),
+                    2
+                );
+            });
+
+            const tempCanvas = document.createElement("canvas");
+            tempCanvas.width = 800;
+            tempCanvas.height = 800;
+            let ctx = tempCanvas.getContext("2d");
+            ctx.putImageData(this.targetData, 0, 0);
+            fabric.Image.fromURL(tempCanvas.toDataURL(), (i) => {
+                this.canvas.clear();
+                this.canvas.add(i);
+                this.canvas.renderAll();
+            });
+            /* setTimeout(() => {
+                this.ctx.putImageData(this.targetData, 0, 0);
+            }, 2000); */
+            this.$message({
+                type: "success",
+                message: "加密成功!",
+            });
+            console.log(this.hiddenData.binaryList, "binaryList");
+            console.log(this.targetData.binaryList, "targetData");
+            console.log(this.hiddenData, "hiddenData");
+            console.log(this.targetData, "targetData");
+        },
         //加载隐藏的画布数据到画布
         loadhiddenData() {
             console.log(this.hiddenData, "this.hiddenData");
@@ -167,7 +182,8 @@ export default {
         },
         //加载json数据到canvas
         loadJsonToCanvas() {
-            this.canvas.loadFromJSON(this.canvasJson);
+            // this.canvas.loadFromJSON(this.canvasJson);
+            // this.canvas.loadFromJSON(this.hiddenData);
             console.log(this.canvasJson, "this.canvasJson ");
         },
         //重置
@@ -238,20 +254,20 @@ export default {
                     type="primary"
                     style="width: 100%; margin: 10px auto"
                     size="default"
-                    @click="inputFile"
+                    @click="drawHiddenData"
                 >
                     开始加密
                 </el-button>
                 5.加密完成,点击生成图片下载加密后的图片
                 <el-button
-                    type="primary"
+                    type="success"
                     style="width: 100%; margin: 10px auto"
                     size="default"
                     @click="exportCanvas"
                 >
-                    生成图片
+                    导出加密后的图片
                 </el-button>
-                <el-button
+                <!-- <el-button
                     type="success"
                     style="width: 100%; margin: 10px auto"
                     size="default"
@@ -266,25 +282,26 @@ export default {
                     @click="canvasToJson"
                 >
                     canvasToJson
-                </el-button>
-                <el-button
+                </el-button> -->
+                <!-- <el-button
                     type="success"
                     style="width: 100%; margin: 10px auto"
                     size="default"
                     @click="loadJsonToCanvas"
                 >
                     loadJsonToCanvas
-                </el-button>
-                <el-button
+                </el-button> -->
+
+                <!-- <el-button
                     type="success"
                     style="width: 100%; margin: 10px auto"
                     size="default"
                     @click="loadhiddenData"
                 >
                     loadhiddenData
-                </el-button>
+                </el-button> -->
                 <el-button
-                    type="success"
+                    type="warning"
                     style="width: 100%; margin: 10px auto"
                     size="default"
                     @click="reload"

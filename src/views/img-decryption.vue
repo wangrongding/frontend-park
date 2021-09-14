@@ -19,10 +19,21 @@
                     type="primary"
                     style="width: 100%; margin: 10px auto"
                     size="default"
-                    @click="getCanvasData('hiddenData')"
+                    @click="decryptImage"
                 >
-                    保存隐写的信息
+                    解析图片
                 </el-button>
+                <p style="margin: 10px 0">图片中隐藏的数据:</p>
+                <canvas
+                    width="280"
+                    height="280"
+                    id="decryptCanvas"
+                    style="
+                        border: 1px dashed #749feb;
+                        background-color: white;
+                        box-sizing: border-box;
+                    "
+                ></canvas>
             </div>
         </div>
     </div>
@@ -34,7 +45,7 @@ import { inputFile } from "@utils/inputFile.js";
 export default {
     components: {},
     data() {
-        return { loading: false, ctx: null, canvas: null, blockList: [], hiddenData: null };
+        return { loading: false, ctx: null, canvas: null, targetData: null, hiddenData: null };
     },
     inject: ["contentReload"],
     watch: {
@@ -102,47 +113,46 @@ export default {
         },
         //获取画布像素数据
         getCanvasData() {
-            this.blockList = [];
-            let tempColorData = this.ctx.getImageData(
-                0,
-                0,
-                this.canvas.width,
-                this.canvas.height
-            ).data;
-            function evenNum(num) {
-                num = num > 254 ? num - 1 : num;
-                num = num % 2 == 1 ? num - 1 : num;
-                return num;
-            }
-            for (let i = 0; i < tempColorData.length; i += 4) {
-                this.blockList.push([
-                    /* evenNum(tempColorData[i]).toString(2).padStart(8, "0").split(""),
-                    evenNum(tempColorData[i + 1])
-                        .toString(2)
-                        .padStart(8, "0")
-                        .split(""),
-                    evenNum(tempColorData[i + 2])
-                        .toString(2)
-                        .padStart(8, "0")
-                        .split(""),
-                    evenNum(tempColorData[i + 3])
-                        .toString(2)
-                        .padStart(8, "0")
-                        .split(""), */
-                    evenNum(tempColorData[i]),
-                    evenNum(tempColorData[i + 1]),
-                    evenNum(tempColorData[i + 2]),
-                    evenNum(tempColorData[i + 3]),
-                    // tempColorData[i],
-                    // tempColorData[i + 1],
-                    // tempColorData[i + 2],
-                    // tempColorData[i + 3],
-                ]);
-            }
-            console.log(this.blockList);
+            this.targetData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+            //存一个二进制的数值表示
+            this.targetData.binaryList = Array.from(this.targetData.data, (color, index) => {
+                color = color.toString(2).padStart(8, "0").split("");
+                return color;
+            });
+            console.log(this.targetData);
             this.loading = false;
         },
-        drawHiddenData() {},
+        //解析图片
+        decryptImage() {
+            const c = document.getElementById("decryptCanvas");
+            const ctx = c.getContext("2d");
+
+            let decryptImageData = [];
+
+            for (let i = 0; i < this.targetData.binaryList.length; i += 8) {
+                let tempColorData = [];
+                for (let j = 0; j < 8; j++) {
+                    tempColorData.push(this.targetData.binaryList[i + j][7]);
+                }
+                decryptImageData.length < Math.pow(Math.floor(Math.sqrt(2560000 / 32)), 2) * 4 &&
+                    decryptImageData.push([...tempColorData]);
+            }
+            decryptImageData = Uint8ClampedArray.from(decryptImageData, (z) => {
+                z = parseInt(z.join(""), 2);
+                return z;
+            });
+            console.log(decryptImageData, "decryptImageData");
+            //需要注意的是putImageData的data的长度必须为两个边的乘积的4的倍数
+            ctx.putImageData(
+                new ImageData(
+                    decryptImageData,
+                    Math.floor(Math.sqrt(2560000 / 8 / 4)),
+                    Math.floor(Math.sqrt(2560000 / 8 / 4))
+                ),
+                0,
+                0
+            );
+        },
         //导出图片
         exportCanvas() {
             const dataURL = this.canvas.toDataURL({
