@@ -35,7 +35,7 @@ export default {
     methods: {
         setIFrameSize() {
             console.log("resize", window.innerHeight);
-            this.windowInnerHeight = window.innerHeight;
+            this.windowInnerHeight = window.innerHeight - 60;
         },
     },
 };

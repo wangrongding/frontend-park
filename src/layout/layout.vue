@@ -69,7 +69,7 @@ export default {
 .page-container {
     .content {
         height: calc(100vh - 60px);
-        overflow: hidden;
+        overflow-y: auto;
     }
 }
 .el-menu.el-menu--horizontal {
