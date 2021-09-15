@@ -21,6 +21,9 @@
             <el-menu-item>
                 <a href="https://fedtop.com" target="_blank">我的博客</a>
             </el-menu-item>
+            <el-menu-item>
+                <a href="https://github.com/wangrongding" target="_blank">GitHub</a>
+            </el-menu-item>
         </el-menu>
         <div class="content">
             <!-- <div class="content" :style="`background: ${contentBackground};`"> -->
