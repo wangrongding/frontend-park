@@ -34,11 +34,8 @@ export default {
             let magic = Math.sin(radLat);
             magic = 1 - ee * magic * magic;
             const sqrtMagic = Math.sqrt(magic);
-            dLat =
-                (dLat * 180.0) /
-                (((a * (1 - ee)) / (magic * sqrtMagic)) * this.PI);
-            dLon =
-                (dLon * 180.0) / ((a / sqrtMagic) * Math.cos(radLat) * this.PI);
+            dLat = (dLat * 180.0) / (((a * (1 - ee)) / (magic * sqrtMagic)) * this.PI);
+            dLon = (dLon * 180.0) / ((a / sqrtMagic) * Math.cos(radLat) * this.PI);
             return { lat: dLat, lon: dLon };
         },
         // WGS-84 to GCJ-02
@@ -101,8 +98,7 @@ export default {
         bd_encrypt(gcjLat, gcjLon) {
             const x = gcjLon;
             const y = gcjLat;
-            const z =
-                Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * this.x_pi);
+            const z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * this.x_pi);
             const theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * this.x_pi);
             const bdLon = z * Math.cos(theta) + 0.0065;
             const bdLat = z * Math.sin(theta) + 0.006;
@@ -112,8 +108,7 @@ export default {
         bd_decrypt(bdLat, bdLon) {
             const x = bdLon - 0.0065;
             const y = bdLat - 0.006;
-            const z =
-                Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * this.x_pi);
+            const z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * this.x_pi);
             const theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * this.x_pi);
             const gcjLon = z * Math.cos(theta);
             const gcjLat = z * Math.sin(theta);
@@ -123,9 +118,7 @@ export default {
         // mercatorLat -> y mercatorLon -> x
         mercator_encrypt: function (wgsLat, wgsLon) {
             const x = (wgsLon * 20037508.34) / 180.0;
-            let y =
-                Math.log(Math.tan(((90.0 + wgsLat) * this.PI) / 360.0)) /
-                (this.PI / 180.0);
+            let y = Math.log(Math.tan(((90.0 + wgsLat) * this.PI) / 360.0)) / (this.PI / 180.0);
             y = (y * 20037508.34) / 180.0;
             return { lat: y, lon: x };
             /*
@@ -142,9 +135,7 @@ export default {
         mercator_decrypt: function (mercatorLat, mercatorLon) {
             const x = (mercatorLon / 20037508.34) * 180.0;
             let y = (mercatorLat / 20037508.34) * 180.0;
-            y =
-                (180 / this.PI) *
-                (2 * Math.atan(Math.exp((y * this.PI) / 180.0)) - this.PI / 2);
+            y = (180 / this.PI) * (2 * Math.atan(Math.exp((y * this.PI) / 180.0)) - this.PI / 2);
             return { lat: y, lon: x };
             /*
          if (Math.abs(mercatorLon) < 180 && Math.abs(mercatorLat) < 90)
@@ -164,9 +155,7 @@ export default {
                 Math.cos((latA * this.PI) / 180.0) *
                 Math.cos((latB * this.PI) / 180.0) *
                 Math.cos(((lonA - lonB) * this.PI) / 180);
-            const y =
-                Math.sin((latA * this.PI) / 180.0) *
-                Math.sin((latB * this.PI) / 180.0);
+            const y = Math.sin((latA * this.PI) / 180.0) * Math.sin((latB * this.PI) / 180.0);
             let s = x + y;
             if (s > 1) {
                 s = 1;
@@ -196,43 +185,26 @@ export default {
                 0.1 * x * y +
                 0.2 * Math.sqrt(Math.abs(x));
             ret +=
-                ((20.0 * Math.sin(6.0 * x * this.PI) +
-                    20.0 * Math.sin(2.0 * x * this.PI)) *
-                    2.0) /
+                ((20.0 * Math.sin(6.0 * x * this.PI) + 20.0 * Math.sin(2.0 * x * this.PI)) * 2.0) /
                 3.0;
             ret +=
-                ((20.0 * Math.sin(y * this.PI) +
-                    40.0 * Math.sin((y / 3.0) * this.PI)) *
-                    2.0) /
-                3.0;
+                ((20.0 * Math.sin(y * this.PI) + 40.0 * Math.sin((y / 3.0) * this.PI)) * 2.0) / 3.0;
             ret +=
-                ((160.0 * Math.sin((y / 12.0) * this.PI) +
-                    320 * Math.sin((y * this.PI) / 30.0)) *
+                ((160.0 * Math.sin((y / 12.0) * this.PI) + 320 * Math.sin((y * this.PI) / 30.0)) *
                     2.0) /
                 3.0;
             return ret;
         },
         transformLon(x, y) {
             let ret =
-                300.0 +
-                x +
-                2.0 * y +
-                0.1 * x * x +
-                0.1 * x * y +
-                0.1 * Math.sqrt(Math.abs(x));
+                300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * Math.sqrt(Math.abs(x));
             ret +=
-                ((20.0 * Math.sin(6.0 * x * this.PI) +
-                    20.0 * Math.sin(2.0 * x * this.PI)) *
-                    2.0) /
+                ((20.0 * Math.sin(6.0 * x * this.PI) + 20.0 * Math.sin(2.0 * x * this.PI)) * 2.0) /
                 3.0;
             ret +=
-                ((20.0 * Math.sin(x * this.PI) +
-                    40.0 * Math.sin((x / 3.0) * this.PI)) *
-                    2.0) /
-                3.0;
+                ((20.0 * Math.sin(x * this.PI) + 40.0 * Math.sin((x / 3.0) * this.PI)) * 2.0) / 3.0;
             ret +=
-                ((150.0 * Math.sin((x / 12.0) * this.PI) +
-                    300.0 * Math.sin((x / 30.0) * this.PI)) *
+                ((150.0 * Math.sin((x / 12.0) * this.PI) + 300.0 * Math.sin((x / 30.0) * this.PI)) *
                     2.0) /
                 3.0;
             return ret;

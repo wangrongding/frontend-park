@@ -1,6 +1,7 @@
 <template>
     <div class="page-container">
-        <el-menu
+        <Menu />
+        <!-- <el-menu
             :default-active="activeIndex"
             class="el-menu-demo"
             mode="horizontal"
@@ -24,7 +25,7 @@
             <el-menu-item>
                 <a href="https://github.com/wangrongding" target="_blank">GitHub</a>
             </el-menu-item>
-        </el-menu>
+        </el-menu> -->
         <div class="content">
             <!-- <div class="content" :style="`background: ${contentBackground};`"> -->
             <transition name="fade" mode="out-in">
@@ -35,9 +36,10 @@
 </template>
 
 <script>
+import Menu from "./menu/menu.vue";
 // import { color } from "@/utils/china-color.js";
 export default {
-    components: {},
+    components: { Menu },
     props: {},
     data() {
         return { activeIndex: "1", isRouterAlive: true /* color */ };
