@@ -1,6 +1,10 @@
 <template>
     <div class="page-container">
-        <Menu />
+        <MenuList
+            :routers="$router.options.routes"
+            :is-collapse="isCollapse"
+            :active-route="activeRoute"
+        />
         <!-- <el-menu
             :default-active="activeIndex"
             class="el-menu-demo"
@@ -36,20 +40,34 @@
 </template>
 
 <script>
-import Menu from "./menu/menu.vue";
+import MenuList from "./menu/MenuList.js";
+// import Menu from "./menu/menu.vue";
 // import { color } from "@/utils/china-color.js";
 export default {
-    components: { Menu },
+    components: { MenuList },
     props: {},
     data() {
-        return { activeIndex: "1", isRouterAlive: true /* color */ };
+        return {
+            activeIndex: "1",
+            isRouterAlive: true /* color */,
+            activeRoute: "",
+            isCollapse: true,
+        };
     },
     computed: {
         contentBackground() {
             return "#41ae3c";
         },
     },
-    watch: {},
+    watch: {
+        $route: {
+            handler(route) {
+                this.activeRoute = route.path;
+                console.log("activeRoute", this.activeRoute);
+            },
+            immediate: true,
+        },
+    },
     created() {
         // console.log(color);
     },

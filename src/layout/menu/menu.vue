@@ -18,7 +18,8 @@
 </template>
 
 <script>
-import MenuItem from "./menu-item.vue"; //引进菜单模板
+// import MenuItem from "./menu-item.vue"; //引进菜单模板
+import MenuItem from "./menu-item.js"; //引进菜单模板
 export default {
     data() {
         return {
