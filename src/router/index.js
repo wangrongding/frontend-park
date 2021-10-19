@@ -77,6 +77,18 @@ const routes = [
         ],
     },
     {
+        path: "/siteMap",
+        redirect: "/siteMap/index",
+        name: "超人导航",
+        component: layout,
+        children: [
+            {
+                path: "index",
+                component: () => import("@/views/siteMap/index.vue"),
+            },
+        ],
+    },
+    {
         custom: true,
         path: "https://fedtop.com",
         name: "我的博客",
