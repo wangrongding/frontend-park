@@ -40,6 +40,18 @@ const routes = [
             },
         ],
     },
+    /*  {
+        path: "/image",
+        name: "图像处理",
+        component: layout,
+        children: [
+            {
+                path: "pixel-image",
+                name: "千图成像",
+                component: () => import("@/views/pixel-image.vue"),
+            },
+        ],
+    }, */
     {
         path: "/pixel-image",
         redirect: "/pixel-image/index",
@@ -63,6 +75,16 @@ const routes = [
                 component: () => import("@/views/test.vue"),
             },
         ],
+    },
+    {
+        custom: true,
+        path: "https://fedtop.com",
+        name: "我的博客",
+    },
+    {
+        custom: true,
+        path: "https://github.com/wangrongding",
+        name: "GitHub",
     },
 ];
 

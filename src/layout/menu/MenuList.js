@@ -1,6 +1,17 @@
 import Vue from "vue";
 function loopDom(createElement, routers, path) {
     return routers.map((route) => {
+        if (route.custom) {
+            return createElement("el-menu-item", [
+                createElement("a", {
+                    domProps: { href: route.path, target: "_blank", innerHTML: route.name },
+                    style: {
+                        height: "60px",
+                        display: "block",
+                    },
+                }),
+            ]);
+        }
         const relativePath = path ? `${path}/${route.path}` : route.path;
         // console.log("relativePath: ", relativePath, "path: ", path, " route.path: ", route.path);
         if (route.children && route.children.length > 1) {
@@ -109,6 +120,8 @@ const menuList = Vue.component("menuList", {
     },
     methods: {
         menuClick(index, indexPath, c) {
+            /* if (!index) {
+            } */
             console.log(index, indexPath, c);
         },
     },
