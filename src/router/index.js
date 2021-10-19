@@ -14,7 +14,7 @@ const routes = [
         children: [
             {
                 path: "index",
-                component: () => import("@/views/home.vue"),
+                component: () => import("@/views/homePage.vue"),
             },
         ],
     },
@@ -65,14 +65,14 @@ const routes = [
         ],
     },
     {
-        path: "/test",
-        redirect: "/test/index",
-        name: "测试",
+        path: "/machine-learning",
+        redirect: "/machine-learning/index",
+        name: "机器学习",
         component: layout,
         children: [
             {
                 path: "index",
-                component: () => import("@/views/test.vue"),
+                component: () => import("@/views/machineLearning/tf.vue"),
             },
         ],
     },
@@ -85,6 +85,18 @@ const routes = [
             {
                 path: "index",
                 component: () => import("@/views/siteMap/index.vue"),
+            },
+        ],
+    },
+    {
+        path: "/test",
+        redirect: "/test/index",
+        name: "测试",
+        component: layout,
+        children: [
+            {
+                path: "index",
+                component: () => import("@/views/test.vue"),
             },
         ],
     },
