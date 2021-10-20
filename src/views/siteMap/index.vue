@@ -17,7 +17,7 @@
                     ></div>
                     <div class="content">
                         <p>{{ item.name }}</p>
-                        <p>{{ item.des }}</p>
+                        <p :title="item.des">{{ item.des }}</p>
                     </div>
                 </div>
             </div>
@@ -54,23 +54,20 @@ export default {
 <style scoped lang="scss">
 .page-container {
     .group {
-        // width: 100%;
         margin: 20px;
         border: 1px solid #727171;
         padding: 20px;
         .title {
             font-size: 20px;
             font-weight: 900;
-            // margin: 20px;
         }
         .list {
             display: grid;
             // grid-template-columns: repeat(5, 250px);
             // grid-template-rows: repeat(5, 250px);
             grid-template-columns: repeat(auto-fill, 320px);
-            // grid-gap: 20px;
+            // grid-gap: 20px;//间隙
             justify-content: space-around;
-            // padding: 20px;
             .item {
                 cursor: pointer;
                 width: 280px;
@@ -82,16 +79,34 @@ export default {
                 align-content: center;
                 align-items: center; /*垂直居中*/
                 flex-direction: row;
+                transition: all 1s;
+                background: white;
+                @keyframes changeBg {
+                    0% {
+                        background: white;
+                    }
+                    100% {
+                        background: #516fa3;
+                        color: white;
+                    }
+                }
                 &:hover {
-                    background: #91a8d0;
+                    // background: linear-gradient(to bottom, #516fa3, #91a8d0);
+                    animation: changeBg 1s;
+                    animation-fill-mode: forwards;
+                    border-radius: 50px;
+                    .item-image {
+                        border: 2px dotted #dbe9ff;
+                    }
                 }
                 .item-image {
-                    width: 60px;
-                    height: 60px;
-                    border: 1px solid #333;
+                    width: 56px;
+                    height: 56px;
+                    border: 2px dashed #333;
                     border-radius: 50%;
                     // object-fit: cover;
                     object-fit: contain;
+                    overflow: hidden;
                 }
 
                 .content {
@@ -103,7 +118,6 @@ export default {
                     }
                     & > p:last-child {
                         font-size: 12px;
-                        color: #727171;
                         width: 210px;
                         /* 
                         //单行省略
