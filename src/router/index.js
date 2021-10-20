@@ -14,7 +14,7 @@ const routes = [
         children: [
             {
                 path: "index",
-                component: () => import("@/views/homePage.vue"),
+                component: () => import("@/views/home.vue"),
             },
         ],
     },
@@ -26,17 +26,17 @@ const routes = [
             {
                 path: "text",
                 name: "文字隐写",
-                component: () => import("@/views/text-steganography.vue"),
+                component: () => import("@/views/steganography/text-steganography.vue"),
             },
             {
                 path: "enImg",
                 name: "图片隐写",
-                component: () => import("@/views/img-steganography.vue"),
+                component: () => import("@/views/steganography/img-steganography.vue"),
             },
             {
                 path: "deImg",
                 name: "图片解密",
-                component: () => import("@/views/img-decryption.vue"),
+                component: () => import("@/views/steganography/img-decryption.vue"),
             },
         ],
     },
@@ -60,7 +60,7 @@ const routes = [
         children: [
             {
                 path: "index",
-                component: () => import("@/views/pixel-image.vue"),
+                component: () => import("@/views/image-processing/pixel-image.vue"),
             },
         ],
     },
@@ -96,7 +96,7 @@ const routes = [
         children: [
             {
                 path: "index",
-                component: () => import("@/views/test.vue"),
+                component: () => import("@/views/other/test.vue"),
             },
         ],
     },

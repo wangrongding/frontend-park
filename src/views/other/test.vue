@@ -131,7 +131,7 @@ export default {
                 { crossOrigin: "anonymous" }
             ); */
 
-            fabric.Image.fromURL(require("../assets/qr.jpg"), function (img) {
+            fabric.Image.fromURL(require("@/assets/qr.jpg"), function (img) {
                 img.scale(0.5);
                 img.set({
                     left: 50,
