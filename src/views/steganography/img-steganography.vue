@@ -317,7 +317,6 @@ export default {
     transition: width 0.28s;
     width: 100vw;
     min-width: 1200px;
-    height: 100vh;
     display: flex;
     .operations {
         background: #516fa3;
