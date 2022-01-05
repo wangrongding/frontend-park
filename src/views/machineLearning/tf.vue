@@ -1,8 +1,11 @@
 <template>
     <div class="page-container" v-loading="loading">
         <div class="container">
-            <p>运行该项目示例可能需要科学上网(由于使用的是mobileNet模型,资源在外网)</p>
+            <p style="line-height: 50px"
+                >运行该项目示例可能需要科学上网(由于使用的是mobileNet模型,资源在外网)</p
+            >
             <img id="img" :src="imageUrl" alt="" />
+            <p>正在搞...(不过你可以体验基本功能)</p>
         </div>
         <div class="side-bar">
             <el-input
@@ -88,6 +91,7 @@ export default {
     height: 100%;
     .container {
         flex: 1;
+        text-align: center;
     }
     .side-bar {
         background: #91a8d0;

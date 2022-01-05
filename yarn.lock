@@ -871,6 +871,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.16.7":
+  version "7.16.7"
+  resolved "https://registry.npmmirror.com/@babel/runtime/download/@babel/runtime-7.16.7.tgz#03ff99f64106588c9c403c6ecb8c3bafbbdff1fa"
+  integrity sha512-9E9FJowqAsytyOY6LG+1KuueckRL+aQW+mKvXRXnuFGyRAyepJPmEo9vgMfXUA6O9u3IeEdv9MAkppFcaQwogQ==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/template@^7.0.0", "@babel/template@^7.14.5":
   version "7.14.5"
   resolved "https://registry.nlark.com/@babel/template/download/@babel/template-7.14.5.tgz#a9bc9d8b33354ff6e55a9c60d1109200a68974f4"
@@ -1957,6 +1964,14 @@ atob@^2.1.2:
   version "2.1.2"
   resolved "https://registry.nlark.com/atob/download/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha1-bZUX654DDSQ2ZmZR6GvZ9vE1M8k=
+
+automation-events@^4.0.12:
+  version "4.0.12"
+  resolved "https://registry.npmmirror.com/automation-events/download/automation-events-4.0.12.tgz#53a65907187aa3d4b9dc53042b05887c5e643f65"
+  integrity sha512-7tu7q/rw3vFuAwjBoarCGql3V0HkC5QAbZUYhOblxxkHzdLUTjVotm0iaIRwiCSqxMeoFK64LrgaSCuSZguvGA==
+  dependencies:
+    "@babel/runtime" "^7.16.7"
+    tslib "^2.3.1"
 
 autoprefixer@^9.8.6:
   version "9.8.6"
@@ -7976,6 +7991,15 @@ stackframe@^1.1.1:
   resolved "https://registry.nlark.com/stackframe/download/stackframe-1.2.0.tgz#52429492d63c62eb989804c11552e3d22e779303"
   integrity sha1-UkKUktY8YuuYmATBFVLj0i53kwM=
 
+standardized-audio-context@^25.1.8:
+  version "25.3.19"
+  resolved "https://registry.npmmirror.com/standardized-audio-context/download/standardized-audio-context-25.3.19.tgz#bcb5bea0365571f5b3bef2c40860069371a3c2d1"
+  integrity sha512-GOXncphk6PLnT+79lyvVen2hn68zEX5K++qvRQXdZXobYjPriW0sShgFxqg3AMVysZifc/5S+8IM/9mNf0x+sA==
+  dependencies:
+    "@babel/runtime" "^7.16.7"
+    automation-events "^4.0.12"
+    tslib "^2.3.1"
+
 static-extend@^0.1.1:
   version "0.1.2"
   resolved "https://registry.nlark.com/static-extend/download/static-extend-0.1.2.tgz#60809c39cbff55337226fd5e0b520f341f1fb5c6"
@@ -8371,6 +8395,14 @@ toidentifier@1.0.0:
   resolved "https://registry.nlark.com/toidentifier/download/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"
   integrity sha1-fhvjRw8ed5SLxD2Uo8j013UrpVM=
 
+tone@^14.7.77:
+  version "14.7.77"
+  resolved "https://registry.npmmirror.com/tone/download/tone-14.7.77.tgz#12a2a9f033952ccdb552275a6384ca5d36d4b5ed"
+  integrity sha1-EqKp8DOVLM21UidaY4TKXTbUte0=
+  dependencies:
+    standardized-audio-context "^25.1.8"
+    tslib "^2.0.1"
+
 toposort@^1.0.0:
   version "1.0.7"
   resolved "https://registry.nlark.com/toposort/download/toposort-1.0.7.tgz#2e68442d9f64ec720b8cc89e6443ac6caa950029"
@@ -8419,6 +8451,11 @@ tslib@^1.9.0:
   version "1.14.1"
   resolved "https://registry.nlark.com/tslib/download/tslib-1.14.1.tgz?cache=0&sync_timestamp=1623450901878&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ftslib%2Fdownload%2Ftslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha1-zy04vcNKE0vK8QkcQfZhni9nLQA=
+
+tslib@^2.0.1, tslib@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.npmmirror.com/tslib/download/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
+  integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
 
 tty-browserify@0.0.0:
   version "0.0.0"

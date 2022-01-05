@@ -77,6 +77,18 @@ const routes = [
         ],
     },
     {
+        path: "/tone",
+        redirect: "/tone/index",
+        name: "电子音乐",
+        component: layout,
+        children: [
+            {
+                path: "index",
+                component: () => import("@/views/tone/tone.vue"),
+            },
+        ],
+    },
+    {
         path: "/siteMap",
         redirect: "/siteMap/index",
         name: "超人导航",
