@@ -1,5 +1,6 @@
 <template>
     <div class="page-container">
+        <p>通过鼠标点击,或者敲击对应音符的摁键开始奏乐~</p>
         <div v-for="(item, index) in Notes" :key="index" style="display: inline-block">
             <div
                 @click="play(item)"
@@ -77,6 +78,8 @@ export default {
 
 <style scoped lang="scss">
 .page-container {
+    text-align: center;
+    padding-top: 200px;
     user-select: none;
     .key {
         width: 25px;

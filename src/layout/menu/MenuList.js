@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Vue from "vue";
 function loopDom(createElement, routers, path) {
     return routers.map((route) => {
@@ -90,9 +91,12 @@ const menuList = Vue.component("menuList", {
                     "active-text-color": "#ffd04b",
                     "unique-opened": true,
                     mode: "horizontal",
-                    "menu-trigger": "click",
+                    "menu-trigger": "hover",
                     router: true,
                     "default-active": this.activeRoute,
+                },
+                style: {
+                    userSelect: "none",
                 },
                 on: {
                     select: this.menuClick,
@@ -120,9 +124,7 @@ const menuList = Vue.component("menuList", {
     },
     methods: {
         menuClick(index, indexPath, c) {
-            /* if (!index) {
-            } */
-            console.log(index, indexPath, c);
+            // console.log(index, indexPath, c);
         },
     },
 });

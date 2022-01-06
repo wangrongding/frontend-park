@@ -89,6 +89,34 @@ const routes = [
         ],
     },
     {
+        path: "/three",
+        // redirect: "/tone/index",
+        name: "ThreeJs",
+        component: layout,
+        children: [
+            {
+                path: "scene",
+                name: "场景",
+                component: () => import("@/views/three/scene.vue"),
+            },
+            {
+                path: "mesh",
+                name: "物体对象",
+                component: () => import("@/views/three/mesh.vue"),
+            },
+            {
+                path: "light",
+                name: "光源",
+                component: () => import("@/views/three/light.vue"),
+            },
+            {
+                path: "animate",
+                name: "动画",
+                component: () => import("@/views/three/animate.vue"),
+            },
+        ],
+    },
+    {
         path: "/siteMap",
         redirect: "/siteMap/index",
         name: "超人导航",
