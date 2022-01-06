@@ -124,10 +124,10 @@ const routes = [
     },
 ];
 
-/* const router = new VueRouter({
-    mode: "history",
+const router = new VueRouter({
+    // mode: "history",
     base: process.env.BASE_URL,
     routes,
-}); */
+});
 
-export default routes;
+export default router;
