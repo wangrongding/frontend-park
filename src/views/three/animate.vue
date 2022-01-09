@@ -46,6 +46,11 @@ export default {
             this.createCube();
             //创建球体
             this.createSphere();
+            //创建圆形几何体
+            this.createCircle();
+            //创建圆锥几何体
+            this.createCone();
+            this.createWireframe();
             //创建光源
             this.createLight();
             //创建渲染器,放最后
@@ -136,6 +141,46 @@ export default {
             this.sphere.castShadow = true;
             this.scene.add(this.sphere);
         },
+        //创建圆形几何体
+        createCircle() {
+            var geometry = new THREE.CircleGeometry(5, 32);
+            var material = new THREE.MeshLambertMaterial({ color: 0xffff00, wireframe: true });
+            var circle = new THREE.Mesh(geometry, material);
+            circle.position.set(10, 5, 10);
+            circle.castShadow = true;
+            this.scene.add(circle);
+        },
+        // 创建圆锥几何体
+        createCone() {
+            var geometry = new THREE.ConeGeometry(5, 10, 32);
+            var material = new THREE.MeshBasicMaterial({ color: 0xfaaf00, wireframe: true });
+            var cone = new THREE.Mesh(geometry, material);
+            cone.position.set(-10, 5, -10);
+            cone.castShadow = true;
+            this.scene.add(cone);
+        },
+        // 创建圆柱几何体
+        createCone1() {
+            var geometry = new THREE.ConeGeometry(5, 10, 32);
+            var material = new THREE.MeshBasicMaterial({ color: 0xfaaf00, wireframe: true });
+            var cone = new THREE.Mesh(geometry, material);
+            cone.position.set(-10, 5, -10);
+            cone.castShadow = true;
+            this.scene.add(cone);
+        },
+        //创建网格几何体
+        createWireframe() {
+            var geometry = new THREE.SphereGeometry(5, 15, 50);
+            var wireframe = new THREE.WireframeGeometry(geometry);
+            var line = new THREE.LineSegments(wireframe);
+            line.material.depthTest = false;
+            line.material.opacity = 0.25;
+            line.material.transparent = true;
+            line.position.set(-30, 5, -10);
+            line.castShadow = true;
+            this.scene.add(line);
+        },
+        //执行动画
         animate() {
             // stats.update();
             this.cube.rotation.x += 0.01;

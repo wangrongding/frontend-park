@@ -45,7 +45,7 @@ export default {
             //设置场景大小
             renderer.setSize(window.innerWidth, window.innerHeight - 60);
             //设置相机位置(x,y,z)
-            camera.position.set(-50, 50, 50);
+            camera.position.set(-30, 40, 50);
             // 通过lookAt将摄像机指向场景中心,(默认指向0,0,0)
             camera.lookAt(scene.position);
             // 将渲染结果添加到dom元素中
@@ -63,7 +63,7 @@ export default {
         //创建平面
         createPlane(scene) {
             //定义平面的大小
-            let planeGeometry = new THREE.PlaneGeometry(40, 40);
+            let planeGeometry = new THREE.PlaneGeometry(80, 80);
             // 通过创建材质对象来设置平面的外观,这里使用的是基本材质
             let planeMaterial = new THREE.MeshBasicMaterial({
                 color: 0xaaaaaa,
