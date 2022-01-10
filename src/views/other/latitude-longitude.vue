@@ -1,26 +1,90 @@
 <template>
-    <div class="page-container"></div>
+    <div class="page-container">
+        <p>当前经度: {{ position.longitude }}</p>
+        <p>当前纬度: {{ position.latitude }}</p>
+        <p>高德转换坐标系结果: {{ position.transform }}</p>
+    </div>
 </template>
-
+<!-- 当我用手机的时候，位置还是十分准确的。都快精确到小区了。所以你白天说的那个问题，一定是要硬件支持才行，我这里用了和你说的一样的gcoord.js来做转换，所以应该不是他们库的问题，其实我不转换的时候（精确到了小数点后7位），也挺准。转换后精确到了小数点后14位了。
+手机我试了下,我手机拿的挺准的,pc的误差较大, -->
 <script>
 /* eslint-disable */
+import gcoord from "gcoord";
 export default {
     components: {},
     props: {},
-    data() {
-        return {};
-    },
     computed: {},
     watch: {},
     created() {},
-    mounted() {},
+    mounted() {
+        this.getPosition();
+        // this.useScript({
+        //     src: "https://api.map.baidu.com/getscript?v=3.0&ak=OaBvYmKX3pjF7YFUFeeBCeGdy9Zp7xB2&services=&t=20210201100830&s=1",
+        // });
+    },
     data() {
         return {
             PI: 3.14159265358979324,
             x_pi: (3.14159265358979324 * 3000.0) / 180.0,
+            position: {
+                longitude: "",
+                latitude: "",
+                transform: "",
+            },
         };
     },
     methods: {
+        getPosition() {
+            window.navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    this.position.transform = gcoord.transform(
+                        [position.coords.longitude, position.coords.latitude], // 经纬度坐标
+                        gcoord.WGS84, // 当前坐标系
+                        gcoord.BD09 // 目标坐标系
+                    );
+                    console.log("高德转换坐标系结果:", this.position.transform);
+                    this.position.latitude = position.coords.latitude;
+                    this.position.longitude = position.coords.longitude;
+                    console.log(position.coords.longitude, "😀longitude😀");
+                    console.log(position.coords.latitude, "😀latitude😀");
+                },
+                () => {},
+                {
+                    // 指示浏览器获取高精度的位置，默认为false
+                    enableHighAccuracy: true,
+                    // 指定获取地理位置的超时时间，默认不限时，单位为毫秒
+                    timeout: 5000,
+                    // 最长有效期，在重复获取地理位置时，此参数指定多久再次获取位置。
+                    maximumAge: 3000,
+                }
+            );
+            //获取当前位置，并继续返回用户移动时更新的位置信息。注：需要具有GPS的设备测试。
+            window.navigator.geolocation.watchPosition(
+                (position) => {
+                    console.log(position.coords.longitude, "😀longitude😀");
+                    console.log(position.coords.latitude, "😀latitude😀");
+                },
+                () => {}
+            );
+        },
+        useScript(opts) {
+            new Promise((resolve, reject) => {
+                let script = document.createElement("script");
+                script.type = "text/javascript";
+
+                script.onload = function () {
+                    console.log(123);
+                    resolve("");
+                };
+                script.onerror = function (err) {
+                    console.log(456);
+                    reject(err);
+                };
+
+                script.src = opts.src;
+                document.head.appendChild(script);
+            });
+        },
         delta(lat, lon) {
             // Krasovsky 1940
             //
@@ -117,36 +181,36 @@ export default {
         },
         // WGS-84 to Web mercator
         // mercatorLat -> y mercatorLon -> x
-        mercator_encrypt: function (wgsLat, wgsLon) {
+        mercator_encrypt(wgsLat, wgsLon) {
             const x = (wgsLon * 20037508.34) / 180.0;
             let y = Math.log(Math.tan(((90.0 + wgsLat) * this.PI) / 360.0)) / (this.PI / 180.0);
             y = (y * 20037508.34) / 180.0;
             return { lat: y, lon: x };
             /*
-         if ((Math.abs(wgsLon) > 180 || Math.abs(wgsLat) > 90))
-         return null
-         var x = 6378137.0 * wgsLon * 0.017453292519943295
-         var a = wgsLat * 0.017453292519943295
-         var y = 3189068.5 * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)))
-         return {'lat' : y, 'lon' : x}
-         //*/
+            if ((Math.abs(wgsLon) > 180 || Math.abs(wgsLat) > 90))
+            return null
+            var x = 6378137.0 * wgsLon * 0.017453292519943295
+            var a = wgsLat * 0.017453292519943295
+            var y = 3189068.5 * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)))
+            return {'lat' : y, 'lon' : x}
+        */
         },
         // Web mercator to WGS-84
         // mercatorLat -> y mercatorLon -> x
-        mercator_decrypt: function (mercatorLat, mercatorLon) {
+        mercator_decrypt(mercatorLat, mercatorLon) {
             const x = (mercatorLon / 20037508.34) * 180.0;
             let y = (mercatorLat / 20037508.34) * 180.0;
             y = (180 / this.PI) * (2 * Math.atan(Math.exp((y * this.PI) / 180.0)) - this.PI / 2);
             return { lat: y, lon: x };
             /*
-         if (Math.abs(mercatorLon) < 180 && Math.abs(mercatorLat) < 90)
-         return null
-         if ((Math.abs(mercatorLon) > 20037508.3427892) || (Math.abs(mercatorLat) > 20037508.3427892))
-         return null
-         var a = mercatorLon / 6378137.0 * 57.295779513082323
-         var x = a - (Math.floor(((a + 180.0) / 360.0)) * 360.0)
-         var y = (1.5707963267948966 - (2.0 * Math.atan(Math.exp((-1.0 * mercatorLat) / 6378137.0)))) * 57.295779513082323
-         return {'lat' : y, 'lon' : x}
+        if (Math.abs(mercatorLon) < 180 && Math.abs(mercatorLat) < 90)
+        return null
+        if ((Math.abs(mercatorLon) > 20037508.3427892) || (Math.abs(mercatorLat) > 20037508.3427892))
+        return null
+        var a = mercatorLon / 6378137.0 * 57.295779513082323
+        var x = a - (Math.floor(((a + 180.0) / 360.0)) * 360.0)
+        var y = (1.5707963267948966 - (2.0 * Math.atan(Math.exp((-1.0 * mercatorLat) / 6378137.0)))) * 57.295779513082323
+        return {'lat' : y, 'lon' : x}
          //*/
         },
         // two point's distance
@@ -214,7 +278,7 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style scoped lang="scss">
 .page-container {
 }
 </style>
