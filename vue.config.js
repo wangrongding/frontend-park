@@ -8,6 +8,7 @@ module.exports = {
         port: 9425,
         hot: true,
         open: true,
+        // https: true,
         overlay: {
             warnings: false,
             errors: true,

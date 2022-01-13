@@ -130,13 +130,18 @@ const routes = [
     },
     {
         path: "/test",
-        redirect: "/test/index",
-        name: "测试",
+        name: "杂项",
         component: layout,
         children: [
             {
-                path: "index",
+                path: "test",
+                name: "测试",
                 component: () => import("@/views/other/test.vue"),
+            },
+            {
+                path: "lat-long",
+                name: "经纬度",
+                component: () => import("@/views/other/latitude-longitude.vue"),
             },
         ],
     },
