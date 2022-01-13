@@ -27,7 +27,7 @@
 
 <script>
 import * as multiavatar from "@multiavatar/multiavatar/dist/esm/index";
-import { sites } from "./siteList.js";
+import { sites } from "./index.js";
 export default {
     components: {},
     props: {},

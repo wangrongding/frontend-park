@@ -2,9 +2,10 @@ import { cssList } from "./css";
 import { JavaScriptList } from "./JavaScript";
 import { nodeList } from "./node";
 import { materialList } from "./material";
-import { blogList } from "./blogs";
+import { blogList } from "./blog";
 import { personalBlogList } from "./personalBlog";
 import { frontWeeklyList } from "./frontWeekly";
+import { docList } from "./doc";
 export const sites = [
     ...blogList,
     ...personalBlogList,
@@ -13,6 +14,7 @@ export const sites = [
     ...cssList,
     ...nodeList,
     ...materialList,
+    ...docList,
     {
         name: "Git",
         list: [
