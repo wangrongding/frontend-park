@@ -8,7 +8,7 @@ jobs:
         runs-on: ubuntu-latest
     steps:
         # 名字随便起
-        - name: Mirror-Github-repos-to-Gitee
+        - name: MirrorGithubReposToGitee
           uses: Yikun/hub-mirror-action@master
           with:
               # src 表示需要被同步的 Github 的账户名
