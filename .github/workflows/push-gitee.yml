@@ -7,7 +7,7 @@ jobs:
     repo-sync:
         runs-on: ubuntu-latest
     steps:
-        - name: Mirror the Github organization repos to Gitee.
+        - name: Mirror-Github-repos-to-Gitee.
           uses: Yikun/hub-mirror-action@master
           with:
               # src 表示需要被同步的 Github 的账户名
