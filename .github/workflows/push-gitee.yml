@@ -1,0 +1,30 @@
+name: push-to-gitee
+on:
+    push:
+        branches:
+            - main
+jobs:
+    repo-sync:
+        runs-on: ubuntu-latest
+    steps:
+        - name: Mirror the Github repos to Gitee.
+          uses: Yikun/hub-mirror-action@master
+          with:
+              # src 表示需要被同步的 Github 的账户名
+              src: "github/wangrongding"
+              # 需要同步到的目的端账户名，即我们 Gitee 的账户名
+              dst: "gitee/wangrongding"
+              # 目的端SSH密钥对中的私钥，其保存在 Secrets 中
+              dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+              # gitee私人令牌
+              dst_token: ${{ secrets.GITEE_TOKEN }}
+              # 账户类型
+              account_type: user
+              # 静态同步列表，在此填写需要同步的仓库名称，可填写多个
+              static_list: "frontend-park"
+              # 启用 git push -f 强制同步
+              force_update: true
+              # 并打开debug日志开关,会显示所有执行命令
+              debug: true
+              # 设置命令行超时时间为1小时
+              timeout: "1h"
