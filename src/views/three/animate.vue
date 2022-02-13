@@ -183,9 +183,9 @@ export default {
         //执行动画
         animate() {
             // stats.update();
-            this.cube.rotation.x += 0.01;
-            this.cube.rotation.y += 0.01;
-            this.sphere.position.x += 0.03;
+            this.cube.rotation.x += 0.03;
+            this.cube.rotation.y += 0.03;
+            this.sphere.position.x += 0.1;
             if (this.sphere.position.x > 20) {
                 this.sphere.position.x = -20;
             }

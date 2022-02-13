@@ -6,6 +6,10 @@
 
 <script>
 import * as THREE from "three";
+import * as dat from "dat.gui";
+import * as Stats from "stats.js";
+
+import createGeometry from "./utils/createGeometry";
 export default {
     components: {},
     props: {},
@@ -14,9 +18,20 @@ export default {
             scene: null,
             camera: null,
             renderer: null,
-            sphere: null,
-            cube: null,
             plane: null,
+            cube: null,
+            sphere: null,
+            sphere2: null,
+            guiConfiguration: {
+                message: "哈喽啊~我是荣顶",
+                cubeSpeed: 0.03,
+                sphereInitVelocity: 0.03,
+                sphereAcceleration: 0.04,
+                checkBox: false,
+                button() {
+                    alert("关注公众号：前端超人");
+                },
+            },
         };
     },
     computed: {},
@@ -25,11 +40,15 @@ export default {
     mounted() {
         this.init();
         this.animate();
+        this.configGUI();
     },
     methods: {
         init() {
             //定义场景
             this.scene = new THREE.Scene();
+            //给场景添加雾化效果
+            // this.scene.fog = new THREE.Fog(0x123, 5, 10);
+            this.scene.fog = new THREE.FogExp2(0xffffff, 0.004);
             //定义摄像机
             this.camera = new THREE.PerspectiveCamera(
                 45,
@@ -42,19 +61,61 @@ export default {
             this.createAxes();
             //创建平面
             this.createPlane();
-            //创建立方体
-            this.createCube();
-            //创建球体
-            this.createSphere();
-            //创建圆形几何体
-            this.createCircle();
-            //创建圆锥几何体
-            this.createCone();
-            this.createWireframe();
             //创建光源
             this.createLight();
             //创建渲染器,放最后
             this.createRenderer();
+            this.getStats();
+            //创建立方体
+            this.cube = createGeometry(
+                this.scene,
+                {
+                    type: "BoxGeometry",
+                    attribute: [5, 5, 5],
+                },
+                { type: "MeshLambertMaterial", options: { color: 0xff0000 } },
+                {
+                    position: [0, 4, 0],
+                    castShadow: true,
+                },
+            );
+            //创建球体
+            this.sphere = createGeometry(
+                this.scene,
+                {
+                    type: "SphereGeometry",
+                    attribute: [3, 20, 20],
+                },
+                { type: "MeshLambertMaterial", options: { color: 0x7777ff } },
+                {
+                    position: [-15, 3, 10],
+                    castShadow: true,
+                },
+            );
+            this.sphere2 = createGeometry(
+                this.scene,
+                {
+                    type: "SphereGeometry",
+                    attribute: [1, 20, 20],
+                },
+                { type: "MeshLambertMaterial", options: { color: "lightgreen" } },
+                {
+                    position: [20, 1, 0],
+                    castShadow: true,
+                },
+            );
+            this.sphere3 = createGeometry(
+                this.scene,
+                {
+                    type: "SphereGeometry",
+                    attribute: [8, 20, 20],
+                },
+                { type: "MeshLambertMaterial", options: { color: "yellow" } },
+                {
+                    position: [40, 8, 0],
+                    castShadow: true,
+                },
+            );
         },
         // 创建渲染器
         createRenderer() {
@@ -64,7 +125,7 @@ export default {
             //设置场景大小
             this.renderer.setSize(window.innerWidth, window.innerHeight - 60);
             //设置相机位置(x,y,z)
-            this.camera.position.set(-50, 50, 50);
+            this.camera.position.set(-100, 40, 100);
             // 通过lookAt将摄像机指向场景中心,(默认指向0,0,0)
             this.camera.lookAt(this.scene.position);
             //开启阴影
@@ -80,7 +141,7 @@ export default {
             //定义光源
             this.spotLight = new THREE.SpotLight(0xffffff);
             //设置光源位置
-            this.spotLight.position.set(10, 40, 40);
+            this.spotLight.position.set(70, 130, 70);
             // 启用阴影功能
             this.spotLight.castShadow = true;
             //将光源添加进场景
@@ -96,7 +157,7 @@ export default {
         //创建平面
         createPlane() {
             //定义平面的大小
-            let planeGeometry = new THREE.PlaneGeometry(100, 100);
+            let planeGeometry = new THREE.PlaneGeometry(200, 200);
             // 通过创建材质对象来设置平面的外观,这里使用的是基本材质
             let planeMaterial = new THREE.MeshLambertMaterial({
                 color: 0xaaaaaa,
@@ -112,50 +173,82 @@ export default {
             //添加平面到场景中
             this.scene.add(this.plane);
         },
-        //创建立方体
-        createCube() {
-            // 定义方块大小
-            let cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
-            //定义方块外观
-            let cubeMaterial = new THREE.MeshLambertMaterial({
-                color: 0xff0000,
-            });
-            this.cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-            //设置方块位置
-            this.cube.position.set(5, 5, 5);
-
-            this.cube.castShadow = true;
-            // 添加到场景中
-            this.scene.add(this.cube);
-        },
-        //创建球体
-        createSphere() {
-            //定义球体大小
-            let sphereGeometry = new THREE.SphereGeometry(4, 20, 20);
-            //定义球体外观
-            let sphereMaterial = new THREE.MeshLambertMaterial({
-                color: 0x7777ff,
-            });
-            this.sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-            this.sphere.position.set(-15, 5, 10);
-            this.sphere.castShadow = true;
-            this.scene.add(this.sphere);
-        },
 
         //执行动画
         animate() {
             // stats.update();
-            this.cube.rotation.x += 0.01;
-            this.cube.rotation.y += 0.01;
-            this.sphere.position.x += 0.03;
-            if (this.sphere.position.x > 20) {
-                this.sphere.position.x = -20;
-            }
+            this.cube.rotation.x += this.guiConfiguration.cubeSpeed;
+            this.cube.rotation.y += this.guiConfiguration.cubeSpeed;
+            this.cube.rotation.z += this.guiConfiguration.cubeSpeed;
+            // this.sphere.position.x += this.guiConfiguration.speed;
+            // if (this.sphere.position.x > 20) {
+            //     this.sphere.position.x = -20;
+            // }
+            this.guiConfiguration.sphereInitVelocity += this.guiConfiguration.sphereAcceleration;
+            this.sphere.position.x = 20 * Math.cos(this.guiConfiguration.sphereInitVelocity);
+            this.sphere.position.z = 20 * Math.sin(this.guiConfiguration.sphereInitVelocity);
+
+            this.sphere2.position.x = 10 * Math.cos(this.guiConfiguration.sphereInitVelocity + 0.9);
+            this.sphere2.position.z = 10 * Math.sin(this.guiConfiguration.sphereInitVelocity + 0.9);
+
+            this.sphere3.position.x = 40 * Math.cos(this.guiConfiguration.sphereInitVelocity - 0.9);
+            this.sphere3.position.z = 40 * Math.sin(this.guiConfiguration.sphereInitVelocity - 0.9);
             this.renderer.render(this.scene, this.camera);
             requestAnimationFrame(this.animate);
+        },
+        //配置dat.gui
+        configGUI() {
+            // let options = {
+            //     message: "哈喽啊~我是荣顶",
+            //     speed: 0.8,
+            //     checkBox: false,
+            //     button: function () {
+            //         alert(123);
+            //     },
+            // };
+
+            const gui = new dat.GUI();
+
+            gui.add(this.guiConfiguration, "message");
+            gui.add(this.guiConfiguration, "cubeSpeed", 0, 0.5);
+            gui.add(this.guiConfiguration, "sphereInitVelocity", -1, 1);
+            gui.add(this.guiConfiguration, "sphereAcceleration", 0, 1);
+            gui.add(this.guiConfiguration, "checkBox");
+            gui.add(this.guiConfiguration, "button").name("点我");
+
+            var testObj = {
+                color0: "#ffae23", // CSS string
+                color1: [0, 128, 255], // RGB array
+                color2: [0, 128, 255, 0.3], // RGB with alpha
+                color3: { h: 350, s: 0.9, v: 0.3 }, // Hue, saturation, value
+            };
+            var f1 = gui.addFolder("球的颜色");
+            f1.addColor(testObj, "color0").name("CSS颜色值");
+            f1.addColor(testObj, "color1").name("RGB颜色值");
+            f1.addColor(testObj, "color2").name("RGBA颜色值");
+            f1.addColor(testObj, "color3").name("HUB颜色值");
+            gui.domElement.style = "position:absolute;top:70px;right:0px";
+        },
+        //获取pfs状态
+        getStats() {
+            var stats = new Stats();
+            stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+            document.body.appendChild(stats.dom);
+            stats.domElement.style = "position:absolute;top:70px;left:0px";
+            function animate() {
+                stats.begin();
+                // monitored code goes here
+                stats.end();
+                requestAnimationFrame(animate);
+            }
+            requestAnimationFrame(animate);
         },
     },
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.page-container {
+    // position: relative;
+}
+</style>
