@@ -17,11 +17,13 @@ export default {
         return {
             scene: null,
             camera: null,
+            gui: null,
             renderer: null,
             plane: null,
             cube: null,
             sphere: null,
             sphere2: null,
+            sphere3: null,
             guiConfiguration: {
                 message: "哈喽啊~我是荣顶",
                 cubeSpeed: 0.03,
@@ -31,6 +33,7 @@ export default {
                 button() {
                     alert("关注公众号：前端超人");
                 },
+                sphere3Color: "#ffae23",
             },
         };
     },
@@ -42,13 +45,19 @@ export default {
         this.animate();
         this.configGUI();
     },
+    beforeRouteLeave(to, from, next) {
+        console.log(123);
+        this.gui.domElement.style.display = "none";
+        next();
+    },
+
     methods: {
         init() {
             //定义场景
             this.scene = new THREE.Scene();
             //给场景添加雾化效果
             // this.scene.fog = new THREE.Fog(0x123, 5, 10);
-            this.scene.fog = new THREE.FogExp2(0xffffff, 0.004);
+            // this.scene.fog = new THREE.FogExp2(0xffffff, 0.004);
             //定义摄像机
             this.camera = new THREE.PerspectiveCamera(
                 45,
@@ -79,6 +88,7 @@ export default {
                     castShadow: true,
                 },
             );
+            this.cube.name = "cube";
             //创建球体
             this.sphere = createGeometry(
                 this.scene,
@@ -104,13 +114,19 @@ export default {
                     castShadow: true,
                 },
             );
+            this.createSphere3();
+        },
+        createSphere3() {
             this.sphere3 = createGeometry(
                 this.scene,
                 {
                     type: "SphereGeometry",
                     attribute: [8, 20, 20],
                 },
-                { type: "MeshLambertMaterial", options: { color: "yellow" } },
+                {
+                    type: "MeshLambertMaterial",
+                    options: { color: this.guiConfiguration.sphere3Color },
+                },
                 {
                     position: [40, 8, 0],
                     castShadow: true,
@@ -207,34 +223,44 @@ export default {
             //     },
             // };
 
-            const gui = new dat.GUI();
+            this.gui = new dat.GUI();
 
-            gui.add(this.guiConfiguration, "message");
-            gui.add(this.guiConfiguration, "cubeSpeed", 0, 0.5);
-            gui.add(this.guiConfiguration, "sphereInitVelocity", -1, 1);
-            gui.add(this.guiConfiguration, "sphereAcceleration", 0, 1);
-            gui.add(this.guiConfiguration, "checkBox");
-            gui.add(this.guiConfiguration, "button").name("点我");
+            this.gui.add(this.guiConfiguration, "message");
+            this.gui.add(this.guiConfiguration, "cubeSpeed", 0, 0.5);
+            this.gui.add(this.guiConfiguration, "sphereInitVelocity", -1, 1);
+            this.gui.add(this.guiConfiguration, "sphereAcceleration", 0, 1);
+            this.gui.add(this.guiConfiguration, "checkBox");
+            this.gui.add(this.guiConfiguration, "button").name("点我");
 
-            var testObj = {
-                color0: "#ffae23", // CSS string
-                color1: [0, 128, 255], // RGB array
-                color2: [0, 128, 255, 0.3], // RGB with alpha
-                color3: { h: 350, s: 0.9, v: 0.3 }, // Hue, saturation, value
-            };
-            var f1 = gui.addFolder("球的颜色");
-            f1.addColor(testObj, "color0").name("CSS颜色值");
-            f1.addColor(testObj, "color1").name("RGB颜色值");
-            f1.addColor(testObj, "color2").name("RGBA颜色值");
-            f1.addColor(testObj, "color3").name("HUB颜色值");
-            gui.domElement.style = "position:absolute;top:70px;right:0px";
+            // var testObj = {
+            //     color0: "#ffae23", // CSS string
+            //     color1: [0, 128, 255], // RGB array
+            //     color2: [0, 128, 255, 0.3], // RGB with alpha
+            //     color3: { h: 350, s: 0.9, v: 0.3 }, // Hue, saturation, value
+            // };
+            var f1 = this.gui.addFolder("球的颜色");
+            let controller = f1.addColor(this.guiConfiguration, "sphere3Color").name("CSS颜色值");
+            //第二个分组默认打开
+            f1.open();
+            // f1.addColor(testObj, "color0").name("CSS颜色值");
+            // f1.addColor(testObj, "color1").name("RGB颜色值");
+            // f1.addColor(testObj, "color2").name("RGBA颜色值");
+            // f1.addColor(testObj, "color3").name("HUB颜色值");
+            this.gui.domElement.style = "position:absolute;top:300px;right:0px";
+            //对应控制项值修改完毕响应
+            controller.onFinishChange((val) => {
+                console.log("🚀🚀🚀 / val", val);
+                // this.sphere3.color.set(val);
+                this.scene.remove(this.sphere3);
+                this.createSphere3();
+            });
         },
         //获取pfs状态
         getStats() {
             var stats = new Stats();
             stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-            document.body.appendChild(stats.dom);
-            stats.domElement.style = "position:absolute;top:70px;left:0px";
+            document.querySelector(".page-container").appendChild(stats.dom);
+            stats.domElement.style = "position:absolute;bottom:0px;left:0px";
             function animate() {
                 stats.begin();
                 // monitored code goes here
