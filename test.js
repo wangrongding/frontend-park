@@ -6,7 +6,7 @@ var minimumSwitchingTimes = function (
     target = [
         [1, 3, 5, 1, 3, 2, 4, 5],
         [2, 3, 4],
-    ]
+    ],
 ) {
     let sourceArr = source.toString().split(",").sort();
     let targetArr = target.toString().split(",").sort();

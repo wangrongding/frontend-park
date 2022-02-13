@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
+    "lint": "vue-cli-service lint --fix",
     "ad": "git add .",
     "push": "git add . && git commit && git push"
   },
@@ -16,6 +16,7 @@
     "@tensorflow/tfjs-converter": "^3.9.0",
     "@tensorflow/tfjs-core": "^3.9.0",
     "core-js": "^3.6.5",
+    "dat.gui": "^0.7.7",
     "element-ui": "^2.15.3",
     "fabric": "^4.5.1",
     "gcoord": "^0.3.2",

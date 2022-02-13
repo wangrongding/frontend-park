@@ -35,7 +35,7 @@ export default {
                 45,
                 window.innerWidth / (window.innerHeight - 60),
                 0.1,
-                1000
+                1000,
             );
 
             //创建坐标系

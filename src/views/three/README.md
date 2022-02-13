@@ -27,12 +27,7 @@ let scene = new THREE.Scene();
 
 ```javascript
 //定义摄像机
-let camera = new THREE.PerspectiveCamera(
-  45,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
+let camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 //设置相机位置(x,y,z)
 camera.position.set(-50, 50, 50);
 // 通过lookAt将摄像机指向场景中心,(默认指向0,0,0)

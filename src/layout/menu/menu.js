@@ -30,10 +30,10 @@ function loopDom(createElement, routers, path) {
                                     innerHTML: route.title,
                                 },
                             }),
-                        ]
+                        ],
                     ),
                     loopDom(createElement, route.children, relativePath),
-                ]
+                ],
             );
         } else {
             return createElement(
@@ -59,7 +59,7 @@ function loopDom(createElement, routers, path) {
                             innerHTML: route.title,
                         },
                     }),
-                ]
+                ],
             );
         }
     });
@@ -81,7 +81,7 @@ const menuList = Vue.component("menuList", {
                     "unique-opened": true,
                 },
             },
-            loopDom(h, this.routers)
+            loopDom(h, this.routers),
         );
     },
     props: {
