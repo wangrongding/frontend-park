@@ -23,62 +23,72 @@
 
 ## 包含项目
 
-1.  ### 隐写术
+### ThreeJs
 
-    文本隐写
+<img
+    src="https://gitee.com/wangrongding/image-house/raw/master/images/202202141040652.gif"
+    alt=""
+    style="width:400px"
+/>
 
-    <img
-        src="https://gitee.com/wangrongding/image-house/raw/master/images/202110211448081.png"
-        alt=""
-        style="width:400px"
-    />
+### 隐写术
 
-    图片隐写  
-    <img
-        src="https://gitee.com/wangrongding/image-house/raw/master/images/202110211449483.png"
-        alt=""
-        style="width:400px"
-    />
+#### 文本隐写
 
-    未完待续!
+<img
+    src="https://gitee.com/wangrongding/image-house/raw/master/images/202110211448081.png"
+    alt=""
+    style="width:400px"
+/>
 
-    -   [x] 文本隐写
-    -   [x] 图片隐写
-    -   [ ] 音频隐写
-    -   [ ] 视频隐写
+#### 图片隐写
 
-2.  ### 千图成像
+<img
+    src="https://gitee.com/wangrongding/image-house/raw/master/images/202110211449483.png"
+    alt=""
+    style="width:400px"
+/>
 
-    <!-- ![](https://files.mdnice.com/user/17056/d6c67ad8-64c5-46b9-a966-e259550e18a9.gif) -->
-    <!-- ![](https://files.mdnice.com/user/17056/9617bf11-1dd9-47b0-b4e9-41db87866f77.gif=60x60) -->
+未完待续!
 
-    <img
-        src="https://files.mdnice.com/user/17056/d6c67ad8-64c5-46b9-a966-e259550e18a9.gif"
-        alt=""
-        style="width:400px"
-    />
+-   [x] 文本隐写
+-   [x] 图片隐写
+-   [ ] 音频隐写
+-   [ ] 视频隐写
 
-    <img
-        src="https://files.mdnice.com/user/17056/9617bf11-1dd9-47b0-b4e9-41db87866f77.gif"
-        alt=""
-        style="width:400px"
-    />
+### 千图成像
 
-    (未完成的功能不影响现在项目的使用,只是一些优化的部分)
+<!-- ![](https://files.mdnice.com/user/17056/d6c67ad8-64c5-46b9-a966-e259550e18a9.gif) -->
+<!-- ![](https://files.mdnice.com/user/17056/9617bf11-1dd9-47b0-b4e9-41db87866f77.gif=60x60) -->
 
-    -   [x] 目标图生成(基本功能) -- 完成
-    -   [ ] 自定义分布方式 -- 待完成
-    -   [ ] 自定义按比例调整 -- 待完成
-    -   [ ] 自定义方向／比例 -- 待完成
-    -   [ ] 自定义贴片高度 -- 待完成
-    -   [ ] 自定义贴片宽度 -- 待完成
-    -   [ ] 资源图片的连续重复控制 -- 待完成
+<img
+    src="https://files.mdnice.com/user/17056/d6c67ad8-64c5-46b9-a966-e259550e18a9.gif"
+    alt=""
+    style="width:400px"
+/>
 
-3.  ### 机器学习(基于 tensorFlow.js 的前端实现)
+<img
+    src="https://files.mdnice.com/user/17056/9617bf11-1dd9-47b0-b4e9-41db87866f77.gif"
+    alt=""
+    style="width:400px"
+/>
+
+(未完成的功能不影响现在项目的使用,只是一些优化的部分)
+
+-   [x] 目标图生成(基本功能) -- 完成
+-   [ ] 自定义分布方式 -- 待完成
+-   [ ] 自定义按比例调整 -- 待完成
+-   [ ] 自定义方向／比例 -- 待完成
+-   [ ] 自定义贴片高度 -- 待完成
+-   [ ] 自定义贴片宽度 -- 待完成
+-   [ ] 资源图片的连续重复控制 -- 待完成
+
+### 机器学习(基于 tensorFlow.js 的前端实现)
 
     该示例正在捣鼓中...
 
-4.  ### WebRTC 音视频协同
+### WebRTC 音视频协同
+
     该示例正在捣鼓中...
 
 ## Project setup
@@ -87,24 +97,16 @@
 yarn install
 ```
 
-### Compiles and hot-reloads for development
-
 ```
 yarn serve
 ```
-
-### Compiles and minifies for production
 
 ```
 yarn build
 ```
 
-### Lints and fixes files
-
 ```
 yarn lint
 ```
-
-### Customize configuration
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
