@@ -5,10 +5,13 @@
 </template>
 
 <script>
+/* eslint-disable */
 import * as THREE from "three";
+import { FlyControls } from "three/examples/jsm/controls/FlyControls";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
 import * as dat from "dat.gui";
 import * as Stats from "stats.js";
-
 import createGeometry from "./utils/createGeometry";
 export default {
     components: {},
@@ -22,10 +25,10 @@ export default {
             plane: null,
             cube: null,
             sphere: null,
-            sphere2: null,
-            sphere3: null,
+            flyControls: null,
+            orbitControls: null,
             guiConfiguration: {
-                message: "哈喽啊~我是荣顶",
+                message: "WASD加鼠标滚轮控制!",
                 cubeSpeed: 0.03,
                 sphereInitVelocity: 0.03,
                 sphereAcceleration: 0.04,
@@ -57,7 +60,7 @@ export default {
             this.scene = new THREE.Scene();
             //给场景添加雾化效果
             // this.scene.fog = new THREE.Fog(0x123, 5, 10);
-            // this.scene.fog = new THREE.FogExp2(0xffffff, 0.004);
+            this.scene.fog = new THREE.FogExp2(0xffffff, 0.004);
             //定义摄像机
             this.camera = new THREE.PerspectiveCamera(
                 45,
@@ -75,6 +78,7 @@ export default {
             //创建渲染器,放最后
             this.createRenderer();
             this.getStats();
+            this.createController();
             //创建立方体
             this.cube = createGeometry(
                 this.scene,
@@ -102,38 +106,8 @@ export default {
                     castShadow: true,
                 },
             );
-            this.sphere2 = createGeometry(
-                this.scene,
-                {
-                    type: "SphereGeometry",
-                    attribute: [1, 20, 20],
-                },
-                { type: "MeshLambertMaterial", options: { color: "lightgreen" } },
-                {
-                    position: [20, 1, 0],
-                    castShadow: true,
-                },
-            );
-            this.createSphere3();
         },
-        
-        createSphere3() {
-            this.sphere3 = createGeometry(
-                this.scene,
-                {
-                    type: "SphereGeometry",
-                    attribute: [8, 20, 20],
-                },
-                {
-                    type: "MeshLambertMaterial",
-                    options: { color: this.guiConfiguration.sphere3Color },
-                },
-                {
-                    position: [40, 8, 0],
-                    castShadow: true,
-                },
-            );
-        },
+
         // 创建渲染器
         createRenderer() {
             this.renderer = new THREE.WebGLRenderer();
@@ -158,7 +132,7 @@ export default {
             //定义光源
             this.spotLight = new THREE.SpotLight(0xffffff);
             //设置光源位置
-            this.spotLight.position.set(70, 130, 70);
+            this.spotLight.position.set(100, 150, 70);
             // 启用阴影功能
             this.spotLight.castShadow = true;
             //将光源添加进场景
@@ -174,7 +148,7 @@ export default {
         //创建平面
         createPlane() {
             //定义平面的大小
-            let planeGeometry = new THREE.PlaneGeometry(200, 200);
+            let planeGeometry = new THREE.PlaneGeometry(250, 250);
             // 通过创建材质对象来设置平面的外观,这里使用的是基本材质
             let planeMaterial = new THREE.MeshLambertMaterial({
                 color: 0xaaaaaa,
@@ -191,41 +165,9 @@ export default {
             this.scene.add(this.plane);
         },
 
-        //执行动画
-        animate() {
-            // stats.update();
-            this.cube.rotation.x += this.guiConfiguration.cubeSpeed;
-            this.cube.rotation.y += this.guiConfiguration.cubeSpeed;
-            this.cube.rotation.z += this.guiConfiguration.cubeSpeed;
-            // this.sphere.position.x += this.guiConfiguration.speed;
-            // if (this.sphere.position.x > 20) {
-            //     this.sphere.position.x = -20;
-            // }
-            this.guiConfiguration.sphereInitVelocity += this.guiConfiguration.sphereAcceleration;
-            this.sphere.position.x = 20 * Math.cos(this.guiConfiguration.sphereInitVelocity);
-            this.sphere.position.z = 20 * Math.sin(this.guiConfiguration.sphereInitVelocity);
-
-            this.sphere2.position.x = 10 * Math.cos(this.guiConfiguration.sphereInitVelocity + 0.9);
-            this.sphere2.position.z = 10 * Math.sin(this.guiConfiguration.sphereInitVelocity + 0.9);
-
-            this.sphere3.position.x = 40 * Math.cos(this.guiConfiguration.sphereInitVelocity - 0.9);
-            this.sphere3.position.z = 40 * Math.sin(this.guiConfiguration.sphereInitVelocity - 0.9);
-            this.renderer.render(this.scene, this.camera);
-            requestAnimationFrame(this.animate);
-        },
         //配置dat.gui
         configGUI() {
-            // let options = {
-            //     message: "哈喽啊~我是荣顶",
-            //     speed: 0.8,
-            //     checkBox: false,
-            //     button: function () {
-            //         alert(123);
-            //     },
-            // };
-
             this.gui = new dat.GUI();
-
             this.gui.add(this.guiConfiguration, "message");
             this.gui.add(this.guiConfiguration, "cubeSpeed", 0, 0.5);
             this.gui.add(this.guiConfiguration, "sphereInitVelocity", -1, 1);
@@ -233,27 +175,16 @@ export default {
             this.gui.add(this.guiConfiguration, "checkBox");
             this.gui.add(this.guiConfiguration, "button").name("点我");
 
-            // var testObj = {
-            //     color0: "#ffae23", // CSS string
-            //     color1: [0, 128, 255], // RGB array
-            //     color2: [0, 128, 255, 0.3], // RGB with alpha
-            //     color3: { h: 350, s: 0.9, v: 0.3 }, // Hue, saturation, value
-            // };
             var f1 = this.gui.addFolder("球的颜色");
             let controller = f1.addColor(this.guiConfiguration, "sphere3Color").name("CSS颜色值");
             //第二个分组默认打开
             f1.open();
-            // f1.addColor(testObj, "color0").name("CSS颜色值");
-            // f1.addColor(testObj, "color1").name("RGB颜色值");
-            // f1.addColor(testObj, "color2").name("RGBA颜色值");
-            // f1.addColor(testObj, "color3").name("HUB颜色值");
             this.gui.domElement.style = "position:absolute;top:300px;right:0px";
             //对应控制项值修改完毕响应
             controller.onFinishChange((val) => {
                 console.log("🚀🚀🚀 / val", val);
                 // this.sphere3.color.set(val);
                 this.scene.remove(this.sphere3);
-                this.createSphere3();
             });
         },
         //获取pfs状态
@@ -269,6 +200,31 @@ export default {
                 requestAnimationFrame(animate);
             }
             requestAnimationFrame(animate);
+        },
+        //执行动画
+        animate() {
+            this.cube.rotation.x += this.guiConfiguration.cubeSpeed;
+            this.cube.rotation.y += this.guiConfiguration.cubeSpeed;
+            this.cube.rotation.z += this.guiConfiguration.cubeSpeed;
+            this.guiConfiguration.sphereInitVelocity += this.guiConfiguration.sphereAcceleration;
+            this.sphere.position.x = 20 * Math.cos(this.guiConfiguration.sphereInitVelocity);
+            this.sphere.position.z = 20 * Math.sin(this.guiConfiguration.sphereInitVelocity);
+
+            this.renderer.render(this.scene, this.camera);
+            this.orbitControls.update();
+            this.flyControls.update(0.01);
+            requestAnimationFrame(this.animate);
+        },
+        //创建控制器
+        createController() {
+            // 创建轨道控制器
+            this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
+            // 移动控制器
+            this.flyControls = new FlyControls(this.camera, this.renderer.domElement);
+            this.flyControls.movementSpeed = 100;
+            this.flyControls.rollSpeed = Math.PI / 24;
+            this.flyControls.autoForward = false;
+            this.flyControls.dragToLook = true;
         },
     },
 };
