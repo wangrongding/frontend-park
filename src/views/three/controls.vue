@@ -47,6 +47,10 @@ export default {
         this.init();
         this.animate();
         this.configGUI();
+        setTimeout(() => {
+            document.querySelector('.dg').style = "margin-top:calc(100vh - 0px);";
+            window.addEventListener('resize',this.onResize,false);
+        }, 1000);
     },
     beforeRouteLeave(to, from, next) {
         console.log(123);
@@ -55,6 +59,11 @@ export default {
     },
 
     methods: {
+        onResize(){
+            this.camera.aspect=window.innerWidth / (window.innerHeight - 60);
+            this.camera.updateProjectionMatrix();
+            this.renderer.setSize(window.innerWidth , (window.innerHeight - 60))
+        },
         init() {
             //定义场景
             this.scene = new THREE.Scene();
@@ -178,8 +187,8 @@ export default {
             var f1 = this.gui.addFolder("球的颜色");
             let controller = f1.addColor(this.guiConfiguration, "sphere3Color").name("CSS颜色值");
             //第二个分组默认打开
+            this.gui.domElement.style = "position:absolute;bottom:20px;right:0px";
             f1.open();
-            this.gui.domElement.style = "position:absolute;top:300px;right:0px";
             //对应控制项值修改完毕响应
             controller.onFinishChange((val) => {
                 console.log("🚀🚀🚀 / val", val);

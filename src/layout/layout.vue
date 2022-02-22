@@ -98,4 +98,12 @@ export default {
 .el-menu.el-menu--horizontal {
     border: none;
 }
+.el-menu{
+    display: flex;
+    width:100vw;
+    height:60px;
+    overflow-x: auto;
+    overflow-y:hidden;
+    box-sizing: border-box;
+}
 </style>

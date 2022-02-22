@@ -40,18 +40,6 @@ const routes = [
             },
         ],
     },
-    /*  {
-        path: "/image",
-        name: "图像处理",
-        component: layout,
-        children: [
-            {
-                path: "pixel-image",
-                name: "千图成像",
-                component: () => import("@/views/pixel-image.vue"),
-            },
-        ],
-    }, */
     {
         path: "/pixel-image",
         redirect: "/pixel-image/index",
@@ -90,38 +78,37 @@ const routes = [
     },
     {
         path: "/three",
-        // redirect: "/tone/index",
         name: "ThreeJs",
         component: layout,
         children: [
             {
                 path: "scene",
-                name: "场景",
+                name: "(入门) 场景",
                 component: () => import("@/views/three/scene.vue"),
             },
             {
                 path: "mesh",
-                name: "物体对象",
+                name: "(入门) 物体对象",
                 component: () => import("@/views/three/mesh.vue"),
             },
             {
                 path: "light",
-                name: "光源",
+                name: "(入门) 光源",
                 component: () => import("@/views/three/light.vue"),
             },
             {
                 path: "animate",
-                name: "动画",
+                name: "(入门) 动画",
                 component: () => import("@/views/three/animate.vue"),
             },
             {
                 path: "dataGUI",
-                name: "dat.GUI",
+                name: "(入门) dat.GUI",
                 component: () => import("@/views/three/dat.gui.vue"),
             },
             {
                 path: "Controls",
-                name: "Controls",
+                name: "(入门) Controls",
                 component: () => import("@/views/three/controls.vue"),
             },
         ],
