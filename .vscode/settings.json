@@ -1,0 +1,21 @@
+{
+  "editor.tabSize": 2,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll.stylelint": true
+  },
+  // stylelint 需要检查的文件
+  "stylelint.validate": ["css", "less", "postcss", "scss", "vue", "sass"],
+  "editor.formatOnSave": false,
+  "cSpell.words": [
+    "Commitlint",
+    "frontent",
+    "multiavatar",
+    "playsinline",
+    "steganography",
+    "Stylelint",
+    "Vite",
+    "vitejs"
+  ]
+  // "prettier.enable": false
+}

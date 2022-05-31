@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "useDefineForClassFields": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "lib": ["esnext", "dom"],
+    "skipLibCheck": true,
+    // 解决不能以“.tsx”扩展名结束??
+    "baseUrl": ".",
+    "paths": {
+      // "@": ["./src"],
+      "@/*": ["src/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "components.d.ts", // 自动注册的组件
+    "auto-imports.d.ts" // 自动导入的api
+  ],
+  "exclude": ["node_modules", "dist", "**/*.js"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

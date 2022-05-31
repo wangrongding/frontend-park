@@ -1,0 +1,22 @@
+# *.* eol=lf
+# *.jpg -text
+# *.png -text
+# ============================================================
+*.js eol=lf
+*.ts eol=lf
+*.vue eol=lf
+*.scss eol=lf
+*.css eol=lf
+*.json eol=lf
+*.html eol=lf
+# ============================================================
+*.ts filter=blockignore
+*.js filter=blockignore
+*.vue filter=blockignore
+
+# 忽略代码块
+# git config --global filter.blockignore.clean "sed '/\/\/ blockignore_begin/,/\/\/ blockignore_end$/d'"
+
+# 忽略行代码
+# git config --global filter.gitignore.clean "sed '/\/\/ #gitignore$/'d"
+# ============================================================
