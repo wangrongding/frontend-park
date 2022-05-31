@@ -391,8 +391,7 @@ export default {
 // 行内表单
 .el-form--inline {
   display: inline-block;
-
-  ::v-deep .el-form-item__label-wrap {
+  :deep(.el-form-item__label-wrap) {
     margin-left: 0 !important;
   }
 }

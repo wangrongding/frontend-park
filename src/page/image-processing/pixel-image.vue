@@ -458,11 +458,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 /* stylelint-disable-next-line */
-::v-deep .el-form-item__label {
+:deep(.el-form-item__label) {
   color: white !important;
 }
 
-::v-deep .el-upload-list {
+:deep(.el-upload-list) {
   max-width: 200px;
   overflow: hidden;
   /* stylelint-disable-next-line */
