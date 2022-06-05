@@ -1,5 +1,5 @@
 <template>
-  <div class="page-container">
+  <div class="">
     <p>当前经度: {{ position.longitude }}</p>
     <p>当前纬度: {{ position.latitude }}</p>
     <p>高德转换坐标系结果: {{ position.transform }}</p>
@@ -298,7 +298,4 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-.page-container {
-}
-</style>
+<style scoped lang="scss"></style>

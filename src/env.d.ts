@@ -14,7 +14,6 @@ declare module '*.vue' {
   export default Component
 }
 
-declare module '*.js'
+// declare module '*.js'
+// 处理导入路径不能以“.ts”扩展名结束。
 declare module '*.ts'
-declare module 'fabric'
-declare module '@multiavatar/multiavatar/esm'

@@ -47,15 +47,19 @@ function drawMode() {
   //   初始化画布
   canvas = new fabric.Canvas('canvas2', {
     isDrawingMode: true, // 自由绘画模式
-    selectable: true,
-    selection: true,
-    hoverCursor: 'pointer',
-    devicePixelRatio: true, // Retina 高清屏 屏幕支持
-    stroke: 'lightgreen',
-    strokeWidth: 4,
   })
-  canvas.freeDrawingBrush.color = 'blue'
-  canvas.freeDrawingBrush.width = 5
+  // 设置画笔颜色
+  // canvas.freeDrawingBrush.color = 'blue'
+  // 设置画笔粗细
+  // canvas.freeDrawingBrush.width = 5
+  // 画笔投影
+  canvas.freeDrawingBrush.shadow = new fabric.Shadow({
+    blur: 10,
+    offsetX: 10,
+    offsetY: 10,
+    affectStroke: true,
+    color: '#30e3ca',
+  })
   ctx = canvas.getContext('2d')
 }
 // 导出画布

@@ -140,7 +140,7 @@ function decodeStr() {
 <style lang="scss" scoped>
 .steganography {
   width: 500px;
-  margin: 100px auto;
+  margin: auto;
 
   p {
     font-weight: bold;

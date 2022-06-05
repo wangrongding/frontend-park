@@ -31,20 +31,25 @@ export const routerMenu: RouteRecordRaw[] = [
       },
       {
         path: '/steganography/deImg',
-        meta: { title: '图片解密' },
+        meta: { title: '解析图片隐写内容' },
         component: () => import('@/page/steganography/img-decryption.vue'),
       },
     ],
   },
   {
-    path: '/pixel-image',
+    path: '/image-processing',
     component: layout,
-    redirect: '/pixel-image/index',
-    meta: { title: '千图成像' },
+    meta: { title: '图像处理', type: 'multiple' },
     children: [
       {
-        path: 'index',
+        path: '/image-processing/pixel-image',
+        meta: { title: '千图成像' },
         component: () => import('@/page/image-processing/pixel-image.vue'),
+      },
+      {
+        path: '/image-processing/edit-image',
+        meta: { title: '图片编辑' },
+        component: () => import('@/page/image-processing/edit-image.vue'),
       },
     ],
   },
@@ -89,43 +94,43 @@ export const routerMenu: RouteRecordRaw[] = [
           },
         ],
       },
-      // {
-      //   path: '/other/ThreeJs',
-      //   component: () => import('@/page/three/index.vue'),
-      //   meta: { title: 'ThreeJs', type: 'multiple' },
-      //   children: [
-      //     {
-      //       path: '/other/ThreeJs/scene',
-      //       meta: { title: '场景' },
-      //       component: () => import('@/page/three/scene.vue'),
-      //     },
-      //     {
-      //       path: '/other/ThreeJs/mesh',
-      //       meta: { title: '物体对象' },
-      //       component: () => import('@/page/three/mesh.vue'),
-      //     },
-      //     {
-      //       path: '/other/ThreeJs/light',
-      //       meta: { title: '光源' },
-      //       component: () => import('@/page/three/light.vue'),
-      //     },
-      //     {
-      //       path: '/other/ThreeJs/animate',
-      //       meta: { title: '动画' },
-      //       component: () => import('@/page/three/animate.vue'),
-      //     },
-      //     {
-      //       path: '/other/ThreeJs/dataGUI',
-      //       meta: { title: 'dat.GUI' },
-      //       component: () => import('@/page/three/dat.gui.vue'),
-      //     },
-      //     {
-      //       path: '/other/ThreeJs/Controls',
-      //       meta: { title: 'Controls' },
-      //       component: () => import('@/page/three/controls.vue'),
-      //     },
-      //   ],
-      // },
+      {
+        path: '/other/ThreeJs',
+        component: () => import('@/page/three/index.vue'),
+        meta: { title: 'ThreeJs', type: 'multiple' },
+        children: [
+          {
+            path: '/other/ThreeJs/scene',
+            meta: { title: '场景' },
+            component: () => import('@/page/three/scene.vue'),
+          },
+          {
+            path: '/other/ThreeJs/mesh',
+            meta: { title: '物体对象' },
+            component: () => import('@/page/three/mesh.vue'),
+          },
+          // {
+          //   path: '/other/ThreeJs/light',
+          //   meta: { title: '光源' },
+          //   component: () => import('@/page/three/light.vue'),
+          // },
+          // {
+          //   path: '/other/ThreeJs/animate',
+          //   meta: { title: '动画' },
+          //   component: () => import('@/page/three/animate.vue'),
+          // },
+          // {
+          //   path: '/other/ThreeJs/dataGUI',
+          //   meta: { title: 'dat.GUI' },
+          //   component: () => import('@/page/three/dat.gui.vue'),
+          // },
+          // {
+          //   path: '/other/ThreeJs/Controls',
+          //   meta: { title: 'Controls' },
+          //   component: () => import('@/page/three/controls.vue'),
+          // },
+        ],
+      },
       {
         path: '/other/canvas',
         component: () => import('@/page/webRTC/index.vue'),

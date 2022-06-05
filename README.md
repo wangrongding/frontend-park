@@ -3,6 +3,12 @@
 一个有趣的前端趣味知识公园~  
 该项目是我平时捣鼓的一些好玩的前端知识案例集合,喜欢的小伙伴也可以自己 fork 到仓库后随意玩耍
 
+<img
+    src="https://assets.fedtop.com/picbed/20220531142022.png"
+    alt=""
+    style="width:400px"
+/>
+
 ## 开发
 
 ### 安装依赖
@@ -19,7 +25,7 @@ yarn
 
 ```sh
 
-# 在node-gyp之前安装 (windows用户)
+# 在node-gyp之前安装 (windows用户在powershell(管理员身份)中安装)
 npm install -g --production windows-build-tools
 
 # 全局安装node-gyp
@@ -45,15 +51,6 @@ yarn build
 ```sh
 yarn fal
 ```
-
-# frontent-park
-
-一个有趣的前端趣味知识公园~  
-该项目是我平时捣鼓的一些好玩的前端知识案例集合,喜欢的小伙伴也可以自己 fork 到仓库后随意玩耍 <img
-    src="https://assets.fedtop.com/picbed/20220531142022.png"
-    alt=""
-    style="width:400px"
-/>
 
 ## 我的博客
 

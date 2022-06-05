@@ -1,7 +1,7 @@
 <script>
 /* eslint-disable */
 import { fabric } from 'fabric'
-import { inputFile } from '@/utils/inputFile.ts'
+import { getFiles } from '@/utils/inputFile.ts'
 export default {
   components: {},
   data() {
@@ -32,7 +32,7 @@ export default {
     },
     //素材图片选择回调
     async inputFile() {
-      let files = await inputFile()
+      let files = await getFiles()
       this.drawImage(files[0])
     },
     //绘制目标图片
@@ -144,7 +144,7 @@ export default {
 </script>
 <template>
   <div class="home">
-    <div v-loading="loading" class="content" :style="`background:white`">
+    <div v-loading="loading" class="content">
       <canvas id="canvas" ref="canvas" width="800" height="800"></canvas>
     </div>
     <div class="operations">

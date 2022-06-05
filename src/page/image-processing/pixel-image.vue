@@ -6,8 +6,8 @@
       :style="`background:${background}`"
     >
       <div style="text-align: left; width: 800px">
-        <p>使用方法:</p>
         <p style="font-size: 12px">
+          使用方法:
           选取目标文件后,再选取需要用来合成目标文件的素材图片,通过自定义的一些配置,生成像素图,点击导出图片即可
         </p>
       </div>
@@ -41,7 +41,7 @@
 /* eslint-disable */
 // @ is an alias to /src
 import { getAverageColor } from '@/utils/averageColor.ts'
-import { inputFile } from '@/utils/inputFile.ts'
+import { getFiles } from '@/utils/inputFile.ts'
 import { mostBlockColor } from '@/utils/mostBlockColor.ts'
 import { fabric } from 'fabric'
 export default {
@@ -60,7 +60,7 @@ export default {
             label: '目标图片',
             limit: 1,
             action: '#',
-            listType: 'file-list',
+            listType: 'picture-card',
             fileList: [],
             autoUpload: false,
             onChange: this.slectFile,
@@ -75,49 +75,49 @@ export default {
                 label: "贴片大小",
             }, */
           //TODO
-          aaa: {
-            type: 'select',
-            label: '分布方式',
-            placeholder: '请选择',
-            selectOptions: [],
-            disabled: true,
-          },
-          bbb: {
-            type: 'select',
-            label: '高清程度',
-            placeholder: '请选择',
-            selectOptions: [],
-            disabled: true,
-          },
-          ccc: {
-            type: 'switch',
-            label: '连续重复:',
-            placeholder: '请选择',
-            disabled: true,
-          },
-          ddd: {
-            type: 'switch',
-            label: '按比例调整',
-            disabled: true,
-          },
-          eee: {
-            type: 'select',
-            label: '方向／比例',
-            selectOptions: [],
-            disabled: true,
-          },
-          fff: {
-            type: 'slider',
-            label: '贴片高度',
-            disabled: true,
-          },
-          ggg: {
-            type: 'slider',
-            label: '贴片宽度',
-            disabled: true,
-          },
+          // aaa: {
+          //   type: 'select',
+          //   label: '分布方式',
+          //   placeholder: '开发中...',
+          //   selectOptions: [],
+          //   disabled: true,
+          // },
+          // bbb: {
+          //   type: 'select',
+          //   label: '高清程度',
+          //   placeholder: '开发中...',
+          //   selectOptions: [],
+          //   disabled: true,
+          // },
+          // ccc: {
+          //   type: 'switch',
+          //   label: '连续重复:',
+          //   placeholder: '开发中...',
+          //   disabled: true,
+          // },
+          // ddd: {
+          //   type: 'switch',
+          //   label: '按比例调整',
+          //   disabled: true,
+          // },
+          // eee: {
+          //   type: 'select',
+          //   label: '方向／比例',
+          //   placeholder: '开发中...',
+          //   selectOptions: [],
+          //   disabled: true,
+          // },
+          // fff: {
+          //   type: 'slider',
+          //   label: '贴片高度',
+          //   disabled: true,
+          // },
+          // ggg: {
+          //   type: 'slider',
+          //   label: '贴片宽度',
+          //   disabled: true,
+          // },
         },
-
         labelWidth: '90px',
         rules: {},
       },
@@ -207,7 +207,7 @@ export default {
     },
     //素材图片选择回调
     async inputFile() {
-      let files = await inputFile()
+      let files = await getFiles()
       this.loading = true
       for (let i = 0; i < files.length; i++) {
         let image = await getAverageColor(files[i])
@@ -486,6 +486,7 @@ export default {
     border: 1px solid #516fa3;
     display: flex;
     align-items: center;
+    justify-content: center;
   }
 
   .content {

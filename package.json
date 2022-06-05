@@ -47,11 +47,12 @@
     ]
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.0.1",
     "@multiavatar/multiavatar": "^1.0.7",
     "@types/node": "^17.0.23",
     "axios": "^0.27.2",
     "dat.gui": "^0.7.9",
-    "element-plus": "^2.2.0",
+    "element-plus": "^2.2.2",
     "fabric": "^5.2.1",
     "gcoord": "^0.3.2",
     "pinia": "^2.0.13",
@@ -64,6 +65,8 @@
   "devDependencies": {
     "@commitlint/cli": "^16.2.4",
     "@commitlint/config-conventional": "^16.2.4",
+    "@types/fabric": "^4.5.7",
+    "@types/multiavatar__multiavatar": "^1.0.0",
     "@typescript-eslint/eslint-plugin": "^5.22.0",
     "@typescript-eslint/parser": "^5.22.0",
     "@vitejs/plugin-vue": "^2.3.1",

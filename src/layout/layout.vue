@@ -31,6 +31,7 @@ onMounted(() => {
   height: 100vh;
 
   .content {
+    background: #e8f1ff;
     overflow-y: auto;
     flex: 1;
   }

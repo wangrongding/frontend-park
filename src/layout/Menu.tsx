@@ -45,6 +45,7 @@ export default defineComponent({
           default-active={route.matched[0].path}
           mode='horizontal'
           background-color='#516FA3'
+          menu-trigger='click'
           text-color='#fff'
           unique-opened={true}
           active-text-color='#ffd04b'

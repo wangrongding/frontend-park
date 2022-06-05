@@ -26,6 +26,7 @@ module.exports = {
     'vue/no-deprecated-slot-attribute': 0, // 禁止使用过时的slot属性
     'no-unused-vars': 0, // 关闭未使用变量检查
     'no-param-reassign': 0, // 禁止对函数参数进行重新赋值
+    'no-unused-expressions': 0, // 禁止使用表达式
     'no-console': 2, //
     // 'import/extensions': [2, 'always', { ignorePackages: true }],
     'import/extensions': 0,
