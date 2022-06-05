@@ -222,6 +222,7 @@ onMounted((): void => {
 <template>
   <div class="edit-image-container">
     <div v-loading="state.loading" class="canvas-container">
+      {{ '__filePath__' }}
       <ContextMenu
         v-show="menuShow"
         ref="contextMenu"

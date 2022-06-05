@@ -87,6 +87,7 @@ onMounted(() => {
 
 <template>
   <div class="test-container">
+    {{ '__filePath__' }}
     <canvas id="canvas" class="canvas" width="900" height="400"></canvas>
     <canvas id="canvas2" class="canvas" width="900" height="400"></canvas>
   </div>

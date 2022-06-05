@@ -5,6 +5,8 @@ import * as path from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import filePathInject from './plugins/vite-plugin-filepath-injector'
+
 // https://vitejs.dev/config/
 
 export default defineConfig((config) => ({
@@ -40,6 +42,7 @@ export default defineConfig((config) => ({
       // 自动导入Element-Plus的组件
       resolvers: [ElementPlusResolver()],
     }),
+    filePathInject(),
   ],
   server: {
     host: '0.0.0.0',
