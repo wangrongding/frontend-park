@@ -77,7 +77,7 @@ const state = reactive({})
         clearable
         filterable
         @change="
-          (deviceId) => {
+          (deviceId:string) => {
             handleDeviceChange(deviceId, 'videoinput')
           }
         "
@@ -95,7 +95,7 @@ const state = reactive({})
         clearable
         filterable
         @change="
-          (deviceId) => {
+          (deviceId:string) => {
             handleDeviceChange(deviceId, 'audioinput')
           }
         "
@@ -113,7 +113,7 @@ const state = reactive({})
         clearable
         filterable
         @change="
-          (deviceId) => {
+          (deviceId:string) => {
             handleDeviceChange(deviceId, 'audiooutput')
           }
         "
