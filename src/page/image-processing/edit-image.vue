@@ -221,8 +221,8 @@ onMounted((): void => {
 </script>
 <template>
   <div class="edit-image-container">
+    <FilepathBox :file-path="'__filePath__'" />
     <div v-loading="state.loading" class="canvas-container">
-      {{ '__filePath__' }}
       <ContextMenu
         v-show="menuShow"
         ref="contextMenu"

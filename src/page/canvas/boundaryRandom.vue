@@ -134,6 +134,7 @@ onMounted(() => {
 })
 </script>
 <template>
+  <FilepathBox :file-path="'__filePath__'" />
   <div class="cognitive-ability-container">
     <div class="title">边界随机(不重叠)</div>
     <canvas

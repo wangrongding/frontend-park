@@ -127,6 +127,7 @@ onMounted(() => {
 })
 </script>
 <template>
+  <FilepathBox :file-path="'__filePath__'" />
   <div class="cognitive-ability-container">
     <div class="title">随机</div>
     <canvas

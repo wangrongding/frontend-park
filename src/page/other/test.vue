@@ -86,6 +86,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <FilepathBox :file-path="'__filePath__'" />
   <div class="test-container">
     {{ '__filePath__' }}
     <canvas id="canvas" class="canvas" width="900" height="400"></canvas>

@@ -76,6 +76,7 @@ function decodeStr() {
 
 <template>
   <div class="steganography">
+    <FilepathBox :file-path="'__filePath__'" />
     <h2>加密:🔒</h2>
     <p>将要嵌入密文的明文:</p>
     <el-input

@@ -144,6 +144,7 @@ export default {
 </script>
 <template>
   <div class="home">
+    <FilepathBox :file-path="'__filePath__'" />
     <div v-loading="loading" class="content">
       <canvas id="canvas" ref="canvas" width="800" height="800"></canvas>
     </div>

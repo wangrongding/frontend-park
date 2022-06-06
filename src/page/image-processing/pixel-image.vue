@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <FilepathBox :file-path="'__filePath__'" />
     <div
       v-loading="loading"
       class="content"

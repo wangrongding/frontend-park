@@ -69,6 +69,7 @@ onMounted(() => {
 const state = reactive({})
 </script>
 <template>
+  <FilepathBox :file-path="'__filePath__'" />
   <div class="device-container">
     <div>
       <el-select
@@ -89,7 +90,7 @@ const state = reactive({})
           :value="item.deviceId"
         ></el-option>
       </el-select>
-      <el-select
+      <!-- <el-select
         value-key=""
         placeholder="选择音频输入设备"
         clearable
@@ -124,9 +125,11 @@ const state = reactive({})
           :label="item.label"
           :value="item.deviceId"
         ></el-option>
-      </el-select>
+      </el-select> -->
     </div>
-    <div style="margin: 20px 0">可以更换你的视频输入,音频输入输出的设备</div>
+    <div style="margin: 20px 0">
+      可以更换你的视频输入,音频输入输出的设备(WIP)
+    </div>
     <video id="video" playsinline autoplay></video>
   </div>
 </template>
