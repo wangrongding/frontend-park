@@ -18,7 +18,6 @@ onMounted(() => {
     <Menu />
     <div id="content" class="content">
       <router-view />
-      <!-- <router-view><router-view /></router-view> -->
     </div>
   </div>
 </template>
@@ -26,16 +25,15 @@ onMounted(() => {
 <style scoped lang="scss">
 .page-container {
   // user-select: none;
-  // display: flex;
-  // flex-direction: column;
+  display: flex;
+  flex-direction: column;
   height: 100vh;
 
   .content {
     position: relative;
     background: #e8f1ff;
     overflow-y: auto;
-
-    // flex: 1;
+    flex: 1;
   }
 }
 </style>
