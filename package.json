@@ -59,7 +59,7 @@
     "stats.js": "^0.17.0",
     "three": "^0.141.0",
     "tone": "^14.7.77",
-    "vue": "^3.2.31",
+    "vue": "^3.2.37",
     "vue-router": "^4.0.14"
   },
   "devDependencies": {
