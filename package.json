@@ -47,12 +47,12 @@
     ]
   },
   "dependencies": {
-    "@element-plus/icons-vue": "^2.0.1",
+    "@element-plus/icons-vue": "^2.0.6",
     "@multiavatar/multiavatar": "^1.0.7",
-    "@types/node": "^17.0.23",
+    "@types/node": "^17.0.45",
     "axios": "^0.27.2",
     "dat.gui": "^0.7.9",
-    "element-plus": "^2.2.2",
+    "element-plus": "^2.2.6",
     "fabric": "^5.2.1",
     "gcoord": "^0.3.2",
     "pinia": "^2.0.13",
