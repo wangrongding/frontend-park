@@ -60,7 +60,7 @@
     "three": "^0.141.0",
     "tone": "^14.8.39",
     "vue": "^3.2.31",
-    "vue-router": "^4.0.14"
+    "vue-router": "^4.0.16"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.4",
