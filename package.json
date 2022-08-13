@@ -52,7 +52,7 @@
     "@types/node": "^17.0.45",
     "axios": "^0.27.2",
     "dat.gui": "^0.7.9",
-    "element-plus": "^2.2.6",
+    "element-plus": "^2.2.10",
     "fabric": "^5.2.1",
     "gcoord": "^0.3.2",
     "pinia": "^2.0.14",
