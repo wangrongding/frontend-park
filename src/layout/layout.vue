@@ -25,7 +25,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .page-container {
-  // user-select: none;
+  user-select: none;
   display: flex;
   flex-direction: column;
   height: 100vh;

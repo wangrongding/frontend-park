@@ -1,0 +1,40 @@
+@charset "utf-8";
+
+// 框架默认主题色
+$base-color-default: #47ba80;
+$base-color-blue: #209bff;
+$base-color-green: #47ba80;
+$base-color-white: #fff;
+$base-color-black: #000;
+$base-color-yellow: #fac858;
+$base-color-orange: #ff6700;
+$base-color-red: #f34d37;
+$base-color-gray: rgb(0 0 0 / 65%);
+
+// 共用变量
+$base-text-color: $base-color-white;
+
+// 默认body背景色
+$base-app-container-bg-color: #1d1f23;
+
+// 顶部导航颜色
+$base-navbar-bg-color: #282c34;
+
+// 侧边栏颜色
+$base-sidebar-bg-color: #282c34;
+
+// 滚轮颜色
+$base-scroll-color: $base-color-default;
+
+// hover滚轮颜色
+$base-scroll-active-color: $base-color-default;
+
+// 默认动画长
+$base-transition-time: 0.3s;
+
+// 表格头颜色
+
+/* stylelint-disable */
+:export {
+  BaseNavBgColor: $base-navbar-bg-color;
+}

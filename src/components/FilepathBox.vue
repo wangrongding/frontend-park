@@ -1,10 +1,6 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
-
 const props = defineProps<{ filePath: string }>()
-
 const isDev = process.env.NODE_ENV === 'development'
-const state = reactive({})
 function open(type: string) {
   let url: string
   if (type === 'VsCode') {

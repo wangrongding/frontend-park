@@ -1,3 +1,4 @@
+// https://vitejs.dev/config/
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
@@ -5,18 +6,34 @@ import * as path from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import Inspect from 'vite-plugin-inspect'
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import viteCompression from 'vite-plugin-compression'
 import VueTypeImports from 'vite-plugin-vue-type-imports'
 import filePathInject from './plugins/vite-plugin-filepath-injector'
-// https://vitejs.dev/config/
 
 export default defineConfig((config) => ({
   plugins: [
+    filePathInject(),
     vue({
       // 开启响应式语法糖
       reactivityTransform: true,
     }),
-    VueTypeImports(), // 解决 vue 的 type 引入问题
-    vueJsx(),
+    // TODO vue3.3的时候去除，3.2目前不支持definedProp使用引入的Type。⬇️
+    VueTypeImports(),
+    viteCompression(), // gzip压缩
+    vueJsx(), // 引入 svg
+    createSvgIconsPlugin({
+      // Specify the icon folder to be cached
+      iconDirs: [path.resolve(process.cwd(), 'src/icons/svg')], // 所有的 svg的文件都存放在该文件夹下
+      symbolId: 'icon-[name]',
+    }),
+    Icons({
+      compiler: 'vue3',
+      defaultStyle: 'font-size: 16px;',
+    }),
     // Api自动导入
     AutoImport({
       dts: true,
@@ -33,6 +50,10 @@ export default defineConfig((config) => ({
         ElementPlusResolver(),
         // 自动导入图标组件
         // 自动导入必须遵循名称格式 {prefix：默认为i}-{collection：图标集合的名称}-{icon：图标名称}
+        IconsResolver({
+          // enabledCollections: ['ep'],
+          extension: 'vue',
+        }),
       ],
       // eslint报错解决方案
       eslintrc: {
@@ -50,16 +71,22 @@ export default defineConfig((config) => ({
         /\.vue\?vue/, // .vue
       ],
       resolvers: [
+        // 自动注册图标组件
+        IconsResolver({
+          extension: 'vue',
+          // enabledCollections: ['ep'],
+        }),
         // 自动导入 Element Plus 组件
         ElementPlusResolver(),
       ],
     }),
+    Inspect(),
   ],
   // 服务器特定选项，如主机、端口、https…
   server: {
     host: '0.0.0.0',
-    port: 9421,
-    // open: true,
+    port: 12345,
+    open: false,
     proxy: {
       '/api': {
         target: loadEnv(config.mode, process.cwd()).VITE_APP_BASE_API,
@@ -82,7 +109,8 @@ export default defineConfig((config) => ({
         // 给含有中文的scss文件添加 @charset:UTF-8;
         charset: false,
         // 在全局中使用 index.scss中预定义的变量
-        additionalData: '@import "./src/styles/index.scss";',
+        additionalData:
+          '@import "./src/styles/variable.scss";@import "./src/styles/element.scss";',
       },
     },
     postcss: {

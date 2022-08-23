@@ -60,10 +60,9 @@ function createAvatar(val: any) {
       align-items: center; /* 垂直居中 */
       flex-direction: row;
       transition: all 1s;
-      background: white;
       @keyframes change-bg {
         0% {
-          background: white;
+          background: #e8f1ff;
         }
 
         100% {
