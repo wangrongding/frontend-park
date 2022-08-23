@@ -30,6 +30,7 @@ module.exports = {
     'no-console': 2, //
     // 'import/extensions': [2, 'always', { ignorePackages: true }],
     'import/extensions': 0,
+    'no-use-before-define': 0,
   },
 }
 

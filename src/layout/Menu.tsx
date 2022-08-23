@@ -31,6 +31,9 @@ export default defineComponent({
       return (
         <el-sub-menu
           index={item.path}
+          hide-timeout={50}
+          show-timeout={50}
+          popper-offset={0}
           v-slots={{
             title: () => item.meta.title,
           }}
@@ -45,7 +48,7 @@ export default defineComponent({
           default-active={route.matched[0].path}
           mode='horizontal'
           background-color='#516FA3'
-          menu-trigger='click'
+          menu-trigger='hover'
           text-color='#fff'
           unique-opened={true}
           active-text-color='#ffd04b'

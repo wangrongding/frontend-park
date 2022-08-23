@@ -11,9 +11,11 @@
     "Commitlint",
     "frontent",
     "multiavatar",
+    "nprogress",
     "playsinline",
     "steganography",
     "Stylelint",
+    "threejs",
     "unplugin",
     "Vite",
     "vitejs"
