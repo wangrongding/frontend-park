@@ -2,6 +2,7 @@
 // @ts-ignore
 import Menu from '@/layout/Menu.tsx'
 
+const route = useRoute()
 onMounted(() => {
   // 禁止右键菜单
   // document.oncontextmenu = () => false
@@ -17,7 +18,7 @@ onMounted(() => {
   <div class="page-container">
     <Menu />
     <div id="content" class="content">
-      <router-view />
+      <router-view :key="route.path" />
     </div>
   </div>
 </template>

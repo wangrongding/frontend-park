@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import multiavatar from '@multiavatar/multiavatar/esm'
-import sites from './index.ts'
+import sites from './index'
 
 function openPage(url: string) {
   window.open(url, '_blank')

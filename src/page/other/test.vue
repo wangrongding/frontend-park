@@ -54,11 +54,11 @@ function drawMode() {
   // canvas.freeDrawingBrush.width = 5
   // 画笔投影
   canvas.freeDrawingBrush.shadow = new fabric.Shadow({
-    blur: 10,
-    offsetX: 10,
-    offsetY: 10,
-    affectStroke: true,
-    color: '#30e3ca',
+    blur: 8,
+    offsetX: 8,
+    offsetY: 8,
+    // affectStroke: true,
+    color: '#3b3b3b',
   })
   ctx = canvas.getContext('2d')
 }

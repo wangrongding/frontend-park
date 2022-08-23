@@ -41,9 +41,9 @@
 <script>
 /* eslint-disable */
 // @ is an alias to /src
-import { getAverageColor } from '@/utils/averageColor.ts'
-import { getFiles } from '@/utils/inputFile.ts'
-import { mostBlockColor } from '@/utils/mostBlockColor.ts'
+import { getAverageColor } from '@/utils/averageColor'
+import { getFiles } from '@/utils/inputFile'
+import { mostBlockColor } from '@/utils/mostBlockColor'
 import { fabric } from 'fabric'
 export default {
   components: {},

@@ -217,6 +217,14 @@ const menuList: Menu[] = [
 
 onMounted((): void => {
   initCanvas()
+  // 禁止右键菜单
+  document.oncontextmenu = () => false
+  // oncopy事件禁用复制;
+  document.oncopy = () => false
+  // oncut事件禁用剪切
+  document.oncut = () => false
+  // onselectstart事件禁用网页上选取的内容
+  document.onselectstart = () => false
 })
 </script>
 <template>
@@ -241,6 +249,7 @@ onMounted((): void => {
       ></canvas>
     </div>
     <div class="operations">
+      <p>右键点击图片可以选择操作菜单</p>
       <el-row>
         <el-button
           type="primary"

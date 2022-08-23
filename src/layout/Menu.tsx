@@ -1,7 +1,7 @@
 import { defineComponent, reactive, ref, Slot, Slots } from 'vue'
 import { RouteRecordRaw, useRoute } from 'vue-router'
 import { ElMenu, ElSubMenu, ElMenuItem } from 'element-plus'
-import { routerMenu } from '@/router/index.ts'
+import { routerMenu } from '@/router/index'
 
 export default defineComponent({
   name: 'Menu',

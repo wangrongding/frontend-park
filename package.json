@@ -32,7 +32,7 @@
     "stylelint-check": "stylelint-config-prettier-check",
     "fal": "npm run format && npm run stylelint && npm run lint",
     "prepare": "husky install",
-    "preinstall": "npx npm-limit yarn",
+    "preinstall": "npx npm-limit pnpm",
     "cz": "cz"
   },
   "lint-staged": {
@@ -94,6 +94,7 @@
     "unplugin-auto-import": "^0.7.1",
     "unplugin-vue-components": "^0.19.5",
     "vite": "^2.9.1",
+    "vite-plugin-vue-type-imports": "^0.2.0",
     "vue-tsc": "^0.33.9"
   },
   "config": {

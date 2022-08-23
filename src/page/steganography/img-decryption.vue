@@ -1,7 +1,7 @@
 <script>
 /* eslint-disable */
 import { fabric } from 'fabric'
-import { getFiles } from '@/utils/inputFile.ts'
+import { getFiles } from '@/utils/inputFile'
 export default {
   components: {},
   data() {

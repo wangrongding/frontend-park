@@ -1,11 +1,11 @@
-import cssList from './css.ts'
-import JavaScriptList from './JavaScript.ts'
-import nodeList from './node.ts'
-import materialList from './material.ts'
-import blogList from './blog.ts'
-import personalBlogList from './personalBlog.ts'
-import frontWeeklyList from './frontWeekly.ts'
-import docList from './doc.ts'
+import cssList from './css'
+import JavaScriptList from './JavaScript'
+import nodeList from './node'
+import materialList from './material'
+import blogList from './blog'
+import personalBlogList from './personalBlog'
+import frontWeeklyList from './frontWeekly'
+import docList from './doc'
 
 export default [
   ...blogList,

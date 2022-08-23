@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { functions } from 'lodash'
 import { reactive } from 'vue'
 
 let canvas: HTMLCanvasElement

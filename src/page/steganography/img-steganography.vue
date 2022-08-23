@@ -1,7 +1,7 @@
 <script>
 /* eslint-disable */
 import { fabric } from 'fabric'
-import { getFiles } from '@/utils/inputFile.ts'
+import { getFiles } from '@/utils/inputFile'
 import { ElMessage } from 'element-plus'
 
 export default {
