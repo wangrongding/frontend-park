@@ -47,7 +47,6 @@ function init() {
   createPlane()
   // 创建光源
   createLight()
-  getStats()
 
   createSphere()
 
@@ -199,9 +198,9 @@ function getStats() {
   document.querySelector('.page-container').appendChild(stats.dom)
   stats.domElement.style = 'position:absolute;bottom:0px;left:0px'
   function statusAnimate() {
-    stats && stats.begin()
+    stats.begin()
     // monitored code goes here
-    stats && stats.end()
+    stats.end()
     requestAnimationFrame(statusAnimate)
   }
   requestAnimationFrame(statusAnimate)
@@ -247,7 +246,8 @@ function configGUI() {
 onMounted(() => {
   init()
   animate()
-  configGUI()
+  // getStats()
+  // configGUI()
 })
 onUnmounted(() => {
   const guiDom = gui.domElement

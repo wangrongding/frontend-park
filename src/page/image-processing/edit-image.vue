@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive, Ref } from 'vue'
+import { ElMessage } from 'element-plus'
 import { fabric } from 'fabric'
 import { getFiles } from '@/utils/inputFile'
 import qrCode from '@/assets/qr.jpg'

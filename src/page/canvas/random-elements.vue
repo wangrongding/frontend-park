@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ElMessage } from 'element-plus'
+
 let canvas: HTMLCanvasElement
 let ctx: CanvasRenderingContext2D
 

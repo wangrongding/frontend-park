@@ -12,6 +12,7 @@ import { imageProcessing } from './modules/image-processing'
 import { audioAndVideo } from './modules/audio-and-video'
 import { siteMap } from './modules/site-map'
 import { three } from './modules/three'
+import { other } from './modules/other'
 // 用于渲染菜单，面包屑，保持原始层级
 export const routerList: Array<RouteRecordRaw> = [
   ...home,
@@ -20,6 +21,7 @@ export const routerList: Array<RouteRecordRaw> = [
   ...audioAndVideo,
   ...three,
   ...siteMap,
+  ...other,
 ]
 
 // 扁平化的路由

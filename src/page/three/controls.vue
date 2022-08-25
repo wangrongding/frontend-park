@@ -52,8 +52,6 @@ function init() {
   createPlane()
   // 创建光源
   createLight()
-  // 获取pfs状态
-  getStats()
   // 创建集合体
   createSphere()
   // 创建渲染器
@@ -235,7 +233,9 @@ function createController() {
 onMounted(() => {
   init()
   animate()
-  configGUI()
+  // 获取pfs状态
+  // getStats()
+  // configGUI()
 })
 onUnmounted(() => {
   /* eslint-disable-next-line */

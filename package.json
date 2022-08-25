@@ -53,6 +53,7 @@
     "@types/three": "^0.143.1",
     "axios": "^0.27.2",
     "dat.gui": "^0.7.9",
+    "dom-to-image": "^2.6.0",
     "element-plus": "^2.2.6",
     "fabric": "^5.2.1",
     "gcoord": "^0.3.2",
@@ -68,6 +69,7 @@
   "devDependencies": {
     "@commitlint/cli": "^16.2.4",
     "@commitlint/config-conventional": "^16.2.4",
+    "@types/dom-to-image": "^2.6.4",
     "@types/fabric": "^4.5.7",
     "@types/multiavatar__multiavatar": "^1.0.0",
     "@types/nprogress": "^0.2.0",

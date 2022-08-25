@@ -5,6 +5,7 @@ specifiers:
   '@commitlint/config-conventional': ^16.2.4
   '@element-plus/icons-vue': ^2.0.6
   '@multiavatar/multiavatar': ^1.0.7
+  '@types/dom-to-image': ^2.6.4
   '@types/fabric': ^4.5.7
   '@types/multiavatar__multiavatar': ^1.0.0
   '@types/node': ^17.0.45
@@ -20,6 +21,7 @@ specifiers:
   cz-conventional-changelog: 3.3.0
   cz-customizable: ^6.3.0
   dat.gui: ^0.7.9
+  dom-to-image: ^2.6.0
   element-plus: ^2.2.6
   eslint: ^7.32.0 || ^8.2.0
   eslint-config-airbnb-base: ^15.0.0
@@ -64,6 +66,7 @@ dependencies:
   '@types/three': registry.npmmirror.com/@types/three/0.143.1
   axios: registry.npmmirror.com/axios/0.27.2
   dat.gui: registry.npmmirror.com/dat.gui/0.7.9
+  dom-to-image: registry.npmmirror.com/dom-to-image/2.6.0
   element-plus: registry.npmmirror.com/element-plus/2.2.12_vue@3.2.37
   fabric: registry.npmmirror.com/fabric/5.2.1
   gcoord: registry.npmmirror.com/gcoord/0.3.2
@@ -79,6 +82,7 @@ dependencies:
 devDependencies:
   '@commitlint/cli': registry.npmmirror.com/@commitlint/cli/16.3.0
   '@commitlint/config-conventional': registry.npmmirror.com/@commitlint/config-conventional/16.2.4
+  '@types/dom-to-image': registry.npmmirror.com/@types/dom-to-image/2.6.4
   '@types/fabric': registry.npmmirror.com/@types/fabric/4.5.11
   '@types/multiavatar__multiavatar': registry.npmmirror.com/@types/multiavatar__multiavatar/1.0.0
   '@types/nprogress': registry.npmmirror.com/@types/nprogress/0.2.0
@@ -1073,6 +1077,12 @@ packages:
     resolution: {integrity: sha512-yOlFc+7UtL/89t2ZhjPvvB/DeAr3r+Dq58IgzsFkOAvVC6NMJXmCGjbptdXdR9qsX7pKcTL+s87FtYREi2dEEQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@tsconfig/node16/-/node16-1.0.3.tgz}
     name: '@tsconfig/node16'
     version: 1.0.3
+    dev: true
+
+  registry.npmmirror.com/@types/dom-to-image/2.6.4:
+    resolution: {integrity: sha512-UddUdGF1qulrSDulkz3K2Ypq527MR6ixlgAzqLbxSiQ0icx0XDlIV+h4+edmjq/1dqn0KgN0xGSe1kI9t+vGuw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/dom-to-image/-/dom-to-image-2.6.4.tgz}
+    name: '@types/dom-to-image'
+    version: 2.6.4
     dev: true
 
   registry.npmmirror.com/@types/fabric/4.5.11:
@@ -3011,6 +3021,12 @@ packages:
       domhandler: registry.npmmirror.com/domhandler/5.0.3
       entities: registry.npmmirror.com/entities/4.3.1
     dev: true
+
+  registry.npmmirror.com/dom-to-image/2.6.0:
+    resolution: {integrity: sha512-Dt0QdaHmLpjURjU7Tnu3AgYSF2LuOmksSGsUcE6ItvJoCWTBEmiMXcqBdNSAm9+QbbwD7JMoVsuuKX6ZVQv1qA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/dom-to-image/-/dom-to-image-2.6.0.tgz}
+    name: dom-to-image
+    version: 2.6.0
+    dev: false
 
   registry.npmmirror.com/domelementtype/1.3.1:
     resolution: {integrity: sha512-BSKB+TSpMpFI/HOxCNr1O8aMOTZ8hT3pM3GQ0w/mWRmkhEDSFJkkyzz4XQsBV44BChwGkrDfMyjVD0eA2aFV3w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/domelementtype/-/domelementtype-1.3.1.tgz}
