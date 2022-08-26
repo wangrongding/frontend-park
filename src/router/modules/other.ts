@@ -17,7 +17,7 @@ export const other: RouteRecordRaw[] = [
         component: () => import('@/page/other/chsi/index.vue'),
       },
       {
-        path: '/other/chsi',
+        path: '/other/cshi',
         meta: { title: 'CHSI在线证明(不可乱用)' },
         component: () => import('@/page/other/chsi/index-temp.vue'),
       },
