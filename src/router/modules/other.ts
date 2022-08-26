@@ -12,7 +12,7 @@ export const other: RouteRecordRaw[] = [
         component: () => import('@/page/other/latitude-longitude.vue'),
       },
       {
-        path: '/other/chsi-hidden',
+        path: '/other/chsi-hid',
         meta: { title: 'CHSI在线证明(不可乱用)', hidden: true },
         component: () => import('@/page/other/chsi/index.vue'),
       },
