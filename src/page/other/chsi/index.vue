@@ -62,8 +62,8 @@ async function download() {
     document.body.removeChild(link)
   } else {
     ElMessageBox.alert(
-      '如果这对你有所帮助，愿意给我在Github上点个 follow 嘛～💖谢谢！',
-      '哈喽～',
+      '如果这对你有所帮助，愿意在Github上顺便点一个 follow 嘛～💖谢谢！',
+      '🥳哈喽～',
       {
         confirmButtonText: '这就去',
         callback: (action: Action) => {
