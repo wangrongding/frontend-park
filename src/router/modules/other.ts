@@ -13,13 +13,13 @@ export const other: RouteRecordRaw[] = [
       },
       {
         path: '/other/chsi-hidden',
-        meta: { title: 'CHSI在线证明(不可乱用)' },
-        component: () => import('@/page/other/chsi/index-temp.vue'),
+        meta: { title: 'CHSI在线证明(不可乱用)', hidden: true },
+        component: () => import('@/page/other/chsi/index.vue'),
       },
       {
         path: '/other/chsi',
-        meta: { title: 'CHSI在线证明(不可乱用)', hidden: true },
-        component: () => import('@/page/other/chsi/index.vue'),
+        meta: { title: 'CHSI在线证明(不可乱用)' },
+        component: () => import('@/page/other/chsi/index-temp.vue'),
       },
     ],
   },
