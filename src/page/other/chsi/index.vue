@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import domToImage from 'dom-to-image'
+import type { Action } from 'element-plus'
 import ChsiPage from './components/chsi-page.vue'
 import { getFiles } from '@/utils/inputFile'
 
@@ -41,17 +42,11 @@ async function selectAvatar() {
   const file = await getFiles()
   state.userInfo.avatar = file[0]
 }
+
+const handleFollow = ref(false)
 // 下载报告图片
-function download() {
-  ElMessageBox.confirm(
-    '该页面用于申请Copilot的学生认证，禁止用于其他用途，否则后果自负！',
-    '警告⚠️',
-    {
-      confirmButtonText: '同意',
-      cancelButtonText: '不同意',
-      type: 'error',
-    },
-  ).then(async () => {
+async function download() {
+  if (handleFollow.value === true) {
     const imgData = await domToImage.toJpeg(
       document.querySelector('#printContainer')!,
       {
@@ -65,7 +60,44 @@ function download() {
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
-  })
+  } else {
+    ElMessageBox.alert(
+      '如果这对你有所帮助，愿意给我在Github上点个 follow 嘛～💖谢谢！',
+      '哈喽～',
+      {
+        confirmButtonText: '这就去',
+        callback: (action: Action) => {
+          if (action === 'confirm') {
+            window.open('https://github.com/wangrongding', '_blank')
+            handleFollow.value = true
+          }
+        },
+      },
+    )
+  }
+  // ElMessageBox.confirm(
+  //   '该页面用于申请Copilot的学生认证，禁止用于其他用途，否则后果自负！',
+  //   '警告⚠️',
+  //   {
+  //     confirmButtonText: '同意',
+  //     cancelButtonText: '不同意',
+  //     type: 'error',
+  //   },
+  // ).then(async () => {
+  //   const imgData = await domToImage.toJpeg(
+  //     document.querySelector('#printContainer')!,
+  //     {
+  //       quality: 1,
+  //       bgcolor: '#fff',
+  //     },
+  //   )
+  //   const link = document.createElement('a')
+  //   link.download = 'canvas.png'
+  //   link.href = imgData
+  //   document.body.appendChild(link)
+  //   link.click()
+  //   document.body.removeChild(link)
+  // })
 }
 </script>
 <template>
@@ -138,13 +170,16 @@ function download() {
       <el-input v-model="state.userInfo.code">
         <template #prepend>验证码：</template>
       </el-input>
+      <p>
+        警告⚠️：该页面用于申请Copilot的学生认证，禁止用于其他用途，否则后果自负！'
+      </p>
       <el-button
         type="success"
         style="width: 100%"
         size="default"
         @click="download"
       >
-        下载报告图片
+        同意上述内容 并 下载报告图片
       </el-button>
     </div>
   </div>
