@@ -54,7 +54,7 @@
     "axios": "^0.27.2",
     "dat.gui": "^0.7.9",
     "dom-to-image": "^2.6.0",
-    "element-plus": "^2.2.6",
+    "element-plus": "2.2.15",
     "fabric": "^5.2.1",
     "gcoord": "^0.3.2",
     "nprogress": "^0.2.0",

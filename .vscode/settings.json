@@ -8,6 +8,7 @@
   "stylelint.validate": ["css", "less", "postcss", "scss", "vue", "sass"],
   "editor.formatOnSave": false,
   "cSpell.words": [
+    "cascader",
     "Commitlint",
     "frontent",
     "multiavatar",
@@ -17,7 +18,8 @@
     "Stylelint",
     "unplugin",
     "Vite",
-    "vitejs"
+    "vitejs",
+    "webrtc"
   ]
   // "prettier.enable": false
 }

@@ -1,39 +1,77 @@
 <script setup lang="ts">
-const devicesList = reactive({
-  audioInput: [] as MediaDeviceInfo[],
-  audioOutput: [] as MediaDeviceInfo[],
-  videoInput: [] as MediaDeviceInfo[],
+const formParams = reactive({
+  data: {
+    audioInput: '',
+    audioOutput: '',
+    videoInput: '',
+  }, // 表单数据对象
+  formList: {
+    audioInput: {
+      type: 'select',
+      label: '音频输入设备切换',
+      placeholder: '请选择',
+      disabled: true,
+      options: [] as MediaDeviceInfo[],
+      optionValue: 'deviceId',
+      optionLabel: 'label',
+      onChange: (deviceId: string) => {
+        handleDeviceChange(deviceId, 'audioinput')
+      },
+    },
+    audioOutput: {
+      type: 'select',
+      label: '音频输出设备切换',
+      placeholder: '请选择',
+      disabled: true,
+      options: [] as MediaDeviceInfo[],
+      optionValue: 'deviceId',
+      optionLabel: 'label',
+      onChange: (deviceId: string) => {
+        handleDeviceChange(deviceId, 'audiooutput')
+      },
+    },
+    videoInput: {
+      type: 'select',
+      label: '视频输入设备切换',
+      placeholder: '请选择',
+      options: [] as MediaDeviceInfo[],
+      optionValue: 'deviceId',
+      optionLabel: 'label',
+      onChange: (deviceId: string) => {
+        handleDeviceChange(deviceId, 'videoinput')
+      },
+    },
+  },
+  labelColor: '#000',
+  inline: true,
+  rules: [{ required: true, message: '请输入最大宽度', trigger: 'blur' }],
 })
-function handleError(error: Error) {
-  Error('navigator.MediaDevices.getUserMedia error: ', error)
-}
-function getUserMedia() {
-  return navigator.mediaDevices
-    .getUserMedia({
-      video: true,
-      audio: true,
-    })
+
+// 获取媒体数据
+function getUserMedia(
+  options: MediaStreamConstraints,
+  cb: (stream: MediaStream) => void,
+) {
+  navigator.mediaDevices
+    .getUserMedia(options)
     .then((stream) => {
-      const video = document.querySelector('video')
-      video!.srcObject = stream
-      video!.onloadedmetadata = () => {
-        video!.play()
-      }
+      cb(stream)
     })
     .catch(handleError)
 }
 
+// 获取所有音视频设备
 function getDevices() {
   navigator.mediaDevices
     .enumerateDevices()
     .then((devices) => {
-      devicesList.videoInput = devices.filter(
+      formParams.formList.videoInput.options = devices.filter(
         (device) => device.kind === 'videoinput',
       )
-      devicesList.audioOutput = devices.filter(
+      formParams.formList.audioOutput.options = devices.filter(
         (device) => device.kind === 'audiooutput',
       )
-      devicesList.audioInput = devices.filter(
+      formParams.formList.audioInput.options = devices.filter(
         (device) => device.kind === 'audioinput',
       )
     })
@@ -44,93 +82,63 @@ function handleDeviceChange(
   deviceId: string,
   type: 'audioinput' | 'audiooutput' | 'videoinput',
 ) {
-  const video = document.querySelector('video')
-  navigator.mediaDevices
-    .getUserMedia({
+  getUserMedia(
+    {
       video: {
         deviceId,
       },
       audio: {
         deviceId,
       },
-    })
-    .then((stream) => {
-      video!.srcObject = stream
-      video!.onloadedmetadata = () => {
-        video!.play()
+    },
+    (stream) => {
+      const video = document.querySelector('video')!
+      video.srcObject = stream
+      video.onloadedmetadata = () => {
+        video.play()
       }
-    })
-    .catch(handleError)
+    },
+  )
+}
+
+// 创建新的视频
+function createVideo(stream: MediaStream) {
+  // 创建一个video标签
+  const video = document.createElement('video')
+  video.srcObject = stream
+  video.onloadedmetadata = () => {
+    video.play()
+  }
+  // 添加到页面
+  document.body.appendChild(video)
+}
+
+// 在视频标签中播放视频流
+function playStream(stream: MediaStream) {
+  const video = document.querySelector('video')!
+  video.srcObject = stream
+  video.onloadedmetadata = () => {
+    video.play()
+  }
+}
+
+function handleError(error: Error) {
+  Error('error: ', error)
 }
 onMounted(() => {
   getDevices()
-  getUserMedia()
+  getUserMedia({ video: true, audio: true }, playStream)
 })
 const state = reactive({})
 </script>
 <template>
   <FilepathBox :file-path="'__filePath__'" />
   <div class="device-container">
-    <div>
-      <el-select
-        value-key=""
-        placeholder="选择视频输入设备"
-        clearable
-        filterable
-        @change="
-          (deviceId:string) => {
-            handleDeviceChange(deviceId, 'videoinput')
-          }
-        "
-      >
-        <el-option
-          v-for="item in devicesList.videoInput"
-          :key="item.deviceId"
-          :label="item.label"
-          :value="item.deviceId"
-        ></el-option>
-      </el-select>
-      <!-- <el-select
-        value-key=""
-        placeholder="选择音频输入设备"
-        clearable
-        filterable
-        @change="
-          (deviceId:string) => {
-            handleDeviceChange(deviceId, 'audioinput')
-          }
-        "
-      >
-        <el-option
-          v-for="item in devicesList.audioInput"
-          :key="item.deviceId"
-          :label="item.label"
-          :value="item.deviceId"
-        ></el-option>
-      </el-select>
-      <el-select
-        value-key=""
-        placeholder="选择音频输出设备"
-        clearable
-        filterable
-        @change="
-          (deviceId:string) => {
-            handleDeviceChange(deviceId, 'audiooutput')
-          }
-        "
-      >
-        <el-option
-          v-for="item in devicesList.audioOutput"
-          :key="item.deviceId"
-          :label="item.label"
-          :value="item.deviceId"
-        ></el-option>
-      </el-select> -->
-    </div>
+    <SuperForm :form-params="formParams" />
     <div style="margin: 20px 0">
       可以更换你的视频输入,音频输入输出的设备(WIP)
     </div>
-    <video id="video" playsinline autoplay></video>
+    <video id="video" playsinline autoplay muted></video>
   </div>
 </template>
 <style lang="scss" scoped>

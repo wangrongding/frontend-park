@@ -16,10 +16,14 @@ onMounted(() => {
 </script>
 <template>
   <div class="page-container">
-    <Menu />
-    <div id="content" class="content">
-      <router-view :key="route.path" />
-    </div>
+    <el-container>
+      <el-header><Menu /></el-header>
+      <el-main>
+        <div id="content" class="content">
+          <router-view :key="route.path" />
+        </div>
+      </el-main>
+    </el-container>
   </div>
 </template>
 
@@ -28,13 +32,24 @@ onMounted(() => {
   user-select: none;
   display: flex;
   flex-direction: column;
-  height: 100vh;
 
-  .content {
-    position: relative;
-    background: #e8f1ff;
-    overflow-y: auto;
+  // height: 100vh;
+
+  .el-header {
+    padding: 0;
+  }
+
+  .el-main {
     flex: 1;
+    padding: 0;
+
+    .content {
+      overflow: auto;
+      height: calc(100vh - 60px);
+      width: 100%;
+      position: relative;
+      background: #e8f1ff;
+    }
   }
 }
 </style>
