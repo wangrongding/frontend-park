@@ -9,7 +9,6 @@ declare global {
   const effectScope: typeof import('vue')['effectScope']
   const EffectScope: typeof import('vue')['EffectScope']
   const getCurrentInstance: typeof import('vue')['getCurrentInstance']
-  const ElMessageBox: typeof import('element-plus/es')['ElMessageBox']
   const getCurrentScope: typeof import('vue')['getCurrentScope']
   const h: typeof import('vue')['h']
   const inject: typeof import('vue')['inject']

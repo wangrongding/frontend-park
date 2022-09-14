@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ElMessageBox } from 'element-plus'
 import domToImage from 'dom-to-image'
 import type { Action } from 'element-plus'
 import ChsiPage from './components/chsi-page.vue'

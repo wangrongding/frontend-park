@@ -17,7 +17,7 @@ function open(type: string) {
 </script>
 <template>
   <div class="filepath-box-container">
-    <el-popover placement="top-start" :width="510" trigger="click">
+    <el-popover placement="top-start" :width="550" trigger="click">
       <template #reference>
         <el-button type="primary" color="#e8f1aa" icon="FolderOpened">
           本页面的文件路径

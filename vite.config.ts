@@ -85,6 +85,7 @@ export default defineConfig((config) => ({
   // 服务器特定选项，如主机、端口、https…
   server: {
     host: '0.0.0.0',
+    https: true,
     port: 12345,
     open: false,
     proxy: {

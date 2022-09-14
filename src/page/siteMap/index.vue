@@ -76,8 +76,6 @@ function createAvatar(val: any) {
         height: 56px;
         border: 2px dashed #333;
         border-radius: 50%;
-
-        // object-fit: cover;
         object-fit: contain;
         overflow: hidden;
       }
