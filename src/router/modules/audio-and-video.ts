@@ -21,7 +21,7 @@ export const audioAndVideo: RouteRecordRaw[] = [
           },
           {
             path: '/audio-and-video/webRTC/index',
-            meta: { title: 'xxxx' },
+            meta: { title: '测试页' },
             component: () => import('@/page/webRTC/index.vue'),
           },
         ],

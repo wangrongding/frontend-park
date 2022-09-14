@@ -11,6 +11,12 @@ export const imageProcessing: RouteRecordRaw[] = [
         component: () => import('@/page/image-processing/pixel-image.vue'),
       },
       {
+        path: '/image-processing/image-compression',
+        meta: { title: '图片压缩' },
+        component: () =>
+          import('@/page/image-processing/image-compression.vue'),
+      },
+      {
         path: '/image-processing/edit-image',
         meta: { title: '图片编辑' },
         component: () => import('@/page/image-processing/edit-image.vue'),

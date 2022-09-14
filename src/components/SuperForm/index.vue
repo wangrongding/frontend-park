@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ElForm, ElMessage } from 'element-plus'
+import { ElForm, ElMessage, genFileId } from 'element-plus'
+import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 import { FormOptions } from './type'
 
 const props = defineProps<{ formParams: FormOptions }>()
@@ -23,9 +24,15 @@ function submitForm(submit: any) {
     }
   })
 }
+// 选中时自动替换上一个文件
+const upload = ref<UploadInstance>()
 
-function onExceed() {
+const handleExceed: UploadProps['onExceed'] = (files) => {
   ElMessage.warning('文件数量超出限制')
+  upload.value!.clearFiles()
+  const file = files[0] as UploadRawFile
+  file.uid = genFileId()
+  upload.value!.handleStart(file)
 }
 
 // function getOption(value: any, defaultValue: any) {
@@ -239,6 +246,7 @@ const formStyle = ref({
         <!-- 上传组件 -->
         <el-upload
           v-if="itemForm.type === 'upload'"
+          ref="upload"
           v-model:file-list="formParams.data[key]"
           :action="itemForm.action"
           multiple
@@ -249,8 +257,9 @@ const formStyle = ref({
           :on-preview="itemForm.onPreview"
           :on-remove="itemForm.onRemove"
           :before-remove="itemForm.onBeforeRemove"
+          :show-file-list="itemForm.showFileList"
           :limit="itemForm.limit"
-          :on-exceed="itemForm.onExceed || onExceed"
+          :on-exceed="itemForm.onExceed || handleExceed"
           :on-error="itemForm.onError"
         >
           <el-button type="primary">{{ itemForm.text }}</el-button>
