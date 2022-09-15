@@ -25,6 +25,11 @@ export const audioAndVideo: RouteRecordRaw[] = [
             component: () => import('@/page/webRTC/p2p.vue'),
           },
           {
+            path: '/audio-and-video/webRTC/signaling-p2p',
+            meta: { title: '信令p2p' },
+            component: () => import('@/page/webRTC/signaling-p2p.vue'),
+          },
+          {
             path: '/audio-and-video/webRTC/select-devices',
             meta: { title: '选择设备' },
             component: () => import('@/page/webRTC/select-devices.vue'),

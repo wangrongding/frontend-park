@@ -37,6 +37,7 @@ onMounted(() => {
 
   .el-header {
     padding: 0;
+    height: 58px;
   }
 
   .el-main {
@@ -45,7 +46,7 @@ onMounted(() => {
 
     .content {
       overflow: auto;
-      height: calc(100vh - 60px);
+      height: calc(100vh - 58px);
       width: 100%;
       position: relative;
       background: #e8f1ff;

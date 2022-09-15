@@ -12,6 +12,7 @@ import IconsResolver from 'unplugin-icons/resolver'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import viteCompression from 'vite-plugin-compression'
 import VueTypeImports from 'vite-plugin-vue-type-imports'
+import * as fs from 'fs'
 import filePathInject from './plugins/vite-plugin-filepath-injector'
 
 export default defineConfig((config) => ({
@@ -85,7 +86,11 @@ export default defineConfig((config) => ({
   // 服务器特定选项，如主机、端口、https…
   server: {
     host: '0.0.0.0',
-    https: true,
+    https: {
+      key: fs.readFileSync(`${__dirname}/localhost+3-key.pem`),
+      cert: fs.readFileSync(`${__dirname}/localhost+3.pem`),
+    },
+    // https: true,
     port: 12345,
     open: false,
     proxy: {

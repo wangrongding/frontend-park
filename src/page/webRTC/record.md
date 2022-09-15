@@ -47,6 +47,9 @@ navigator.mediaDevices.getDisplayMedia(constraints)
 
 ### 连接
 
+https，对应的我们信令服务的地址也需要是 https，不然就会报错  
+![](https://assets.fedtop.com/picbed/202209152158537.png)
+
 ![](https://assets.fedtop.com/picbed/202209150123502.png)
 
 ## git 仓库
@@ -82,8 +85,11 @@ navigator.mediaDevices.getDisplayMedia(constraints)
 
 ## 自签证书
 
-https://www.jianshu.com/p/7cb5c2cffaaa
+- https://www.jianshu.com/p/7cb5c2cffaaa
+- https://juejin.cn/post/7104650674880643108
+- https://penueling.com/%E7%B7%9A%E4%B8%8A%E5%AD%B8%E7%BF%92/%E8%A6%81%E6%80%8E%E9%BA%BC%E8%AE%93localhost%E4%B9%9F%E5%8F%AF%E4%BB%A5%E6%9C%89https%E6%86%91%E8%AD%89%EF%BC%9F/
 
 ## 一些边角问题
 
 - cmake 问题： http://jotmynotes.blogspot.com/2016/10/updating-cmake-from-2811-to-362-or.html
+- [](https://juejin.cn/post/7071910670056292389)
