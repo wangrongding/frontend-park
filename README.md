@@ -109,7 +109,7 @@
 ### 安装依赖
 
 ```sh
-yarn
+pnpm i
 ```
 
 ## 需要注意的是
@@ -132,17 +132,17 @@ npm install -g node-gyp
 ## 本地运行
 
 ```sh
-yarn dev
+pnpm dev
 ```
 
 ## 打包
 
 ```sh
-yarn build
+pnpm build
 ```
 
 ## 格式化代码并执行 eslint 校验
 
 ```sh
-yarn fal
+pnpm fal
 ```
