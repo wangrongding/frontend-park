@@ -23,11 +23,25 @@
 
 ### WebRTC 音视频协同
 
-- 拍照 ![](https://assets.fedtop.com/picbed/202209150918746.png)
+- [x] 拍照   
+<img
+    src="https://assets.fedtop.com/picbed/202209150918746.png"
+    alt=""
+    style="width:400px"
+/>
 
-- 无信令传递 sdp（p2p 音视频通话）
+- [x] 无信令传递 sdp（p2p 音视频通话）  
 
-![](https://assets.fedtop.com/picbed/202209150922457.png)
+<img
+    src="https://assets.fedtop.com/picbed/202209150922457.png"
+    alt=""
+    style="width:400px"
+/>
+
+- [ ] 搭建 STUN/TURN 服务器  
+- [ ] 美颜功能  
+- [ ] WebRTC + Three.js 实现一个有趣的项目
+- [ ] WebRTC + TensorFlow.js 实现一个有趣的项目
 
 ### ThreeJs
 
