@@ -51,7 +51,6 @@ function createAvatar(val: any) {
 
     .item {
       cursor: pointer;
-      width: 280px;
       height: 80px;
       display: flex;
       padding: 10px 20px;
