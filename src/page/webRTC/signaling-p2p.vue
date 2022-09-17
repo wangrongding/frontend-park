@@ -1,35 +1,65 @@
 <script setup lang="ts">
 import { ElMessage } from 'element-plus'
-import io from 'socket.io-client'
+import io, { Socket } from 'socket.io-client'
+
+const state = reactive({
+  peerConnection: new RTCPeerConnection(),
+  // 创建一个空的本地媒体流
+  localStream: new MediaStream(),
+  // 创建一个空的远程媒体流
+  remoteStream: new MediaStream(),
+  offerSdp: '',
+  answerSdp: '',
+})
 
 const peerConnection = new RTCPeerConnection()
 let localStream: MediaStream
 let remoteStream: MediaStream
-
 const offerSdp = ref('')
 const answerSdp = ref('')
 
-// 连接socket
-function initConnect() {
-  const socket = io('https://192.168.1.126:3000')
-  const userId = Math.random().toString(36).substring(2)
-  const roomId = '001'
-  socket.on('connect', () => {
-    ElMessage.success('连接成功')
-    // console.log('🦄🦄🦄', '连接成功')
-    socket.emit('join', { userId, roomId })
-  })
+let socket: Socket
+const userId = getUuid()
+const roomId = '001'
 
+function initConnect() {
+  // TODO 替换为公网地址
+  socket = io('https://192.168.1.126:3000')
+  socket.on('connect', () => {
+    handleConnect()
+  })
   // ========================================
-  socket.on('disconnect', () => {
-    // console.log('disconnect')
+  socket.on('disconnect', () => {})
+  socket.on('welcome', (data) => {
+    ElMessage.success(`${data.userId}加入房间`)
   })
-  socket.on('joined', (data) => {
-    // console.log('joined', data)
+  socket.on('message', (data) => {})
+  socket.on('offer', (data) => {
+    createAnswer(data.sdp)
   })
-  socket.on('message', (data) => {
-    // console.log(data)
+  socket.on('answer', (data) => {
+    addAnswer(data.sdp)
   })
+}
+
+// 设置唯一标识
+function getUuid() {
+  const uuid = localStorage.getItem('uuid')
+  if (uuid) {
+    return uuid
+  }
+  const newUuid = Math.random().toString(36).substring(2)
+  localStorage.setItem('uuid', newUuid)
+  return newUuid
+}
+
+function handleConnect() {
+  ElMessage.success('🦄🦄🦄连接成功')
+  socket.emit('join', { userId, roomId })
+  createOffer()
+}
+function handleLeave() {
+  socket.emit('leave', { userId, roomId })
 }
 
 const init = async () => {
@@ -56,34 +86,47 @@ const init = async () => {
   }
 }
 
+// 创建 offer
 const createOffer = async () => {
+  // 当一个新的offer ICE候选人被创建时触发事件
   peerConnection.onicecandidate = async (event) => {
-    // Event that fires off when a new offer ICE candidate is created
     if (event.candidate) {
       offerSdp.value = JSON.stringify(peerConnection.localDescription)
+      socket.emit('offer', {
+        userId,
+        roomId,
+        sdp: JSON.stringify(peerConnection.localDescription),
+      })
+      // console.log('🚀🚀🚀createOffer', offer)
     }
   }
   const offer = await peerConnection.createOffer()
   await peerConnection.setLocalDescription(offer)
+  // TODO
 }
-
-const createAnswer = async () => {
-  const offer = JSON.parse(offerSdp.value)
+// 创建 answer
+const createAnswer = async (offerSdp: string) => {
+  const offer = JSON.parse(offerSdp)
   peerConnection.onicecandidate = async (event) => {
     // Event that fires off when a new answer ICE candidate is created
     if (event.candidate) {
       answerSdp.value = JSON.stringify(peerConnection.localDescription)
+      // TODO
+      socket.emit('answer', {
+        userId,
+        roomId,
+        sdp: JSON.stringify(peerConnection.localDescription),
+      })
     }
   }
   await peerConnection.setRemoteDescription(offer)
   const answer = await peerConnection.createAnswer()
   await peerConnection.setLocalDescription(answer)
 }
-
-const addAnswer = async () => {
+// 添加 answer
+const addAnswer = async (answerSdp: string) => {
   // console.log('Add answer triggerd')
-  const answer = JSON.parse(answerSdp.value)
-  // console.log('answer:', answer)
+  const answer = JSON.parse(answerSdp)
   if (!peerConnection.currentRemoteDescription) {
     peerConnection.setRemoteDescription(answer)
   }
@@ -91,9 +134,11 @@ const addAnswer = async () => {
 
 onMounted(() => {
   // eslint-disable-next-line
-  console.clear()
-  initConnect()
-  init()
+  // console.clear()
+  nextTick(() => {
+    initConnect()
+    init()
+  })
   setInterval(() => {
     // 刷新网页
   }, 10 * 1000)
@@ -103,17 +148,27 @@ onMounted(() => {
   <FilepathBox :file-path="'__filePath__'" />
   <div class="page-container">
     <div class="video-container">
-      <video
-        id="remote-video"
-        class="remote-video"
-        autoplay
-        playsinline
-      ></video>
+      <div class="main-video">
+        <video
+          id="remote-video"
+          class="remote-video"
+          autoplay
+          playsinline
+        ></video>
+      </div>
       <div class="video-list">
         <video id="local" autoplay playsinline></video>
       </div>
     </div>
-    <div class="operation"></div>
+    <div class="operation">
+      <el-button type="primary" @click="handleConnect">加入</el-button>
+      <el-button type="danger" @click="handleLeave">离开</el-button>
+      <el-button type="primary" @click="createOffer">创建offer</el-button>
+      <!--   <el-button type="primary" @click="createAnswer(offerSdp)">
+        创建answer
+      </el-button>
+      <el-button type="primary" @click="addAnswer">添加answer</el-button> -->
+    </div>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -135,14 +190,17 @@ onMounted(() => {
     video {
       margin: 0 auto;
       border: 4px solid #048ff2;
-      background-color: #516fa3;
+      background-color: #363739;
       border-radius: 30px;
+      widows: 100%;
+      height: 100%;
     }
 
-    .remote-video {
-      max-width: 100%;
-      max-height: 100%;
-      background-color: #516fa3;
+    .main-video {
+      flex: 1;
+      height: 100%;
+      border-radius: 30px;
+      background-color: #3f4044;
     }
 
     .video-list {
@@ -161,7 +219,11 @@ onMounted(() => {
   .operation {
     width: 100%;
     height: 100px;
+    text-align: center;
     background-color: #405982;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>

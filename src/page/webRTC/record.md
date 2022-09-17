@@ -21,6 +21,10 @@ navigator.mediaDevices
 
 #### 切换设备
 
+#### 用户唯一标识
+
+- [@fingerprintjs/fingerprintjs-pro]https://segmentfault.com/q/1010000041271387
+
 #### 切换前后摄像头
 
 ![](https://assets.fedtop.com/picbed/202209142144928.png)
@@ -51,6 +55,18 @@ https，对应的我们信令服务的地址也需要是 https，不然就会报
 ![](https://assets.fedtop.com/picbed/202209152158537.png)
 
 ![](https://assets.fedtop.com/picbed/202209150123502.png)
+
+描述，告诉我支持什么，自我介绍
+
+## 最后
+
+**然而这个世界上没有绝对完美的东西， WebRTC 自身仍存在一些缺憾：**
+
+- 兼容性问题。在 Web 端存在浏览器之间的兼容性问题，虽然 WebRTC 组织在 GitHub 上提供了 WebRTC 适配器，但除此之外仍要面临浏览器行为不一致的问题
+- 传输质量不稳定。由于 WebRTC 使用的是对点对传输，跨运营商、跨地区、低带宽、高丢包等场景下的传输质量基本听天由命。
+- 移动端适配差。针对不同机型需要做适配，很难有统一的用户体验。
+
+讲到这里就结束了，WebRTC 着实让我体会了一次它在音视频领域的强大。在浏览器支持上，除了 IE 之外， Chrome、Firefox、Safari、Microsoft Edge 等主流浏览器都已支持 WebRTC，多种音视频开发场景如在线课堂、远程屏幕等也得到广泛应用。在未来，希望它能给我们带来更多惊喜！
 
 ## git 仓库
 
