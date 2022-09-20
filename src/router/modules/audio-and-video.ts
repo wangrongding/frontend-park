@@ -15,6 +15,11 @@ export const audioAndVideo: RouteRecordRaw[] = [
         meta: { title: 'webRTC(开发中)', type: 'multiple' },
         children: [
           {
+            path: '/audio-and-video/webRTC/index',
+            meta: { title: '基础 API' },
+            component: () => import('@/page/webRTC/index.vue'),
+          },
+          {
             path: '/audio-and-video/webRTC/take-photos',
             meta: { title: '拍照' },
             component: () => import('@/page/webRTC/take-photos.vue'),
@@ -28,16 +33,6 @@ export const audioAndVideo: RouteRecordRaw[] = [
             path: '/audio-and-video/webRTC/signaling-p2p',
             meta: { title: '信令p2p' },
             component: () => import('@/page/webRTC/signaling-p2p.vue'),
-          },
-          {
-            path: '/audio-and-video/webRTC/select-devices',
-            meta: { title: '选择设备' },
-            component: () => import('@/page/webRTC/select-devices.vue'),
-          },
-          {
-            path: '/audio-and-video/webRTC/index',
-            meta: { title: '测试页' },
-            component: () => import('@/page/webRTC/index.vue'),
           },
         ],
       },

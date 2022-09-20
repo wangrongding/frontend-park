@@ -8,6 +8,7 @@
   "stylelint.validate": ["css", "less", "postcss", "scss", "vue", "sass"],
   "editor.formatOnSave": false,
   "cSpell.words": [
+    "autoplay",
     "cascader",
     "Commitlint",
     "frontent",

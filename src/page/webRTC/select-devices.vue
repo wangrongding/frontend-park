@@ -12,8 +12,8 @@ const formParams = reactive({
       placeholder: '请选择',
       disabled: true,
       options: [] as MediaDeviceInfo[],
-      optionValue: 'deviceId',
-      optionLabel: 'label',
+      optionValueKey: 'deviceId',
+      optionLabelKey: 'label',
       onChange: (deviceId: string) => {
         handleDeviceChange(deviceId, 'audioinput')
       },
@@ -24,8 +24,8 @@ const formParams = reactive({
       placeholder: '请选择',
       disabled: true,
       options: [] as MediaDeviceInfo[],
-      optionValue: 'deviceId',
-      optionLabel: 'label',
+      optionValueKey: 'deviceId',
+      optionLabelKey: 'label',
       onChange: (deviceId: string) => {
         handleDeviceChange(deviceId, 'audiooutput')
       },
@@ -35,8 +35,8 @@ const formParams = reactive({
       label: '视频输入设备切换',
       placeholder: '请选择',
       options: [] as MediaDeviceInfo[],
-      optionValue: 'deviceId',
-      optionLabel: 'label',
+      optionValueKey: 'deviceId',
+      optionLabelKey: 'label',
       onChange: (deviceId: string) => {
         handleDeviceChange(deviceId, 'videoinput')
       },

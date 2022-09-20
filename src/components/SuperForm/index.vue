@@ -126,7 +126,7 @@ const formStyle = ref({
           :multiple-limit="itemForm.multipleLimit"
           :style="`${itemForm.width ? 'width:' + itemForm.width : ''}`"
           :clearable="itemForm.clearable"
-          :placeholder="itemForm.placeholder"
+          :placeholder="itemForm.placeholder || '请选择'"
           :disabled="itemForm.disabled"
           :collapse-tags="itemForm.collapseTags"
           :filterable="itemForm.filterable"
@@ -140,8 +140,8 @@ const formStyle = ref({
           <el-option
             v-for="(option, index) in itemForm.options"
             :key="index"
-            :label="option[itemForm.optionLabel]"
-            :value="option[itemForm.optionValue]"
+            :label="option[itemForm.optionLabelKey || 'label']"
+            :value="option[itemForm.optionValueKey || 'value']"
           />
         </el-select>
         <!-- 级联 -->

@@ -11,8 +11,8 @@ const formParams = reactive({
       label: '切换设备',
       placeholder: '请选择',
       options: [] as MediaDeviceInfo[],
-      optionValue: 'deviceId',
-      optionLabel: 'label',
+      optionValueKey: 'deviceId',
+      optionLabelKey: 'label',
       onChange: (deviceId: string) => {
         handleDeviceChange(deviceId)
       },
@@ -25,8 +25,8 @@ const formParams = reactive({
         { label: '前置摄像头', value: 1 },
         { label: '后置摄像头', value: 2 },
       ],
-      optionValue: 'value',
-      optionLabel: 'label',
+      optionValueKey: 'value',
+      optionLabelKey: 'label',
       onChange: cameraSwitching,
     },
   },

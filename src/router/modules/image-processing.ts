@@ -36,6 +36,11 @@ export const imageProcessing: RouteRecordRaw[] = [
         meta: { title: '随机生成图形' },
         component: () => import('@/page/canvas/random-elements.vue'),
       },
+      {
+        path: '/image-processing/base-tree',
+        meta: { title: '树' },
+        component: () => import('@/page/canvas/base-tree.vue'),
+      },
     ],
   },
 ]

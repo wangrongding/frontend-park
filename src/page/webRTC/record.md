@@ -2,28 +2,53 @@
 
 ## 记录
 
+### 分享屏幕，录屏截屏
+
+```html
+<div class="local-video">
+  <video id="localVideo" autoplay playsinline muted></video>
+</div>
+```
+
+```typescript
+// 播放本地视频流
+function playLocalStream(stream: MediaStream) {
+  const localVideo = document.getElementById('localVideo') as HTMLVideoElement
+  localVideo.srcObject = stream
+}
+// 分享屏幕
+async function shareScreen() {
+  const stream = await navigator.mediaDevices.getDisplayMedia({
+    audio: true,
+    video: true,
+  })
+  // 播放本地视频流
+  playLocalStream(stream)
+}
+```
+
+第一次 mac 需要同意，或者自己到设置中打开  
+![](https://assets.fedtop.com/picbed/202209142011041.png)
+
+![](https://assets.fedtop.com/picbed/202209142019128.png)
+
 ### 获取摄像头
 
 ```typescript
-navigator.mediaDevices.getUserMedia(constraints)
-
-navigator.mediaDevices
-  .getUserMedia(constraints)
-  .then(function (stream) {
-    /* 使用这个 stream stream */
+// 获取本地音视频流
+async function getLocalStream() {
+  const stream = await navigator.mediaDevices.getUserMedia({
+    audio: true,
+    video: true,
   })
-  .catch(function (err) {
-    /* 处理 error */
-  })
+  // 播放本地视频流
+  playLocalStream(stream)
+}
 ```
 
 `navigator.mediaDevices.getUserMedia(constraints)` 在 Chrome 47 以后，只允许来自“安全可信”的客户端的视频音频请求（https，localhost）。要不然 Chrome 会抛出错误，提示 navigator 对象中则没有 mediaDevices 对象。
 
 #### 切换设备
-
-#### 用户唯一标识
-
-- [@fingerprintjs/fingerprintjs-pro]https://segmentfault.com/q/1010000041271387
 
 #### 切换前后摄像头
 
@@ -38,16 +63,20 @@ navigator.mediaDevices
 ![](https://assets.fedtop.com/picbed/202209142154040.png)  
 ![](https://assets.fedtop.com/picbed/202209142153213.png)
 
-### 分享屏幕
+## 录制
 
-```typescript
-navigator.mediaDevices.getDisplayMedia(constraints)
-```
+- [MediaRecorder](https://developer.mozilla.org/zh-CN/docs/Web/API/MediaRecorder)
+- []: # (https://developer.mozilla.org/zh-CN/docs/Web/API/MediaStream_Recording_API/Using_the_MediaStream_Recording_API)
+- [查看视频类型支持](https://cconcolato.github.io/media-mime-support/)
+- https://www.webrtc-experiment.com/msr/gif-recorder.html
 
-第一次 mac 需要同意，或者自己到设置中打开  
-![](https://assets.fedtop.com/picbed/202209142011041.png)
+## 一对一音视频通话
 
-![](https://assets.fedtop.com/picbed/202209142019128.png)
+## 信令服务器
+
+#### 用户唯一标识
+
+- [@fingerprintjs/fingerprintjs-pro]https://segmentfault.com/q/1010000041271387
 
 ### 连接
 
