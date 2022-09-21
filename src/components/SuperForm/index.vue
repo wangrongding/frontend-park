@@ -262,7 +262,10 @@ const formStyle = ref({
           :on-exceed="itemForm.onExceed || handleExceed"
           :on-error="itemForm.onError"
         >
-          <el-button type="primary">{{ itemForm.text }}</el-button>
+          <el-button v-if="itemForm.text" type="primary">
+            {{ itemForm.text }}
+          </el-button>
+          <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
           <!-- <template #tip>
             <div class="el-upload__tip">
               jpg/png files with a size less than 500KB.
@@ -272,18 +275,14 @@ const formStyle = ref({
         </el-upload>
         <!-- 表单其他组件 -->
         <template
-          v-if="itemForm.slots && itemForm.slots.formItem"
-          #formItem="{ column, $index }"
+          v-if="itemForm.type === 'custom' && itemForm.slots.default"
+          #default="{ row, column, $index }"
         >
           <slot
-            :name="itemForm.slots!.formItem"
+            :row="row"
             :column="column"
             :index="$index"
-          />
-
-          <slot
-            v-if="itemForm.type === 'customItem'"
-            :name="itemForm.name ? itemForm.name : 'customItem'"
+            :name="itemForm.slots!.default"
             :item-form="itemForm"
             :form-date="formParams.data"
             :item-key="key"

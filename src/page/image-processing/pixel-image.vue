@@ -16,23 +16,34 @@
     </div>
     <div class="operations">
       <div style="height: 800px">
-        <EasyForm :form-params="formParams">
+        <SuperForm :form-params="formParams">
           <template #inputFile="{}">
             <el-button type="primary" size="small" @click="inputFile">
               选择文件
             </el-button>
             <div>共选择{{ imgList.length }}个文件</div>
           </template>
-        </EasyForm>
-        <el-button type="primary" size="default" @click="reload">
-          重置
-        </el-button>
-        <el-button type="primary" size="default" @click="generateImg">
-          生成图片
-        </el-button>
-        <el-button type="success" size="default" @click="exportCanvas">
-          导出图片
-        </el-button>
+        </SuperForm>
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: space-between;
+            gap: 20px;
+          "
+          class="button-group"
+        >
+          <el-button type="primary" size="default" @click="reload">
+            重置
+          </el-button>
+          <el-button type="primary" size="default" @click="generateImg">
+            生成图片
+          </el-button>
+          <el-button type="success" size="default" @click="exportCanvas">
+            导出图片
+          </el-button>
+        </div>
       </div>
     </div>
   </div>
@@ -63,14 +74,23 @@ export default {
             action: '#',
             listType: 'picture-card',
             fileList: [],
-            autoUpload: false,
-            onChange: this.slectFile,
+            autoUpload: true,
+            // onChange: this.slectFile,
+            httpRequest: this.slectFile,
           },
           inputFile: {
-            type: 'customItem',
+            type: 'custom',
             label: '素材图片',
             name: 'inputFile',
+            slots: {
+              default: 'inputFile',
+            },
           },
+          // inputFile: {
+          //   type: 'customItem',
+          //   label: '素材图片',
+          //   name: 'inputFile',
+          // },
           /* userN2ww2ame: {
                 type: "slider",
                 label: "贴片大小",
@@ -150,10 +170,10 @@ export default {
     //重置
     reload() {
       // window.location.reload();
-      console.log(this.canvas.viewportTransform)
-      this.canvas.deactivateAll().renderAll()
+      console.log(this.canvas)
+      // this.canvas && this.canvas.deactivateAll().renderAll()
       //http://fabricjs.com/fabric-intro-part-5#pan_zoom
-      // this.canvas.clear(); // 清空画布
+      this.canvas.clear() // 清空画布
     },
     //生成图片
     generateImg() {
@@ -202,8 +222,9 @@ export default {
       })
     },
     //目标图片选择回调
-    slectFile(file, fileList) {
-      let tempUrl = window.URL.createObjectURL(file.raw)
+    slectFile(file) {
+      console.log('🚀🚀🚀 / file', file)
+      let tempUrl = window.URL.createObjectURL(file.file)
       this.drawImage(tempUrl)
     },
     //素材图片选择回调
@@ -488,6 +509,17 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      align-items: space-around;
+      justify-content: center;
+
+      .el-button {
+        margin: 10px 0;
+      }
+    }
   }
 
   .content {
