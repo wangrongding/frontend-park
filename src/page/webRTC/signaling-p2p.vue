@@ -26,17 +26,33 @@ function initConnect() {
   // TODO 替换为公网地址
   socket = io('https://192.168.1.126:3000')
   socket.on('connect', () => {
+    ElMessage.success('🦄🦄🦄连接成功')
     handleConnect()
   })
   // ========================================
   socket.on('disconnect', () => {})
   socket.on('welcome', (data) => {
     ElMessage.success(`${data.userId}加入房间`)
+    // // 发送 offer
+    // if (offerSdp.value) {
+    //   socket.emit('offer', { userId, roomId, sdp: offerSdp.value })
+    // }
   })
   socket.on('message', (data) => {})
+  // 创建offer
+  socket.on('createOffer', (data) => {
+    // 发送 offer
+    if (offerSdp.value) {
+      socket.emit('offer', { userId, roomId, sdp: offerSdp.value })
+      return
+    }
+    createOffer()
+  })
+  // 收到offer
   socket.on('offer', (data) => {
     createAnswer(data.sdp)
   })
+  // 收到answer
   socket.on('answer', (data) => {
     addAnswer(data.sdp)
   })
@@ -52,12 +68,11 @@ function getUuid() {
   localStorage.setItem('uuid', newUuid)
   return newUuid
 }
-
+// 连接成功
 function handleConnect() {
-  ElMessage.success('🦄🦄🦄连接成功')
   socket.emit('join', { userId, roomId })
-  createOffer()
 }
+// 离开房间
 function handleLeave() {
   socket.emit('leave', { userId, roomId })
 }
@@ -92,11 +107,10 @@ const createOffer = async () => {
   peerConnection.onicecandidate = async (event) => {
     if (event.candidate) {
       offerSdp.value = JSON.stringify(peerConnection.localDescription)
-      socket.emit('offer', {
-        userId,
-        roomId,
-        sdp: JSON.stringify(peerConnection.localDescription),
-      })
+      // 发送 offer
+      if (offerSdp.value) {
+        socket.emit('offer', { userId, roomId, sdp: offerSdp.value })
+      }
       // console.log('🚀🚀🚀createOffer', offer)
     }
   }
@@ -132,16 +146,10 @@ const addAnswer = async (answerSdp: string) => {
   }
 }
 
-onMounted(() => {
-  // eslint-disable-next-line
-  // console.clear()
-  nextTick(() => {
-    initConnect()
-    init()
-  })
-  setInterval(() => {
-    // 刷新网页
-  }, 10 * 1000)
+onMounted(async () => {
+  await init()
+  await initConnect()
+  nextTick(async () => {})
 })
 </script>
 <template>
