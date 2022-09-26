@@ -75,8 +75,8 @@ export default {
             listType: 'picture-card',
             fileList: [],
             autoUpload: true,
-            // onChange: this.slectFile,
-            httpRequest: this.slectFile,
+            // onChange: this.selectFile,
+            httpRequest: this.selectFile,
           },
           inputFile: {
             type: 'custom',
@@ -222,7 +222,7 @@ export default {
       })
     },
     //目标图片选择回调
-    slectFile(file) {
+    selectFile(file) {
       console.log('🚀🚀🚀 / file', file)
       let tempUrl = window.URL.createObjectURL(file.file)
       this.drawImage(tempUrl)

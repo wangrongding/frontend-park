@@ -51,6 +51,8 @@ module.exports = {
     'import/prefer-default-export': 0, // 禁止使用export default
     'no-shadow': 0, // 禁止变量声明时使用相同名字
     'import/extensions': 0, // 使用文件扩展名
+    'no-underscore-dangle': 0, // 禁止使用下划线
+    'no-multi-assign': 0, // 禁止连续赋值
   },
 }
 
