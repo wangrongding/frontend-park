@@ -25,7 +25,8 @@ const roomId = '001'
 function initConnect() {
   // TODO 替换为公网地址
   // socket = io('https://192.168.1.126:3000')
-  socket = io('https://signaling.fedtop.com')
+  // socket = io('https://signaling.fedtop.com')
+  socket = io('https://47.95.239.198:3000')
   socket.on('connect', () => {
     ElMessage.success('🦄🦄🦄连接成功')
     handleConnect()
