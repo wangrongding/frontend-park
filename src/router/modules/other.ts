@@ -21,6 +21,11 @@ export const other: RouteRecordRaw[] = [
         meta: { title: 'CHSI在线证明(不可乱用)' },
         component: () => import('@/page/other/chsi/index-temp.vue'),
       },
+      {
+        path: '/other/vibrate',
+        meta: { title: '震动（暂只支持安卓）' },
+        component: () => import('@/page/other/vibrate.vue'),
+      },
     ],
   },
 ]
