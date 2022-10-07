@@ -36,9 +36,9 @@
 
 ![](https://assets.fedtop.com/picbed/202210071601566.gif)
 
-### 摄像头获取媒体流及一些其他操作
+## 摄像头获取媒体流及一些其他操作
 
-首先我们通过一个简单的拍照小应用来看一下如何通过摄像头获取媒体流。
+要实现 音视频通话，我们肯定要先获取到摄像头的媒体流，然后通过 WebRTC 技术将媒体流传输到远端实现实时通讯。下面我们先通过一个简单的拍照小应用来看一下如何通过摄像头获取媒体流。
 
 ![](https://assets.fedtop.com/picbed/202209142147208.png)
 
@@ -208,13 +208,18 @@ function handleDeviceChange(deviceId: string) {
 
 可以看到，获得了多个摄像头设备，我这里是一个笔记本自带的摄像头和一个 OBS 虚拟摄像头，包括最近 MacOs 更新到 Ventura 13 ,IOS 更新到 16 后的`连续互通摄像头`，都可以获取到。这样我们就可以在视频的时候，就可以通过拍摄更清晰的手机后置来拍摄了。
 
-虚拟摄像头更有意思，在 OBS 中开启虚拟摄像头后，可以播放一个视频，然后进行视频会议，这样你甚至可以提前录制好一个端坐的视频（简直是上网课必备！😅），我之前试过播放特朗普的视频，然后微信视频，对面看到的确实是特朗普在演讲，所以说这方面很有安全隐患，所以大家在网上和别人视频的时候，还是需要注意下，对方可能不是真的。跑题了，我们继续。🦄🦄🦄
+虚拟摄像头更有意思，在 OBS 中开启虚拟摄像头后，可以播放一个视频，然后进行视频会议，这样你甚至可以提前录制好一个端坐的视频（简直是上网课必备！😅），我之前试过播放特朗普的视频，然后微信视频，对面看到的确实是特朗普在演讲，所以说这方面很有安全隐患，所以大家在网上和别人视频的时候，还是需要注意下，对方可能不是真的。
 
+![](https://assets.fedtop.com/picbed/202209142154040.png)  
+![](https://assets.fedtop.com/picbed/202209142153213.png)  
 ![](https://assets.fedtop.com/picbed/202210071650410.png)
+
+跑题了，我们继续。🦄🦄🦄
 
 说完了切换摄像头，我们再来看看如何在支持切换前后置摄像头的设备上如何切换前后摄像头。我们可以通过指定 `facingMode` 来实现，facingMode 有 4 个值，分别是 user、environment 和 left、right，分别对应前后摄像头和左右摄像头。
 
-当需要强制使用前置摄像头时，可以使用 exact 关键字，例如 facingMode: { exact: 'user' }，
+当需要强制使用前置摄像头时，可以使用 exact 关键字，例如 facingMode: { exact: 'user' }，强制切换前后摄像头时，当摄像头不支持时，会报一个 OverconstrainedError［无法满足要求的错误］  
+![](https://assets.fedtop.com/picbed/202209142144928.png)
 
 ```typescript
 // 切换前后摄像头
@@ -249,7 +254,11 @@ switchCamera(1) // 切换前置摄像头
 
 ok, continue ~
 
-### 通过屏幕共享获取获取媒体流，实现录制等操作
+## 通过屏幕共享获取获取媒体流，实现录制等操作
+
+在视频会议中，我们经常会使用到屏幕共享，已经我们经常会有录制屏幕等需求，市面上还有那么多需要付费的软件，我们通过 WebRTC 配合一些相关 api 自己实现一个不是更好吗？🤔🤔🤔 既省钱又学到了知识。
+
+那么我们如何通过屏幕共享获取媒体流并实现录制呢？下面通过一个小 demo 来简单实现一下。
 
 在 WebRTC 中，我们可以通过 `getDisplayMedia` 来获取屏幕共享的媒体流，这个 API 与 `getUserMedia` 类似，但是它只能获取屏幕共享的媒体流。
 
@@ -357,6 +366,8 @@ console.log(getSupportedMimeTypes())
 
 ![](https://assets.fedtop.com/picbed/202210080136400.png)
 
+也可以通过这个网址[👉🏻media-mime-support](https://cconcolato.github.io/media-mime-support/) 来查看当前浏览器所支持的 mimeType 的情况。
+
 目前最常用的一般都是 `video/mp4`。 截止到目前为止，最佳的 8 种视频格式为：`mp4` ,`webm` ,`mov` ,`avi` ,`mkv` ,`wmv` ,`avchd` ,`flv`。而 webm 是 Google 专门为 web 端推出的一种视频格式。100% 开源，且 100%兼容 Google Chrome 浏览器和 Android 设备。如果你没有强烈的需求，也可以使用 webm 格式。
 
 说了这么多，不支持就不能录制成 mp4 了？🥲  
@@ -414,278 +425,229 @@ function downloadBlob(blob: Blob) {
 
 当然，既然都拿到了媒体流，那么我们也可以将媒体流中的视频轨道录制成 gif 图片，这样在一些场景下分享起来也会更加方便。
 
-![](https://assets.fedtop.com/picbed/202210072359705.png)
-
 由于 `MediaRecorder` api 不支持将 mimeType 设置成 image/gif ，所以我们需要借助一个第三方库`MediaStreamRecorder`来实现。它的用法和 `MediaRecorder` 基本一致。我就不再赘述了。
 
-### 通过
+最后有一个需要注意的地方，也是我在实际项目中遇到的问题。截止到目前为止，在使用 `MediaRecorder` 录制视频的时候，如果你的系统是 Windows 或者 Chrome OS，那么录制的视频没什么问题，但是在 Mac 和 Linux 上，录制摄像头和分享屏幕时，选择网页的分享方式，所拿获得的媒体流是可以拿到视频轨道和音频轨道的，但是录制整个屏幕时，由于系统的限制，只能拿到视频的轨道。好在一般录屏都不会有带音频的需求，期待后面能够支持。
 
-## 常用的 API
+![](https://assets.fedtop.com/picbed/202210072359705.png)
 
-[拍照](https://developer.mozilla.org/zh-CN/docs/Web/API/Media_Capture_and_Streams_API/Taking_still_photos)
+## 实现视频的虚拟背景
 
-## 信令服务器
+在视频会议中，我们经常会看到一些人在视频中的背景是虚拟的，这样可以让我们更专注于对方的表情和语言，而不会被背景中的一些干扰因素所分散注意力。那么我们如何实现这样的效果呢？
 
-https://developer.mozilla.org/zh-CN/docs/Web/API/WebRTC_API/Signaling_and_video_calling
+下面我们先通过一个简单的 demo 来看看效果。
 
-https://developer.mozilla.org/zh-CN/docs/Web/API/WebRTC_API/Session_lifetime#%E4%BF%A1%E4%BB%A4
+[👉 线上体验地址](https://frontend-park.vercel.app/audio-and-video/webRTC/background-process)
 
-### 什么叫信令？
+![](https://assets.fedtop.com/picbed/202210080636262.gif)
 
-信令是在两个设备之间发送控制信息以确定通信协议、信道、媒体编解码器和格式以及数据传输方法以及任何所需的路由信息的过程。 关于 WebRTC 的信令流程最重要的一点是：**信令在规范中并没有定义。**所以开发者需要自己决定如何实现这个过程。开发者可以为应用程序引擎选择任意的信息协议（如 SIP 或 XMPP），任意双向通信信道（如 WebSocket 或 XMLHttpRequest) 与持久连接服务器的 API（如 Google Channel API）一起工作。
+主要原理是通过 `canvas` 将视频中的每一帧画到画布上，然后将画布中的像素逐个与设定的背景色（默认是绿色，你可以更换为任意符合你背景的颜色）进行计算，比较后的差值达到设定的阈值时，对其进行处理，将其更换为预先准备好的背景图的图像数据，最后将处理后的图像数据再画到虚拟背景画布上，通过虚拟背景画布拿到媒体流后给到 video 标签播放， 这样就实现了视频的虚拟背景效果。
 
-你可能会想，为什么这么一个对于建立 WebRTC 连接至关重要的基本过程居然没有定义在规范里？ 答案很简单：由于两个设备无法直接相互联系，规范无法预测 WebRTC 的所有可能用例，因此更明智的做法就是让开发人员们自己选择合适的网络技术和消息传递协议。
+下面我们来看看具体的实现。
 
-加微信？谈恋爱，没有微信，借助第三方闺蜜
-
-## 拨打微信
-
-微信接收，轮询 socket，第三方？p2p？
-
-## 引用
-
-https://baijiahao.baidu.com/s?id=1714740880954778889&wfr=spider&for=pc
-
-https://developer.mozilla.org/zh-CN/docs/Web/API/WebRTC_API/Protocols
-
-https://developer.mozilla.org/zh-CN/docs/Web/API/WebRTC_API/Session_lifetime
-
-## 记录
-
-### 分享屏幕，录屏截屏
+为保持大小一致，这里我们统一设置画布和视频的宽高为 480\*300。
 
 ```html
-<div class="local-video">
-  <video id="localVideo" autoplay playsinline muted></video>
-</div>
+<canvas id="backgroundImg" width="480" height="300"></canvas>
+<video id="real-video" width="480" height="300" autoplay muted></video>
+<video id="virtual-video" width="480" height="300" autoplay muted></video>
 ```
+
+首先我们需要准备好背景图，这里我使用了一张图片，你也可以使用视频作为背景。
+
+通过 canvas 将背景图画到画布上，然后通过 `getImageData` 方法拿到图像数据。
 
 ```typescript
-// 播放本地视频流
-function playLocalStream(stream: MediaStream) {
-  const localVideo = document.getElementById('localVideo') as HTMLVideoElement
-  localVideo.srcObject = stream
-}
-// 分享屏幕
-async function shareScreen() {
-  const stream = await navigator.mediaDevices.getDisplayMedia({
-    audio: true,
-    video: true,
-  })
-  // 播放本地视频流
-  playLocalStream(stream)
+// 虚拟背景的 canvas中的图片数据
+let backgroundImageData: ImageData
+// 获取背景图像数据
+function getBackgroundImageData() {
+  const backgroundCanvas = document.querySelector(
+    '#backgroundImg',
+  ) as HTMLCanvasElement
+  const backgroundCtx = backgroundCanvas.getContext('2d')!
+  const img = new Image()
+  img.src = 'https://xxxx.png'
+  img.onload = () => {
+    backgroundCtx.drawImage(
+      img,
+      0,
+      0,
+      backgroundCanvas.width,
+      backgroundCanvas.height,
+    )
+
+    backgroundImageData = backgroundCtx.getImageData(
+      0,
+      0,
+      backgroundCanvas.width,
+      backgroundCanvas.height,
+    )
+  }
 }
 ```
 
-第一次 mac 需要同意，或者自己到设置中打开  
-![](https://assets.fedtop.com/picbed/202209142011041.png)
-
-![](https://assets.fedtop.com/picbed/202209142019128.png)
-
-### 获取摄像头
+然后我们需要通过摄像头获取到视频流，还是用之前几个 demo 中的方法。
 
 ```typescript
 // 获取本地音视频流
-async function getLocalStream() {
-  const stream = await navigator.mediaDevices.getUserMedia({
-    audio: true,
-    video: true,
-  })
-  // 播放本地视频流
-  playLocalStream(stream)
+async function getLocalStream(options: MediaStreamConstraints) {
+  const stream = await navigator.mediaDevices.getUserMedia(options)
+  return stream
+}
+
+// 播放原始视频流
+function playRealVideo(stream: MediaStream) {
+  realVideo = document.querySelector('#real-video') as HTMLVideoElement
+  realVideo.srcObject = stream
 }
 ```
 
-`navigator.mediaDevices.getUserMedia(constraints)` 在 Chrome 47 以后，只允许来自“安全可信”的客户端的视频音频请求（https，localhost）。要不然 Chrome 会抛出错误，提示 navigator 对象中则没有 mediaDevices 对象。
+上述步骤完成后，我们就可以通过创建 `canvas` 标签 先将真实的视频每隔 40ms 一次 画到画布上。
 
-#### 切换设备
+这样的话，画布就会不断的更新，能达到 25 帧的效果，这样能保证我们的视频流是非常流畅的。
 
-#### 切换前后摄像头
+一般来说，人眼舒适放松时可视帧数是每秒 24 帧，高度集中精神时不超过 30 帧。电影院里的 2D 电影一般是 24 帧的，3D 电影一般是 60 帧以上。
 
-![](https://assets.fedtop.com/picbed/202209142144928.png)
+画到画布后，我们也相应的要通过 `getImageData` 方法拿到真实视频的图像数据。
 
-我们尝试使用外置的摄像头，我这里使用 ios16 新出的
+然后每一帧都要与设置好的背景色进行比较，比较后的差值达到设定的阈值的像素，就要扣除（替换为之前拿到的背景图的像素。
 
-![](https://assets.fedtop.com/picbed/202209142147208.png)
+![](https://assets.fedtop.com/picbed/202210080714355.png)  
+![](https://assets.fedtop.com/picbed/202210080714035.png)
 
-虚拟摄像头也不会有前后之分,这里我用 OBS 开一个虚拟摄像头（OBS 这个功能挺好玩的，之前试过播放特朗普的视频然后开虚拟摄像头拨打微信视频电话，对方看到的就是特朗普，哈哈 😂😂😂）
+看到这里,如果以前看过我的文章，大家一定很眼熟，这个计算颜色差的逻辑与我之前写的[《我用 10000 张图片合成我们美好的瞬间》](https://juejin.cn/post/6996431901623844894)用来做合成图的逻辑是一样的。
 
-![](https://assets.fedtop.com/picbed/202209142154040.png)  
-![](https://assets.fedtop.com/picbed/202209142153213.png)
+首先需要明白的一点就是，rgb 的色域是一个 3 维的空间，我们可以通过计算两个点之间的距离来判断两个颜色的差异。距离越小，颜色差异越小。
 
-## 录制
+而这只需要我们中学时期学过的 欧式距离 公式就可以了。
 
-- [MediaRecorder](https://developer.mozilla.org/zh-CN/docs/Web/API/MediaRecorder)
-- []: # (https://developer.mozilla.org/zh-CN/docs/Web/API/MediaStream_Recording_API/Using_the_MediaStream_Recording_API)
-- [查看视频类型支持](https://cconcolato.github.io/media-mime-support/)
-- https://www.webrtc-experiment.com/msr/gif-recorder.html
+![](https://assets.fedtop.com/picbed/202210080718926.png)
 
-## 一对一音视频通话
+我们把它转化为颜色差的计算公式如下：
 
-## 信令服务器
+```typescript
+// 计算颜色差
+function colorDiff(color1: number[], color2: number[]) {
+  const r = color1[0] - color2[0]
+  const g = color1[1] - color2[1]
+  const b = color1[2] - color2[2]
+  return Math.sqrt(r * r + g * g + b * b)
+}
+```
 
-#### 用户唯一标识
+然后再将处理后的图像数据画到虚拟视频的画布上，再通过`captureStream`api 将画布转换为视频流，最后将视频流赋值给虚拟视频的 `srcObject` 属性。
 
-- [@fingerprintjs/fingerprintjs-pro]https://segmentfault.com/q/1010000041271387
+代码如下：
 
-### 连接
+```typescript
+const WIDTH = 480 // 视频宽度
+const HEIGHT = 300 // 视频高度
 
-https，对应的我们信令服务的地址也需要是 https，不然就会报错  
-![](https://assets.fedtop.com/picbed/202209152158537.png)
+// 将视频写到 canvas 中
+function drawVideoToCanvas(realVideo: HTMLVideoElement) {
+  realVideoCanvas = document.createElement('canvas') as HTMLCanvasElement
+  realVideoCtx = realVideoCanvas.getContext('2d')!
+  virtualVideoCanvas = document.createElement('canvas') as HTMLCanvasElement
+  virtualVideoCtx = virtualVideoCanvas.getContext('2d')!
+  realVideoCanvas.width = virtualVideoCanvas.width = WIDTH
+  realVideoCanvas.height = virtualVideoCanvas.height = HEIGHT
 
-![](https://assets.fedtop.com/picbed/202209150123502.png)
+  // 每隔 100ms 将真实的视频写到 canvas 中，并获取视频的图像数据
+  setInterval(() => {
+    realVideoCtx.drawImage(
+      realVideo,
+      0,
+      0,
+      realVideoCanvas.width,
+      realVideoCanvas.height,
+    )
+    // 获取 realVideoCanvas 中的图像数据
+    realVideoImageData = realVideoCtx.getImageData(
+      0,
+      0,
+      realVideoCanvas.width,
+      realVideoCanvas.height,
+    )
+    // 处理真实视频的图像数据，将其写到虚拟视频的 canvas 中
+    processFrameDrawToVirtualVideo()
+  }, 40)
+  // 从 VirtualVideoCanvas 中获取视频流并在 virtualVideo 中播放
+  getStreamFromVirtualVideoCanvas()
+}
 
-描述，告诉我支持什么，自我介绍
+// 从 VirtualVideoCanvas 中获取视频流并在 virtualVideo 中播放
+function getStreamFromVirtualVideoCanvas() {
+  virtualVideo = document.querySelector('#virtual-video') as HTMLVideoElement
+  const stream = virtualVideoCanvas.captureStream(30)
+  virtualVideo.srcObject = stream
+}
+```
+
+逐像素计算与要处理的目标颜色的差值，如果差值小于容差，则将该像素设置为背景图片中的对应像素
+
+```typescript
+// 处理真实视频的图像数据，将其写到虚拟视频的 canvas 中
+function processFrameDrawToVirtualVideo() {
+  // 逐像素计算与要处理的目标颜色的差值，如果差值小于阈值，则将该像素设置为背景图片中的对应像素
+  for (let i = 0; i < realVideoImageData.data.length; i += 4) {
+    const r = realVideoImageData.data[i]
+    const g = realVideoImageData.data[i + 1]
+    const b = realVideoImageData.data[i + 2]
+    const a = realVideoImageData.data[i + 3]
+    const bgR = backgroundImageData.data[i]
+    const bgG = backgroundImageData.data[i + 1]
+    const bgB = backgroundImageData.data[i + 2]
+    const bgA = backgroundImageData.data[i + 3]
+
+    // 计算与背景色的差值
+    const diff = colorDiff([r, g, b], backgroundColor)
+    // 当差值小于设定的阈值，则将该像素设置为背景图片中的对应像素
+    if (diff < allowance.value) {
+      realVideoImageData.data[i] = bgR
+      realVideoImageData.data[i + 1] = bgG
+      realVideoImageData.data[i + 2] = bgB
+      realVideoImageData.data[i + 3] = bgA
+    }
+  }
+  // 将处理后的图像数据写到虚拟视频的 canvas 中
+  virtualVideoCtx.putImageData(realVideoImageData, 0, 0)
+}
+
+// 计算颜色差异
+function colorDiff(rgba1: number[], rgba2: number[]) {
+  let d = 0
+  for (let i = 0; i < rgba1.length; i++) {
+    d += (rgba1[i] - rgba2[i]) ** 2
+  }
+  return Math.sqrt(d)
+}
+```
+
+可以看到，其中`backgroundColor`（需要扣除的背景色）和`allowance`（容差值）两个变量是由外部控制的，这样我们就可以在页面上通过滑动条或是其他的组件来动态改变容差，通过取色器来动态改变需要扣除的背景色。
+
+![](https://assets.fedtop.com/picbed/202210080726300.png)
 
 ## 最后
 
-**然而这个世界上没有绝对完美的东西， WebRTC 自身仍存在一些缺憾：**
+至此，我们就可以实现一个简单的背景替换的功能了。当然，这里只是简单的实现了一个背景替换的功能，实际上，我们还可以通过更多的技术手段来实现更加复杂的功能，比如：
 
-- 兼容性问题。在 Web 端存在浏览器之间的兼容性问题，虽然 WebRTC 组织在 GitHub 上提供了 WebRTC 适配器，但除此之外仍要面临浏览器行为不一致的问题
-- 传输质量不稳定。由于 WebRTC 使用的是对点对传输，跨运营商、跨地区、低带宽、高丢包等场景下的传输质量基本听天由命。
-- 移动端适配差。针对不同机型需要做适配，很难有统一的用户体验。
+目前只是针对纯色的背景进行了替换，如果复杂的背景，我们可以通过图像分割的方式来实现背景替换，比如：TensorFlow.js 中的 身体分割（BodyPix）。
 
-讲到这里就结束了，WebRTC 着实让我体会了一次它在音视频领域的强大。在浏览器支持上，除了 IE 之外， Chrome、Firefox、Safari、Microsoft Edge 等主流浏览器都已支持 WebRTC，多种音视频开发场景如在线课堂、远程屏幕等也得到广泛应用。在未来，希望它能给我们带来更多惊喜！
+![](https://assets.fedtop.com/picbed/202210080733513.png)
 
-## WebRTC 各种协议是如何相互交互的？
+或者是说，对于视频中的人脸，我们可以通过`face-api.js`来检测人脸，并将人脸替换为其他的图片，从而实现一个简单的换脸功能。对于视频中的人体，我们可以通过`posenet`来检测人体，并将人体替换为其他的图片，从而实现一个简单的换装功能。等等...（后续我都在这个专栏中安排~）
 
-https://developer.mozilla.org/zh-CN/docs/Web/API/WebRTC_API/Connectivity
+可以见得，用 WebRTC 相关的知识来结合一些其他相关技术，可以实现非常多的有趣的项目，可玩性非常强。
 
-## 学习 WebRTC 必须知道的五个协议
+这作为我专栏的第一篇，主要是想通过这篇文章来介绍一下 WebRTC 相关的知识，以及 WebRTC 相关的一些应用场景，希望能够帮助到大家。
 
-https://zhuanlan.zhihu.com/p/73914640
+本来还想写下 1v1 视频聊天的实现，但是由于时间关系，我把它放到第二篇来写吧，demo 我已经放到了 我的[前端公园合集仓库](https://github.com/wangrongding/frontend-park)中，这两天抽空写完~
 
-https://juejin.cn/post/6844904125692379143#heading-6
+![](https://assets.fedtop.com/picbed/202210080747267.png)
 
-WebRTC API 就是建立于他们之上
+我是通宵写完这篇文章的，现在已经 是 10.7 号 上午 7 点半了，所以我需要休息一下，哈哈。😅
 
-### NAT（Network Address Translation）
+## 最后的最后 ~
 
-NAT (网络地址翻译) 是一个能够让多台主机共享一个 IP 地址的技术。NAT 会给局域网内每台主机分配一个唯一的地址同时调整输入和输出的网络流量，使之能够发送到正确的位置。
-
-网络地址转换协议 Network Address Translation (NAT) 用来给你的（私网）设备映射一个公网的 IP 地址的协议。一般情况下，路由器的 WAN 口有一个公网 IP，所有连接这个路由器 LAN 口的设备会分配一个私有网段的 IP 地址（例如 192.168.1.3）。私网设备的 IP 被映射成路由器的公网 IP 和唯一的端口，通过这种方式不需要为每一个私网设备分配不同的公网 IP，但是依然能被外网设备发现。
-
-<!-- TODO 图 -->
-
-### TURN（Traversal Using Relays around NAT）
-
-一些路由器使用一种“对称型 NAT”的 NAT 模型。这意味着路由器只接受和对端先前建立的连接（就是下一次请求建立新的连接映射）。
-
-NAT 的中继穿越方式 Traversal Using Relays around NAT (TURN) 通过 TURN 服务器中继所有数据的方式来绕过“对称型 NAT”。你需要在 TURN 服务器上创建一个连接，然后告诉所有对端设备发包到服务器上，TURN 服务器再把包转发给你。很显然这种方式是开销很大的，所以只有在没得选择的情况下采用。
-
-[协议地址](https://www.rfc-editor.org/rfc/rfc7065)
-
-<!-- TODO 图 -->
-
-### TURN (Session Traversal Utilities for NAT)
-
-NAT 的会话穿越功能 Session Traversal Utilities for NAT (STUN) (缩略语的最后一个字母是 NAT 的首字母) 是一个允许位于 NAT 后的客户端找出自己的公网地址，判断出路由器阻止直连的限制方法的协议。
-
-客户端通过给公网的 STUN 服务器发送请求获得自己的公网地址信息，以及是否能够被（穿过路由器）访问。
-
-[协议地址](https://www.rfc-editor.org/rfc/rfc5389)
-
-### ICE (Interactive Connectivity Establishment)
-
-https://developer.mozilla.org/zh-CN/docs/Glossary/ICE
-
-交互式连接设施 Interactive Connectivity Establishment (ICE) 是一个允许你的浏览器和对端浏览器建立连接的协议框架。在实际的网络当中，有很多原因能导致简单的从 A 端到 B 端直连不能如愿完成。这需要绕过阻止建立连接的防火墙，给你的设备分配一个唯一可见的地址（通常情况下我们的大部分设备没有一个固定的公网地址），如果路由器不允许主机直连，还得通过一台服务器转发数据。ICE 通过使用以下几种技术完成上述工作。
-
-[协议地址](https://www.rfc-editor.org/rfc/rfc5245)
-
-### SDP (Session Description Protocol)
-
-会话描述协议 Session Description Protocol (SDP) 是一个描述多媒体连接内容的协议，例如分辨率，格式，编码，加密算法等。所以在数据传输时两端都能够理解彼此的数据。本质上，这些描述内容的元数据并不是媒体流本身。
-
-从技术上讲，SDP 并不是一个真正的协议，而是一种数据格式，用于描述在设备之间共享媒体的连接。
-
-记录 SDP 远远超出了本文档的范围。但是，这里有几件事值得注意。
-
-[协议地址](https://www.rfc-editor.org/rfc/rfc3264)
-
-## 自签证书
-
-线上环境，需要使用 HTTPS 协议。你可以通过 mkcert 工具来生成本地的 自签 HTTPS 证书。或者在本地搭建一个 HTTPS 服务器，比如使用 nginx。
-
-- https://www.jianshu.com/p/7cb5c2cffaaa
-- https://juejin.cn/post/7104650674880643108
-- https://penueling.com/%E7%B7%9A%E4%B8%8A%E5%AD%B8%E7%BF%92/%E8%A6%81%E6%80%8E%E9%BA%BC%E8%AE%93localhost%E4%B9%9F%E5%8F%AF%E4%BB%A5%E6%9C%89https%E6%86%91%E8%AD%89%EF%BC%9F/
-
-## 一些边角问题
-
-- cmake 问题： http://jotmynotes.blogspot.com/2016/10/updating-cmake-from-2811-to-362-or.html
-- [](https://juejin.cn/post/7071910670056292389)
-
-## Peer.js
-
-- https://juejin.cn/post/7065913779761971214
-
-## WebRTC 的安全隐患
-
-https://www.expressvpn.com/webrtc-leak-test
-
-https://www.expressvpn.com/webrtc-leak-test#chrome
-
-https://www.expressvpn.com/internet-privacy/webrtc-leaks/
-
-## IP 查询
-
-https://www.ip138.com/
-
-https://nordvpn.com/zh/ip-lookup/
-
-获取 IP 地址 https://iq.opengenus.org/get-ip-addresses-using-javascript/
-
-检测 ice 穿透的在线工具
-
-https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/
-
-## WebRTC 的安全隐患
-
-https://www.expressvpn.com/webrtc-leak-test
-
-https://www.expressvpn.com/webrtc-leak-test#chrome
-
-https://www.expressvpn.com/internet-privacy/webrtc-leaks/
-
-## 相关链接
-
-### 相关文章
-
-- [WebRTC 是如何工作的？](https://www.agora.io/cn/community/blog-121-category-24640)
-- https://webrtc.org.cn/webrtc-tutorial-2-signaling-stun-turn/
-- https://juejin.cn/post/6844903844904697864#heading-5
-
-- https://juejin.cn/post/6844903798750576647
-- https://juejin.cn/post/7129763930779418654
-- https://juejin.cn/post/7000205126719766565
-- https://juejin.cn/post/6881551269514149896
-- https://juejin.cn/post/6884851075887661070
-- https://juejin.cn/post/6952849597148430344
-
-- https://zhuanlan.zhihu.com/p/75492311
-- https://zhuanlan.zhihu.com/p/76615314
-- https://zhuanlan.zhihu.com/p/75387873
-- https://zhuanlan.zhihu.com/p/73914640
-
-- 配置 coturn https://juejin.cn/post/6999962039930060837
-- https://webrtc.github.io/samples/
-- [turn、turn 服务测试地址](https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/)
-- [WebRTC，无信号传递 SDP。示例](https://divanov11.github.io/WebRTC-Simple-SDP-Handshake-Demo/)
-
-### 相关 git 仓库
-
-- https://github.com/feixiao/learning_webrtc/blob/master/learning-webrtc/README.md
-- https://github.com/AgoraIO/API-Examples-Web
-
-<!--
-highlight: color-brewer
-highlight: atom-one-dark
-theme: healer-readable
-theme: scrolls-light
-theme: smartblue
-
--------
-theme: smartblue
-highlight: atom-one-dark
--->
+大家喜欢这个专栏的话，😁 可以点点赞 ~ ，你的支持就是我的动力 🌸

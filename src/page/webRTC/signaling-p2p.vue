@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ElMessage } from 'element-plus'
 import io, { Socket } from 'socket.io-client'
+// import VConsole from 'vconsole'
 
+// const vConsole = new VConsole()
 const state = reactive({
   peerConnection: new RTCPeerConnection(),
   // 创建一个空的本地媒体流
@@ -19,14 +21,18 @@ const offerSdp = ref('')
 const answerSdp = ref('')
 
 let socket: Socket
-const userId = getUuid()
-const roomId = '001'
 
+const userId = getUuid()
+const roomId = '003'
 function initConnect() {
   // TODO 替换为公网地址
+  // socket = io('http://192.168.1.126:3000')
   // socket = io('https://192.168.1.126:3000')
-  // socket = io('https://signaling.fedtop.com')
-  socket = io('https://47.95.239.198:3000')
+  socket = io('https://signaling.fedtop.com')
+  // socket = io('https://signaling.fedtop.com/proxy')
+  // socket = io('https://47.95.239.198:3000')
+  // socket = io('node-park.vercel.app')
+  // socket = io('https://node-park-wangrongding.vercel.app')
   socket.on('connect', () => {
     ElMessage.success('🦄🦄🦄连接成功')
     handleConnect()
@@ -62,12 +68,12 @@ function initConnect() {
 
 // 设置唯一标识
 function getUuid() {
-  const uuid = localStorage.getItem('uuid')
-  if (uuid) {
-    return uuid
-  }
+  // const uuid = sessionStorage.getItem('uuid')
+  // if (uuid) {
+  //   return uuid
+  // }
   const newUuid = Math.random().toString(36).substring(2)
-  localStorage.setItem('uuid', newUuid)
+  // sessionStorage.setItem('uuid', newUuid)
   return newUuid
 }
 // 连接成功
@@ -171,9 +177,10 @@ onMounted(async () => {
       </div>
     </div>
     <div class="operation">
+      <el-button type="primary" @click="createOffer">关闭视频</el-button>
+      <el-button type="primary" @click="createOffer">关闭音频</el-button>
       <el-button type="primary" @click="handleConnect">加入</el-button>
       <el-button type="danger" @click="handleLeave">离开</el-button>
-      <el-button type="primary" @click="createOffer">创建offer</el-button>
       <!--   <el-button type="primary" @click="createAnswer(offerSdp)">
         创建answer
       </el-button>
