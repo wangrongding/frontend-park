@@ -26,7 +26,7 @@
 - [x] 拍照
 
 <img
-  src="https://assets.fedtop.com/picbed/202209150918746.png"
+  src="https://assets.fedtop.com/picbed/202210071514394.png"
   alt=""
   style="width:400px"
 />
