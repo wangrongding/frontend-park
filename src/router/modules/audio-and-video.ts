@@ -20,9 +20,9 @@ export const audioAndVideo: RouteRecordRaw[] = [
             component: () => import('@/page/webRTC/take-photos.vue'),
           },
           {
-            path: '/audio-and-video/webRTC/index',
+            path: '/audio-and-video/webRTC/record',
             meta: { title: '音视频，分享屏幕，录制' },
-            component: () => import('@/page/webRTC/index.vue'),
+            component: () => import('@/page/webRTC/record.vue'),
           },
           {
             path: '/audio-and-video/webRTC/background-process',

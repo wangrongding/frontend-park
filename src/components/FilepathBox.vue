@@ -65,9 +65,9 @@ function open(type: string) {
 </template>
 <style lang="scss" scoped>
 .filepath-box-container {
-  position: absolute;
+  position: fixed;
   bottom: 20px;
-  right: 20px;
+  left: 20px;
 }
 
 .el-button {

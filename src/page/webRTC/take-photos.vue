@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import multiavatar from '@multiavatar/multiavatar/esm'
+import { ElMessage } from 'element-plus'
 
 const formParams = reactive({
   data: {
@@ -27,7 +28,7 @@ const formParams = reactive({
       ],
       optionValueKey: 'value',
       optionLabelKey: 'label',
-      onChange: cameraSwitching,
+      onChange: switchCamera,
     },
   },
   labelColor: '#fff',
@@ -44,20 +45,24 @@ const state = reactive({
 
 const imgData = ref('')
 const imgList = ref<string[]>([])
-
 // 切换前后摄像头
-function cameraSwitching(val: number) {
-  if (val === 1) {
-    // state.constraints.video = { facingMode: 'user' }
-    state.constraints.video = { facingMode: { exact: 'user' } }
-  } else {
-    state.constraints.video = { facingMode: { exact: 'environment' } }
+function switchCamera(val: number) {
+  state.constraints.video = {
+    // 强制切换前后摄像头
+    facingMode: { exact: val === 1 ? 'user' : 'environment' },
+    // 也可以这样当前后摄像头不支持切换时，会继续使用当前摄像头，好处是不会报错
+    // facingMode: val === 1 ? 'user' : 'environment',
   }
 
-  // state.constraints.video = {
-  //   deviceId: { exact: deviceId },
-  // }
-  getLocalStream()
+  navigator.mediaDevices
+    .getUserMedia(state.constraints)
+    .then((stream) => {
+      ElMessage.success('切换成功')
+      playLocalStream(stream)
+    })
+    .catch((err) => {
+      ElMessage.error('你的设备不支持切换前后摄像头')
+    })
 }
 
 // 切换设备
@@ -66,6 +71,15 @@ function handleDeviceChange(deviceId: string) {
     deviceId: { exact: deviceId },
   }
   getLocalStream()
+}
+
+// 获取当前的设备ID
+function getDevicesId() {
+  const videoEl = document.getElementById('localVideo') as any
+  const currentDeviceId = videoEl!.srcObject
+    .getVideoTracks()[0]
+    .getSettings().deviceId
+  // console.log('🚀🚀🚀 / currentDeviceId', currentDeviceId)
 }
 
 // 获取所有音视频设备
@@ -101,7 +115,6 @@ function takePhoto() {
   ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height)
   imgList.value.push(canvas.toDataURL('image/png'))
   // add filter
-
   const filterList = [
     'blur(5px)', // 模糊
     'brightness(0.5)', // 亮度
@@ -121,9 +134,6 @@ function takePhoto() {
     ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height)
     imgList.value.push(canvas.toDataURL('image/png'))
   }
-
-  // generateFilterImg(canvas, videoEl, canvas)
-  // imgData.value = canvas.toDataURL('image/png')
 }
 
 function handleError(error: Error) {
@@ -156,7 +166,6 @@ onMounted(() => {
         :key="item"
         class="item"
       >
-        <!-- <img :src="imgData || createAvatar(item)" alt="" /> -->
         <img
           :src="imgList.length !== 0 ? item as any : createAvatar(item)"
           alt=""
@@ -210,8 +219,12 @@ onMounted(() => {
     background-color: #516fa3;
     border: 5px solid #99beff;
     border-radius: 50px;
-    width: 300px;
-    height: 400px;
+
+    // width: 300px;
+    min-height: 400px;
+    max-height: 500px;
+    min-width: 300px;
+    max-width: 300px;
     padding: 20px;
     box-sizing: border-box;
     text-align: center;
