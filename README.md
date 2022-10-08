@@ -31,10 +31,34 @@
   style="width:400px"
 />
 
-- [x] 无信令传递 sdp（p2p 音视频通话）
+- [x] 屏幕录制
+
+<img
+  src="https://assets.fedtop.com/picbed/202210080230355.gif"
+  alt=""
+  style="width:400px"
+/>
+
+- [x] 虚拟背景
+
+<img
+  src="https://assets.fedtop.com/picbed/202210080636262.gif"
+  alt=""
+  style="width:400px"
+/>
+
+- [x] 无信令传递 (1v1 音视频通话)
 
 <img
   src="https://assets.fedtop.com/picbed/202209150922457.png"
+  alt=""
+  style="width:400px"
+/>
+
+- [x] 信令传递 (1v1 音视频通话)
+
+<img
+  src="https://assets.fedtop.com/picbed/202210080816161.png"
   alt=""
   style="width:400px"
 />
