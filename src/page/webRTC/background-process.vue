@@ -19,29 +19,31 @@ let virtualVideoCtx: CanvasRenderingContext2D
 let backgroundImageData: ImageData
 // 获取背景图像数据
 function getBackgroundImageData() {
-  const backgroundCanvas = document.querySelector(
-    '#backgroundImg',
-  ) as HTMLCanvasElement
-  const backgroundCtx = backgroundCanvas.getContext('2d')!
-  const img = new Image()
-  img.src = backgroundImg
-  img.onload = () => {
-    backgroundCtx.drawImage(
-      img,
-      0,
-      0,
-      backgroundCanvas.width,
-      backgroundCanvas.height,
-    )
+  return new Promise((resolve) => {
+    const backgroundCanvas = document.querySelector(
+      '#backgroundImg',
+    ) as HTMLCanvasElement
+    const backgroundCtx = backgroundCanvas.getContext('2d')!
+    const img = new Image()
+    img.src = backgroundImg
+    img.onload = () => {
+      backgroundCtx.drawImage(
+        img,
+        0,
+        0,
+        backgroundCanvas.width,
+        backgroundCanvas.height,
+      )
 
-    backgroundImageData = backgroundCtx.getImageData(
-      0,
-      0,
-      backgroundCanvas.width,
-      backgroundCanvas.height,
-    )
-    start()
-  }
+      backgroundImageData = backgroundCtx.getImageData(
+        0,
+        0,
+        backgroundCanvas.width,
+        backgroundCanvas.height,
+      )
+      resolve(0)
+    }
+  })
 }
 
 // 获取本地音视频流
@@ -160,6 +162,7 @@ watch(
 )
 // 开始
 async function start() {
+  await getBackgroundImageData()
   const stream = await getLocalStream({
     video: {
       width: WIDTH,
@@ -171,9 +174,7 @@ async function start() {
   drawVideoToCanvas(realVideo)
 }
 
-onMounted(async () => {
-  getBackgroundImageData()
-})
+onMounted(start)
 </script>
 <template>
   <div class="background-processing-container">
