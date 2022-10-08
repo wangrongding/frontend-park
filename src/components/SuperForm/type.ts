@@ -10,7 +10,7 @@ interface Upload {
   onRemove: (file: File) => void
   onBeforeRemove: (file: File) => void
   onExceed: (file: File) => void
-  onError: (error: Error) => void
+  onError: any
 }
 interface ItemForm extends Partial<Upload> {
   type: string

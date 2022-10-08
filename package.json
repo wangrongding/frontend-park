@@ -107,7 +107,7 @@
     "vite-plugin-inspect": "^0.6.0",
     "vite-plugin-svg-icons": "^2.0.1",
     "vite-plugin-vue-type-imports": "^0.2.0",
-    "vue-tsc": "^0.33.9"
+    "vue-tsc": "^1.0.0"
   },
   "config": {
     "commitizen": {
