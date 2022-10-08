@@ -23,8 +23,13 @@ const answerSdp = ref('')
 let socket: Socket
 
 const userId = getUuid()
-const roomId = '003'
+// const roomId = '003'
+const roomId = ref('')
 function initConnect() {
+  if (!roomId.value) {
+    ElMessage.error('请输入房间号')
+    return
+  }
   // TODO 替换为公网地址
   // socket = io('http://192.168.1.126:3000')
   // socket = io('https://192.168.1.126:3000')
@@ -43,7 +48,7 @@ function initConnect() {
     ElMessage.success(`${data.userId}加入房间`)
     // // 发送 offer
     // if (offerSdp.value) {
-    //   socket.emit('offer', { userId, roomId, sdp: offerSdp.value })
+    //   socket.emit('offer', { userId, roomId:roomId.value, sdp: offerSdp.value })
     // }
   })
   socket.on('message', (data) => {})
@@ -51,7 +56,11 @@ function initConnect() {
   socket.on('createOffer', (data) => {
     // 发送 offer
     if (offerSdp.value) {
-      socket.emit('offer', { userId, roomId, sdp: offerSdp.value })
+      socket.emit('offer', {
+        userId,
+        roomId: roomId.value,
+        sdp: offerSdp.value,
+      })
       return
     }
     createOffer()
@@ -78,11 +87,11 @@ function getUuid() {
 }
 // 连接成功
 function handleConnect() {
-  socket.emit('join', { userId, roomId })
+  socket.emit('join', { userId, roomId: roomId.value })
 }
 // 离开房间
 function handleLeave() {
-  socket.emit('leave', { userId, roomId })
+  socket.emit('leave', { userId, roomId: roomId.value })
 }
 
 const init = async () => {
@@ -117,7 +126,11 @@ const createOffer = async () => {
       offerSdp.value = JSON.stringify(peerConnection.localDescription)
       // 发送 offer
       if (offerSdp.value) {
-        socket.emit('offer', { userId, roomId, sdp: offerSdp.value })
+        socket.emit('offer', {
+          userId,
+          roomId: roomId.value,
+          sdp: offerSdp.value,
+        })
       }
       // console.log('🚀🚀🚀createOffer', offer)
     }
@@ -136,7 +149,7 @@ const createAnswer = async (offerSdp: string) => {
       // TODO
       socket.emit('answer', {
         userId,
-        roomId,
+        roomId: roomId.value,
         sdp: JSON.stringify(peerConnection.localDescription),
       })
     }
@@ -156,13 +169,13 @@ const addAnswer = async (answerSdp: string) => {
 
 onMounted(async () => {
   await init()
-  await initConnect()
+  // await initConnect()
   nextTick(async () => {})
 })
 </script>
 <template>
   <FilepathBox :file-path="'__filePath__'" />
-  <div class="page-container">
+  <div class="signaling-p2p-container">
     <div class="video-container">
       <div class="main-video">
         <video
@@ -177,10 +190,18 @@ onMounted(async () => {
       </div>
     </div>
     <div class="operation">
+      房间号：
+      <el-input
+        v-model="roomId"
+        style="width: 150px; margin-right: 20px"
+        placeholder="要加入的房间号"
+        clearable
+      ></el-input>
+
+      <el-button type="primary" @click="initConnect">加入</el-button>
+      <el-button type="danger" @click="handleLeave">离开</el-button>
       <el-button type="primary" @click="createOffer">关闭视频</el-button>
       <el-button type="primary" @click="createOffer">关闭音频</el-button>
-      <el-button type="primary" @click="handleConnect">加入</el-button>
-      <el-button type="danger" @click="handleLeave">离开</el-button>
       <!--   <el-button type="primary" @click="createAnswer(offerSdp)">
         创建answer
       </el-button>
@@ -189,7 +210,7 @@ onMounted(async () => {
   </div>
 </template>
 <style lang="scss" scoped>
-.page-container {
+.signaling-p2p-container {
   height: 100%;
   display: flex;
   justify-content: space-between;
