@@ -161,10 +161,7 @@ watch(
 onMounted(async () => {
   getBackgroundImageData()
   const stream = await getLocalStream({
-    video: {
-      deviceId:
-        '6b6851ee8503772ff567632b00c896ba604509bb2aad763016bfa82077d3d946',
-    },
+    video: true,
     audio: false,
   })
   playRealVideo(stream)

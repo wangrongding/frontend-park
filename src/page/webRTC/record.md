@@ -646,7 +646,7 @@ function colorDiff(rgba1: number[], rgba2: number[]) {
 
 ![](https://assets.fedtop.com/picbed/202210080747267.png)
 
-我是通宵写完这篇文章的，现在已经 是 10.7 号 上午 7 点半了，所以我需要休息一下，哈哈。😅
+我是通宵写完这篇文章的，现在已经 是 10.7 号 上午 8 点半了，所以我需要休息一下，哈哈。😅
 
 ## 最后的最后 ~
 
