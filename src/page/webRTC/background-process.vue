@@ -46,13 +46,15 @@ function getBackgroundImageData() {
 // 获取本地音视频流
 async function getLocalStream(options: MediaStreamConstraints) {
   const stream = await navigator.mediaDevices.getUserMedia(options)
-  return stream
+
+  playRealVideo(stream)
 }
 
 // 播放原始视频流
 function playRealVideo(stream: MediaStream) {
   realVideo = document.querySelector('#real-video') as HTMLVideoElement
   realVideo.srcObject = stream
+  drawVideoToCanvas(realVideo)
 }
 
 // 将视频写到 canvas 中
@@ -160,15 +162,13 @@ watch(
 
 onMounted(async () => {
   getBackgroundImageData()
-  const stream = await getLocalStream({
+  await getLocalStream({
     video: {
       width: WIDTH,
       height: HEIGHT,
     },
     audio: false,
   })
-  playRealVideo(stream)
-  drawVideoToCanvas(realVideo)
 })
 </script>
 <template>
