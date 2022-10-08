@@ -161,7 +161,10 @@ watch(
 onMounted(async () => {
   getBackgroundImageData()
   const stream = await getLocalStream({
-    video: true,
+    video: {
+      width: WIDTH,
+      height: HEIGHT,
+    },
     audio: false,
   })
   playRealVideo(stream)
@@ -210,6 +213,8 @@ onMounted(async () => {
 
   video,
   canvas {
+    width: 480px;
+    height: 300px;
     border: 4px dashed #374685;
   }
 }
