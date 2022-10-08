@@ -25,7 +25,9 @@ function getBackgroundImageData() {
     ) as HTMLCanvasElement
     const backgroundCtx = backgroundCanvas.getContext('2d')!
     const img = new Image()
-    img.src = backgroundImg
+    // img.src = backgroundImg
+    img.src = 'https://assets.fedtop.com/picbed/202210081600467.png'
+    img.setAttribute('crossOrigin', '')
     img.onload = () => {
       backgroundCtx.drawImage(
         img,
