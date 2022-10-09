@@ -35,6 +35,11 @@ export const three: RouteRecordRaw[] = [
         meta: { title: 'Controls' },
         component: () => import('@/page/three/controls.vue'),
       },
+      {
+        path: '/three/planet',
+        meta: { title: '星球' },
+        component: () => import('@/page/three/planet.vue'),
+      },
     ],
   },
 ]

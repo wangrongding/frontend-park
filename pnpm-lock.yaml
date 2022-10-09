@@ -10,6 +10,7 @@ specifiers:
   '@types/multiavatar__multiavatar': ^1.0.0
   '@types/node': ^17.0.45
   '@types/nprogress': ^0.2.0
+  '@types/stats.js': ^0.17.0
   '@types/three': ^0.143.1
   '@typescript-eslint/eslint-plugin': ^5.22.0
   '@typescript-eslint/parser': ^5.22.0
@@ -90,6 +91,7 @@ devDependencies:
   '@types/fabric': 4.5.11
   '@types/multiavatar__multiavatar': 1.0.0
   '@types/nprogress': 0.2.0
+  '@types/stats.js': 0.17.0
   '@typescript-eslint/eslint-plugin': 5.32.0_iosr3hrei2tubxveewluhu5lhy
   '@typescript-eslint/parser': 5.32.0_qugx7qdu5zevzvxaiqyxfiwquq
   '@vitejs/plugin-vue': 2.3.3_vite@2.9.14+vue@3.2.37
@@ -969,6 +971,10 @@ packages:
 
   /@types/parse-json/4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/@types/parse-json/-/parse-json-4.0.0.tgz}
+    dev: true
+
+  /@types/stats.js/0.17.0:
+    resolution: {integrity: sha512-9w+a7bR8PeB0dCT/HBULU2fMqf6BAzvKbxFboYhmDtDkKPiyXYbjoe2auwsXlEFI7CFNMF1dCv3dFH5Poy9R1w==}
     dev: true
 
   /@types/svgo/2.6.4:
