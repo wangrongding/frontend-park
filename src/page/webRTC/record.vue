@@ -6,6 +6,7 @@ const formParams = reactive({
     audioInput: '',
     audioOutput: '',
     videoInput: '',
+    videoMimeType: 'video/webm;codecs=vp9',
   },
   // 表单数据对象
   formList: {
@@ -44,6 +45,7 @@ const formParams = reactive({
     videoMimeType: {
       type: 'select',
       label: '录制的视频格式',
+      clearable: true,
       options: [] as any,
       onChange: (val: string) => {
         handleVideoMimeTypeChange(val)
@@ -59,7 +61,9 @@ let localStream: MediaStream
 let mediaRecorder: MediaRecorder
 
 // 当录制的视频 mimeType改变时
-function handleVideoMimeTypeChange(deviceId: string) {}
+function handleVideoMimeTypeChange(val: string) {
+  formParams.data.videoMimeType = val
+}
 
 // 获取所有音视频设备
 function getDevices() {
@@ -181,45 +185,50 @@ function getSupportedMimeTypes() {
 }
 
 const timer = ref(0)
+const kbps = 1024
+const Mbps = kbps * kbps
+
 // 开始录制
 function startRecord() {
   if (!localStream) {
     ElMessage.warning('请先获取本地音视频流')
     return
   }
-  if (mediaRecorder) {
+  if (mediaRecorder?.state === 'recording') {
     mediaRecorder.stop()
     return
   }
-
-  const kbps = 1024
-  const Mbps = kbps * kbps
+  // console.log('🚀🚀🚀 / mediaRecorder', mediaRecorder)
   const options = {
     audioBitsPerSecond: 128000,
     videoBitsPerSecond: 2500000,
-    mimeType: 'video/webm; codecs="vp8,opus"',
-    // mimeType: 'video/mp4'
-    // mimeType: 'image/gif',
+    mimeType: formParams.data.videoMimeType,
+    // mimeType: 'video/webm; codecs="vp8,opus"',
     // bitsPerSecond: 2000 * Mbps,
-    // videoBitsPerSecond: 100000 * Mbps,
   }
+  const chunks: Blob[] = []
+  let timerId: any
   mediaRecorder = new MediaRecorder(localStream, options)
   mediaRecorder.start()
 
-  // 计时
-  const timerId = setInterval(() => {
-    timer.value++
-  }, 1000)
-
   mediaRecorder.ondataavailable = (e) => {
-    // 将录制的数据合并成一个 Blob 对象
-    // const blob = new Blob([e.data], { type: e.data.type })
-    const blob = new Blob([e.data], { type: 'video/mp4' })
-    downloadBlob(blob)
+    chunks.push(e.data)
+  }
+
+  mediaRecorder.onstart = () => {
+    // 计时
+    timerId = setInterval(() => {
+      timer.value++
+    }, 1000)
   }
   mediaRecorder.onstop = (e: Event) => {
     timer.value = 0
     clearInterval(timerId)
+    // 将录制的数据合并成一个 Blob 对象
+    // const blob = new Blob(chunks, { type: chunks[0].type })
+    const blob = new Blob(chunks, { type: mediaRecorder?.mimeType })
+    downloadBlob(blob)
+    chunks.length = 0
   }
 }
 
@@ -231,7 +240,9 @@ function downloadBlob(blob: Blob) {
   // 设置 a 标签的 href 属性为刚刚生成的 URL 地址
   a.href = url
   // 设置 a 标签的 download 属性为文件名
-  a.download = `${new Date().getTime()}.${blob.type.split('/')[1]}`
+  a.download = `${new Date().getTime()}.${
+    blob.type.split('/')[1].split(';')[0]
+  }`
   // 模拟点击 a 标签
   a.click()
   // 释放 URL 地址
@@ -261,7 +272,7 @@ onMounted(() => {
           :type="timer === 0 ? 'success' : 'warning'"
           @click="startRecord"
         >
-          {{ timer === 0 ? ' 开始录制' : '暂停录制 | ' + timer }}
+          {{ timer === 0 ? ' 开始录制' : '终止录制 | ' + timer }}
         </el-button>
       </div>
     </div>
