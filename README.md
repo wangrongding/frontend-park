@@ -71,8 +71,18 @@
 
 ### ThreeJs
 
+- 控制器
+
 <img
-    src="https://assets.fedtop.com/picbed/202202141040652.gif"
+  src="https://assets.fedtop.com/picbed/202202141040652.gif"
+  alt=""
+  style="width:400px"
+/>
+
+- 太阳系
+
+<img
+    src="https://assets.fedtop.com/picbed/Kapture 2022-10-10 at 04.23.10.gif"
     alt=""
     style="width:400px"
 />
