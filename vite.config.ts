@@ -87,8 +87,8 @@ export default defineConfig((config) => ({
   server: {
     host: '0.0.0.0',
     https: {
-      key: fs.readFileSync(`${__dirname}/localhost+3-key.pem`),
-      cert: fs.readFileSync(`${__dirname}/localhost+3.pem`),
+      key: fs.readFileSync(`${__dirname}/localhost-key.pem`),
+      cert: fs.readFileSync(`${__dirname}/localhost.pem`),
     },
     // https: true,
     port: 12345,
