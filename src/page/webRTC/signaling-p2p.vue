@@ -4,27 +4,20 @@ import io, { Socket } from 'socket.io-client'
 // import VConsole from 'vconsole'
 
 // const vConsole = new VConsole()
-const state = reactive({
-  peerConnection: new RTCPeerConnection(),
-  // 创建一个空的本地媒体流
-  localStream: new MediaStream(),
-  // 创建一个空的远程媒体流
-  remoteStream: new MediaStream(),
-  offerSdp: '',
-  answerSdp: '',
+const peerConnection = new RTCPeerConnection({
+  iceServers: [
+    {
+      urls: 'stun:stun.voipbuster.com ',
+    },
+  ],
 })
-
-const peerConnection = new RTCPeerConnection()
+const userId = Math.random().toString(36).substring(2)
+const roomId = ref('222')
+let socket: Socket
 let localStream: MediaStream
 let remoteStream: MediaStream
-const offerSdp = ref('')
-const answerSdp = ref('')
+let offerSdp = ''
 
-let socket: Socket
-
-const userId = getUuid()
-// const roomId = '003'
-const roomId = ref('')
 function initConnect() {
   if (!roomId.value) {
     ElMessage.error('请输入房间号')
@@ -38,28 +31,29 @@ function initConnect() {
   // socket = io('https://47.95.239.198:3000')
   // socket = io('node-park.vercel.app')
   // socket = io('https://node-park-wangrongding.vercel.app')
+
+  // 连接成功时触发
   socket.on('connect', () => {
     ElMessage.success('🦄🦄🦄连接成功')
     handleConnect()
   })
   // ========================================
+  // 当有用户离开房间时触发
   socket.on('disconnect', () => {})
+  // 当有用户加入房间时触发
   socket.on('welcome', (data) => {
     ElMessage.success(`${data.userId}加入房间`)
-    // // 发送 offer
-    // if (offerSdp.value) {
-    //   socket.emit('offer', { userId, roomId:roomId.value, sdp: offerSdp.value })
-    // }
   })
+  // 当有用户发送消息时触发
   socket.on('message', (data) => {})
   // 创建offer
   socket.on('createOffer', (data) => {
     // 发送 offer
-    if (offerSdp.value) {
+    if (offerSdp) {
       socket.emit('offer', {
         userId,
         roomId: roomId.value,
-        sdp: offerSdp.value,
+        sdp: offerSdp,
       })
       return
     }
@@ -75,16 +69,6 @@ function initConnect() {
   })
 }
 
-// 设置唯一标识
-function getUuid() {
-  // const uuid = sessionStorage.getItem('uuid')
-  // if (uuid) {
-  //   return uuid
-  // }
-  const newUuid = Math.random().toString(36).substring(2)
-  // sessionStorage.setItem('uuid', newUuid)
-  return newUuid
-}
 // 连接成功
 function handleConnect() {
   socket.emit('join', { userId, roomId: roomId.value })
@@ -119,34 +103,31 @@ const init = async () => {
 }
 
 // 创建 offer
-const createOffer = async () => {
+async function createOffer() {
   // 当一个新的offer ICE候选人被创建时触发事件
   peerConnection.onicecandidate = async (event) => {
     if (event.candidate) {
-      offerSdp.value = JSON.stringify(peerConnection.localDescription)
+      offerSdp = JSON.stringify(peerConnection.localDescription)
       // 发送 offer
-      if (offerSdp.value) {
+      if (offerSdp) {
         socket.emit('offer', {
           userId,
           roomId: roomId.value,
-          sdp: offerSdp.value,
+          sdp: offerSdp,
         })
       }
-      // console.log('🚀🚀🚀createOffer', offer)
     }
   }
   const offer = await peerConnection.createOffer()
   await peerConnection.setLocalDescription(offer)
-  // TODO
 }
+
 // 创建 answer
-const createAnswer = async (offerSdp: string) => {
-  const offer = JSON.parse(offerSdp)
+async function createAnswer(val: string) {
+  const offer = JSON.parse(val)
   peerConnection.onicecandidate = async (event) => {
-    // Event that fires off when a new answer ICE candidate is created
+    // 当一个新的 answer ICE candidate 被创建时
     if (event.candidate) {
-      answerSdp.value = JSON.stringify(peerConnection.localDescription)
-      // TODO
       socket.emit('answer', {
         userId,
         roomId: roomId.value,
@@ -158,9 +139,9 @@ const createAnswer = async (offerSdp: string) => {
   const answer = await peerConnection.createAnswer()
   await peerConnection.setLocalDescription(answer)
 }
+
 // 添加 answer
-const addAnswer = async (answerSdp: string) => {
-  // console.log('Add answer triggerd')
+async function addAnswer(answerSdp: string) {
   const answer = JSON.parse(answerSdp)
   if (!peerConnection.currentRemoteDescription) {
     peerConnection.setRemoteDescription(answer)
