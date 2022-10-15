@@ -6,8 +6,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 // 创建场景
 const scene = new THREE.Scene()
 // 给场景添加雾化效果
-scene.fog = new THREE.Fog(0x123, 5, 10)
-scene.fog = new THREE.FogExp2(0xffffff, 0.004)
+// scene.fog = new THREE.Fog(0x123, 5, 10)
+// scene.fog = new THREE.FogExp2(0xffffff, 0.004)
 // 定义摄像机
 const camera = new THREE.PerspectiveCamera(
   45,
@@ -20,16 +20,16 @@ const camera = new THREE.PerspectiveCamera(
 const axes = new THREE.AxesHelper(10)
 scene.add(axes)
 
-// // 创建平面
-// const planeGeometry = new THREE.PlaneGeometry(200, 200)
+// 创建平面
+// const planeGeometry = new THREE.PlaneGeometry(100, 100)
 // // 通过创建材质对象来设置平面的外观,这里使用的是基本材质
-// const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff })
+// const planeMaterial = new THREE.MeshLambertMaterial({ color: 0x000 })
 // // 将大小和外观组合进Mesh对象,赋值给平面对象
 // const plane = new THREE.Mesh(planeGeometry, planeMaterial)
 // // 平面绕x轴旋转九十度
 // plane.rotation.x = -0.5 * Math.PI
 // // 定义其在场景中的位置
-// plane.position.set(15, -20, 0)
+// plane.position.set(0, -20, 0)
 // // 添加平面到场景中
 // scene.add(plane)
 
@@ -42,144 +42,117 @@ spotLight.castShadow = true
 // 将光源添加进场景
 scene.add(spotLight)
 
-// 创建太阳，并添加贴图
-const sunGeometry = new THREE.SphereGeometry(10, 32, 32)
-const sunMaterial = new THREE.MeshBasicMaterial({
-  map: new THREE.TextureLoader().load(
-    'https://assets.fedtop.com/picbed/sun_color.jpg',
-  ),
-})
-const sun = new THREE.Mesh(sunGeometry, sunMaterial)
-sun.position.set(0, 0, 0)
-scene.add(sun)
+// 行星配置
+const planetsConfiguration = [
+  {
+    name: '太阳',
+    radius: 16,
+    distance: 0,
+    speed: 0,
+    map: 'https://assets.fedtop.com/picbed/sun_color.jpg',
+  },
+  {
+    name: '水星',
+    radius: 0.5,
+    distance: 24,
+    speed: 0.02,
+    map: 'https://assets.fedtop.com/picbed/mercury_color.jpg',
+  },
+  {
+    name: '金星',
+    radius: 0.8,
+    distance: 26,
+    speed: 0.015,
+    map: 'https://assets.fedtop.com/picbed/venus_color.jpg',
+  },
+  {
+    name: '地球',
+    radius: 1,
+    distance: 28,
+    speed: 0.03,
+    map: 'https://assets.fedtop.com/picbed/earth_color.jpg',
+  },
+  {
+    name: '火星',
+    radius: 0.8,
+    distance: 30,
+    speed: 0.025,
+    map: 'https://assets.fedtop.com/picbed/mars_color.jpg',
+  },
+  {
+    name: '木星',
+    radius: 3,
+    distance: 40,
+    speed: 0.02,
+    map: 'https://assets.fedtop.com/picbed/jupiter_color.jpg',
+  },
+  {
+    name: '土星',
+    radius: 3,
+    distance: 50,
+    speed: 0.015,
+    map: 'https://assets.fedtop.com/picbed/saturn_color.jpg',
+  },
+  {
+    name: '天王星',
+    radius: 1.5,
+    distance: 60,
+    speed: 0.01,
+    map: 'https://assets.fedtop.com/picbed/uranus_color.jpg',
+  },
+  {
+    name: '海王星',
+    radius: 1.1,
+    distance: 70,
+    speed: 0.008,
+    map: 'https://assets.fedtop.com/picbed/neptune_color.jpg',
+  },
+]
 
-// 创建水星
-const mercuryGeometry = new THREE.SphereGeometry(0.5, 32, 32)
-const mercuryMaterial = new THREE.MeshBasicMaterial({
-  map: new THREE.TextureLoader().load(
-    'https://assets.fedtop.com/picbed/mercury_color.jpg',
-  ),
+// 生成太阳系
+const planets: any = planetsConfiguration.map((planet, index) => {
+  // 创建行星
+  const geometry = new THREE.SphereGeometry(planet.radius, 20, 20)
+  const material = new THREE[
+    index === 0 ? 'MeshBasicMaterial' : 'MeshLambertMaterial'
+  ]({
+    map: new THREE.TextureLoader().load(planet.map),
+  })
+  const mesh = new THREE.Mesh(geometry, material)
+  // 设置行星的位置
+  mesh.position.x = planet.distance
+  // 将行星添加到场景中
+  scene.add(mesh)
+  // 将行星添加到行星列表中
+  return {
+    mesh,
+    speed: planet.speed,
+    distance: planet.distance,
+  }
 })
-const mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial)
-mercury.position.set(15, 0, 0)
-scene.add(mercury)
 
-// 创建金星
-const venusGeometry = new THREE.SphereGeometry(0.8, 32, 32)
-const venusMaterial = new THREE.MeshBasicMaterial({
-  map: new THREE.TextureLoader().load(
-    'https://assets.fedtop.com/picbed/venus_color.jpg',
-  ),
-})
-const venus = new THREE.Mesh(venusGeometry, venusMaterial)
-venus.position.set(18, 0, 0)
-scene.add(venus)
+// 创建宇宙背景
+const spaceTexture = new THREE.TextureLoader().load(
+  // 'https://assets.fedtop.com/picbed/202210152003603.png',
+  'https://assets.fedtop.com/picbed/wallhaven-dp2y7g_1280x720.png',
+  // 'https://assets.fedtop.com/picbed/wallhaven-13ggqw_1280x720.png',
+  // 'https://assets.fedtop.com/picbed/wallhaven-g7r3vd.jpg',
+)
+scene.background = spaceTexture
 
-// 创建地球
-const earthGeometry = new THREE.SphereGeometry(1, 32, 32)
-const earthMaterial = new THREE.MeshBasicMaterial({
-  map: new THREE.TextureLoader().load(
-    'https://assets.fedtop.com/picbed/earth_color.jpg',
-  ),
-})
-const earth = new THREE.Mesh(earthGeometry, earthMaterial)
-earth.position.set(22, 0, 0)
-scene.add(earth)
-
-// 创建火星
-const marsGeometry = new THREE.SphereGeometry(0.6, 32, 32)
-const marsMaterial = new THREE.MeshBasicMaterial({
-  map: new THREE.TextureLoader().load(
-    'https://assets.fedtop.com/picbed/mars_color.jpg',
-  ),
-})
-const mars = new THREE.Mesh(marsGeometry, marsMaterial)
-mars.position.set(25, 0, 0)
-scene.add(mars)
-
-// 创建木星
-const jupiterGeometry = new THREE.SphereGeometry(2, 32, 32)
-const jupiterMaterial = new THREE.MeshBasicMaterial({
-  map: new THREE.TextureLoader().load(
-    'https://assets.fedtop.com/picbed/jupiter_color.jpg',
-  ),
-})
-const jupiter = new THREE.Mesh(jupiterGeometry, jupiterMaterial)
-jupiter.position.set(30, 0, 0)
-scene.add(jupiter)
-
-// 创建土星
-const saturnGeometry = new THREE.SphereGeometry(1.8, 32, 32)
-const saturnMaterial = new THREE.MeshBasicMaterial({
-  map: new THREE.TextureLoader().load(
-    'https://assets.fedtop.com/picbed/saturn_color.jpg',
-  ),
-})
-const saturn = new THREE.Mesh(saturnGeometry, saturnMaterial)
-saturn.position.set(35, 0, 0)
-scene.add(saturn)
-
-// 创建天王星
-const uranusGeometry = new THREE.SphereGeometry(1.5, 32, 32)
-const uranusMaterial = new THREE.MeshBasicMaterial({
-  map: new THREE.TextureLoader().load(
-    'https://assets.fedtop.com/picbed/uranus_color.jpg',
-  ),
-})
-const uranus = new THREE.Mesh(uranusGeometry, uranusMaterial)
-uranus.position.set(40, 0, 0)
-scene.add(uranus)
-
-// 创建海王星
-const neptuneGeometry = new THREE.SphereGeometry(1.4, 32, 32)
-const neptuneMaterial = new THREE.MeshBasicMaterial({
-  map: new THREE.TextureLoader().load(
-    'https://assets.fedtop.com/picbed/neptune_color.jpg',
-  ),
-})
-const neptune = new THREE.Mesh(neptuneGeometry, neptuneMaterial)
-neptune.position.set(45, 0, 0)
-scene.add(neptune)
-
-// 给行星添加动画
-const animate = () => {
-  // 旋转太阳
-  sun.rotation.y += 0.005
-  // 旋转水星
-  mercury.rotation.y += 0.028
-  mercury.position.x = 10 * Math.cos(mercury.rotation.y)
-  mercury.position.z = 10 * Math.sin(mercury.rotation.y)
-  // 旋转金星
-  venus.rotation.y += 0.027
-  venus.position.x = 20 * Math.cos(venus.rotation.y)
-  venus.position.z = 20 * Math.sin(venus.rotation.y)
-  // 旋转地球
-  earth.rotation.y += 0.026
-  earth.position.x = 30 * Math.cos(earth.rotation.y)
-  earth.position.z = 30 * Math.sin(earth.rotation.y)
-  // 旋转火星
-  mars.rotation.y += 0.025
-  mars.position.x = 40 * Math.cos(mars.rotation.y)
-  mars.position.z = 40 * Math.sin(mars.rotation.y)
-  // 旋转木星
-  jupiter.rotation.y += 0.024
-  jupiter.position.x = 50 * Math.cos(jupiter.rotation.y)
-  jupiter.position.z = 50 * Math.sin(jupiter.rotation.y)
-  // 旋转土星
-  saturn.rotation.y += 0.023
-  saturn.position.x = 60 * Math.cos(saturn.rotation.y)
-  saturn.position.z = 60 * Math.sin(saturn.rotation.y)
-  // 旋转天王星
-  uranus.rotation.y += 0.022
-  uranus.position.x = 70 * Math.cos(uranus.rotation.y)
-  uranus.position.z = 70 * Math.sin(uranus.rotation.y)
-  // 旋转海王星
-  neptune.rotation.y += 0.021
-  neptune.position.x = 80 * Math.cos(neptune.rotation.y)
-  neptune.position.z = 80 * Math.sin(neptune.rotation.y)
+// 行星运动动画
+function animate() {
+  // 循环遍历行星列表
+  planets.forEach((planet: any, index: number) => {
+    // 自旋
+    planet.mesh.rotation.y += planet.speed + 0.001
+    // 公转
+    planet.mesh.position.x = planet.distance * Math.cos(planet.mesh.rotation.y)
+    planet.mesh.position.z = planet.distance * Math.sin(planet.mesh.rotation.y)
+  })
   // 渲染场景
   renderer.render(scene, camera)
-  // 递归调用
+  // 递归调用animate函数
   requestAnimationFrame(animate)
 }
 
@@ -190,7 +163,7 @@ renderer.setClearColor(new THREE.Color(0x000))
 // 设置场景大小
 renderer.setSize(window.innerWidth, window.innerHeight - 60)
 // 设置相机位置(x,y,z)
-camera.position.set(-100, 40, 100)
+camera.position.set(-200, 80, 200)
 // 通过lookAt将摄像机指向场景中心,(默认指向0,0,0)
 camera.lookAt(scene.position)
 // 开启阴影
