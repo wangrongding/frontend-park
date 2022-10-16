@@ -1,26 +1,47 @@
 <script setup lang="ts">
-const peerConnection = new RTCPeerConnection()
+// 创建
+const peerConnection = new RTCPeerConnection({
+  iceServers: [
+    // { urls: 'stun:stun.l.google.com:19302' },
+    // { urls: 'stun:stun1.l.google.com:19302' },
+    // { urls: 'stun:stun2.l.google.com:19302' },
+    // { urls: 'stun:stun3.l.google.com:19302' },
+    // { urls: 'stun:stun4.l.google.com:19302' },
+    // { urls: 'stun:stun.ideasip.com' },
+    // { urls: 'stun:stun.schlund.de' },
+    { urls: 'stun:stun.voipbuster.com ' },
+  ],
+})
 let localStream: MediaStream
 let remoteStream: MediaStream
 
 const offerSdp = ref('')
 const answerSdp = ref('')
 
+// 初始化
 const init = async () => {
+  // 获取本地端视频标签
   const localVideo = document.getElementById('local') as HTMLVideoElement
+  // 获取远程端视频标签
   const remoteVideo = document.getElementById('remote') as HTMLVideoElement
+  // 获取本地媒体流
   localStream = await navigator.mediaDevices.getUserMedia({
     video: true,
     audio: false,
   })
+  // 创建远程空媒体流
   remoteStream = new MediaStream()
+  // 设置本地视频流
   localVideo.srcObject = localStream
+  // 设置远程视频流
   remoteVideo.srcObject = remoteStream
-
+  // 添加本地流到 peerConnection
   localStream.getTracks().forEach((track) => {
     peerConnection.addTrack(track, localStream)
   })
-
+  // 已经过时的方法 [addStream API](https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/addStream)
+  // peerConnection.addStream(localStream);
+  // 监听远程流
   peerConnection.ontrack = (event) => {
     event.streams[0].getTracks().forEach((track) => {
       remoteStream.addTrack(track)
@@ -28,6 +49,11 @@ const init = async () => {
   }
 }
 
+function test() {
+  // console.log('test', peerConnection)
+}
+
+// 创建 offer（提案）
 const createOffer = async () => {
   peerConnection.onicecandidate = async (event) => {
     // Event that fires off when a new offer ICE candidate is created
@@ -37,10 +63,13 @@ const createOffer = async () => {
   }
   const offer = await peerConnection.createOffer()
   await peerConnection.setLocalDescription(offer)
+  // await peerConnection.setLocalDescription()
 }
-
+// 创建 answer
 const createAnswer = async () => {
+  // 解析字符串
   const offer = JSON.parse(offerSdp.value)
+
   peerConnection.onicecandidate = async (event) => {
     // Event that fires off when a new answer ICE candidate is created
     if (event.candidate) {
@@ -52,10 +81,10 @@ const createAnswer = async () => {
   await peerConnection.setLocalDescription(answer)
 }
 
+// 添加 answer(应答)
 const addAnswer = async () => {
-  // console.log('Add answer triggerd')
-  const answer = JSON.parse(answerSdp.value)
   // console.log('answer:', answer)
+  const answer = JSON.parse(answerSdp.value)
   if (!peerConnection.currentRemoteDescription) {
     peerConnection.setRemoteDescription(answer)
   }
@@ -65,7 +94,19 @@ function copyToClipboard(val: string) {
   navigator.clipboard.writeText(val)
 }
 
-onMounted(() => {
+// // 获取本地流
+// navigator.mediaDevices
+//   .getUserMedia({
+//     video: true,
+//     audio: true,
+//   })
+//   .then((stream) => {
+//     const localVideo = document.getElementById('local') as HTMLVideoElement
+//     localVideo.srcObject = stream
+//   })
+
+// 设置本地视频流
+onMounted(async () => {
   init()
 })
 </script>
@@ -73,48 +114,77 @@ onMounted(() => {
   <FilepathBox :file-path="'__filePath__'" />
   <div class="page-container">
     <div class="video-container">
-      <video id="local" autoplay playsinline></video>
+      <video id="local" autoplay playsinline muted></video>
       <video id="remote" autoplay playsinline></video>
     </div>
     <div class="operation">
-      <el-button
-        id="create-offer"
-        type="primary"
-        size="default"
-        @click="createOffer"
-      >
-        Create Offer
-      </el-button>
       <div class="step">
-        <b>1.</b>
-        随便一个人，点击 Create Offer，生成 SDP offer
-        ，并从下面的文本区域复制offer。（点完，第二个人就不用再点这个按钮了）
+        <p>
+          用户 1，点击 Create Offer，生成 SDP offer，把下面生成的offer
+          复制给用户 2
+        </p>
+        <el-button
+          id="create-offer"
+          type="primary"
+          size="default"
+          @click="createOffer"
+        >
+          创建 Offer
+        </el-button>
+        <el-button
+          id="create-offer"
+          type="primary"
+          size="default"
+          @click="test"
+        >
+          测试按钮
+        </el-button>
+        <p>SDP offer:</p>
+        <el-input
+          v-model="offerSdp"
+          placeholder="User 2, paste SDP offer here..."
+        >
+          <template #append>
+            <el-button
+              type="success"
+              size="default"
+              @click="copyToClipboard(offerSdp)"
+            >
+              点击复制
+            </el-button>
+          </template>
+        </el-input>
       </div>
 
-      <p>SDP offer:</p>
-      <el-input
-        v-model="offerSdp"
-        placeholder="User 2, paste SDP offer here..."
-      >
-        <template #prepend>
-          <el-button
-            type="success"
-            size="default"
-            @click="copyToClipboard(offerSdp)"
-          >
-            点击复制
-          </el-button>
-        </template>
-        <template #append>
-          <el-button type="success" size="default" @click="createAnswer">
-            Create Answer
-          </el-button>
-        </template>
-      </el-input>
       <div class="step">
-        <b>2.</b>
-        第二个人将刚才第一个人生成的SDP报价粘贴到上面的文本区域，然后 点击
-        "创建答案 "来生成SDP答案，并从下面的文本区域复制答案。给第一个人。
+        <p>
+          用户 2将用户1 刚才生成的SDP offer 粘贴到下方，点击 "创建答案
+          "来生成SDP答案，然后将 SDP Answer 复制给用户 1。
+        </p>
+
+        <el-input
+          v-model="offerSdp"
+          placeholder="User 2, paste SDP offer here..."
+        >
+          <template #append>
+            <el-button type="success" size="default" @click="createAnswer">
+              创建 Answer
+            </el-button>
+          </template>
+        </el-input>
+
+        <p>SDP Answer:</p>
+        <el-input v-model="answerSdp" placeholder="生成的SDP answer">
+          <template #append>
+            <el-button
+              type="success"
+              size="default"
+              @click="copyToClipboard(answerSdp)"
+            >
+              点击复制
+            </el-button>
+          </template>
+        </el-input>
       </div>
 
       <p>SDP Answer:</p>
@@ -174,12 +244,14 @@ onMounted(() => {
   }
 
   .operation {
-    width: 500px;
+    width: 520px;
 
     .step {
-      background-color: beige;
-      padding: 10px;
+      padding: 30px;
+      background-color: #516fa3;
       margin: 10px 0;
+      color: white;
+      border-radius: 20px;
     }
   }
 }
