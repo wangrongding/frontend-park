@@ -12,19 +12,16 @@ export const other: RouteRecordRaw[] = [
         component: () => import('@/page/other/latitude-longitude.vue'),
       },
       {
-        path: '/other/chsi-hid',
-        meta: { title: 'CHSI在线证明(不可乱用)', hidden: true },
-        component: () => import('@/page/other/chsi/index.vue'),
+        path: '/other/vibrate',
+        meta: { title: '震动（暂只支持安卓）' },
+        component: () => import('@/page/other/vibrate.vue'),
       },
       {
         path: '/other/cshi',
         meta: { title: 'CHSI在线证明(不可乱用)' },
         component: () => import('@/page/other/chsi/index-temp.vue'),
-      },
-      {
-        path: '/other/vibrate',
-        meta: { title: '震动（暂只支持安卓）' },
-        component: () => import('@/page/other/vibrate.vue'),
+        // 自己删掉上面的，用这个↓
+        // component: () => import('@/page/other/chsi/index.vue'),
       },
     ],
   },
