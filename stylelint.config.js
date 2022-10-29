@@ -12,6 +12,12 @@ module.exports = {
     'color-hex-case': 'lower',
     'block-no-empty': null,
     'no-empty-source': null,
+    'at-rule-no-unknown': [
+      true,
+      {
+        ignoreAtRules: ['function', 'if', 'each', 'include', 'mixin', 'for'],
+      },
+    ],
   },
   ignoreFiles: [
     '**/*.js',

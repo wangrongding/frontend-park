@@ -17,6 +17,11 @@ export const other: RouteRecordRaw[] = [
         component: () => import('@/page/other/vibrate.vue'),
       },
       {
+        path: '/other/css-selector',
+        meta: { title: 'css选择器训练' },
+        component: () => import('@/page/other/css-selector.vue'),
+      },
+      {
         path: '/other/cshi',
         meta: { title: 'CHSI在线证明(不可乱用)' },
         component: () => import('@/page/other/chsi/index-temp.vue'),
