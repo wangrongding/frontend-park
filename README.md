@@ -1,17 +1,18 @@
 # frontent-park
 
-一个有趣的前端趣味知识公园~  
+一个有趣的前端趣味知识公园~ 在线地址：👉🏻 [frontent-park](https://frontend-park.vercel.app/home)
+
 该项目是我平时捣鼓的一些好玩的前端知识案例集合,喜欢的小伙伴也可以自己 fork 到仓库后随意玩耍
 
-<img
+<!-- <img
     src="https://assets.fedtop.com/picbed/20220531142022.png"
     alt=""
     style="width:400px"
-/>
+/> -->
 
-## 我的博客
+<!-- ## 我的博客
 
-所有示例的具体实现和技术说明，在[我的博客](https://www.fedtop.com/)中都有对应的文章
+所有示例的具体实现和技术说明，在[我的博客](https://www.fedtop.com/)中都有对应的文章 -->
 
 <!-- <img
     src="https://assets.fedtop.com/picbed/20220531142049.png"
@@ -25,6 +26,8 @@
 
 - [x] 拍照
 
+基于 WebRTC 的拍照功能，可以拍照并保存到本地
+
 <img
   src="https://assets.fedtop.com/picbed/202210071514394.png"
   alt=""
@@ -32,6 +35,8 @@
 />
 
 - [x] 屏幕录制
+
+将获取到的媒体流，通过 MediaRecorder API 进行录制，然后可以下载录制的视频
 
 <img
   src="https://assets.fedtop.com/picbed/202210080230355.gif"
@@ -41,13 +46,17 @@
 
 - [x] 虚拟背景
 
+捕获摄像头后，对背景进行处理
+
 <img
-  src="https://assets.fedtop.com/picbed/202210080636262.gif"
+  src="https://assets.fedtop.com/picbed/202211030012599.gif"
   alt=""
   style="width:400px"
 />
 
 - [x] 无信令传递 (1v1 音视频通话)
+
+手动实现 P2P 的音视频通话，不依赖信令服务器
 
 <img
   src="https://assets.fedtop.com/picbed/202209150922457.png"
@@ -56,6 +65,8 @@
 />
 
 - [x] 信令传递 (1v1 音视频通话)
+
+通过信令服务器实现 P2P 的音视频通话，支持内/外网连接，可以在不同网络环境下进行通话
 
 <img
   src="https://assets.fedtop.com/picbed/202210080816161.png"
@@ -70,6 +81,8 @@
 - [ ] WebRTC + Electron + robotjs 实现远程控制
 
 ### ThreeJs
+
+一些 ThreeJs 的代码示例
 
 - 控制器
 
@@ -91,6 +104,8 @@
 
 #### 文本隐写
 
+将指定的文本信息，编译成零宽字符，隐藏到一段文本中，用于信息加密等
+
 <img
     src="https://assets.fedtop.com/picbed/20220531142208.png"
     alt=""
@@ -98,6 +113,8 @@
 />
 
 #### 图片隐写
+
+将图片隐藏到另一张图片中，用于加密或者隐藏信息，版权保护（隐水印）等
 
 <img
     src="https://assets.fedtop.com/picbed/20220531142226.png"
@@ -113,6 +130,8 @@
 - [ ] 视频隐写
 
 ### 千图成像
+
+将选取的若干张图片，通过拼接的方式，合成为一张新指定的图片（马赛克图）
 
 <img
     src="https://assets.fedtop.com/picbed/202209150916358.gif"
