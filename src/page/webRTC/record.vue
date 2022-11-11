@@ -143,6 +143,7 @@ async function getLocalStream() {
   })
   // 播放本地视频流
   playStream()
+  isLocalStreamOpen = true
 }
 
 // 关闭本地音视频流
@@ -150,6 +151,17 @@ function closeLocalStream() {
   localStream.getTracks().forEach((track) => {
     track.stop()
   })
+  isLocalStreamOpen = false
+}
+
+// 操作本地音视频流
+let isLocalStreamOpen = $ref(false)
+function handleLocalStream() {
+  if (isLocalStreamOpen) {
+    closeLocalStream()
+  } else {
+    getLocalStream()
+  }
 }
 
 // 获取支持的媒体类型
@@ -269,9 +281,11 @@ onMounted(() => {
     <div class="control">
       <SuperForm :form-params="formParams" />
       <div>
-        <el-button type="primary" @click="getLocalStream">打开摄像头</el-button>
-        <el-button type="warning" @click="closeLocalStream">
-          关闭摄像头
+        <el-button
+          :type="isLocalStreamOpen ? 'warning' : 'primary'"
+          @click="handleLocalStream"
+        >
+          {{ isLocalStreamOpen ? '关闭摄像头' : '打开摄像头' }}
         </el-button>
         <el-button type="primary" @click="getScreenStream">分享屏幕</el-button>
         <el-button
