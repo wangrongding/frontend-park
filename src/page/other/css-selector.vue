@@ -5,6 +5,17 @@ const random = (min: number, max: number) => {
 }
 
 const list = [...Array(100)].map(() => random(1, 10))
+
+onMounted(() => {
+  const context = document.getElementById('context')!
+  const selected = context.querySelectorAll(':scope > div')
+
+  document.getElementById('results')!.innerHTML = Array.prototype.map
+    .call(selected, (element) => {
+      return `#${element.getAttribute('id')}`
+    })
+    .join(', ')
+})
 </script>
 <template>
   <div class="css-temp">
@@ -12,6 +23,20 @@ const list = [...Array(100)].map(() => random(1, 10))
       {{ item }}
     </div>
   </div>
+
+  <div id="context">
+    <div id="element-1">
+      <div id="element-1.1">element-1.1</div>
+      <div id="element-1.2">element-1.2</div>
+    </div>
+    <div id="element-2">
+      <div id="element-2.1">element-2.1</div>
+    </div>
+  </div>
+  <p>
+    Selected elements ids :
+    <span id="results"></span>
+  </p>
 </template>
 <style lang="scss" scoped>
 .css-temp {
@@ -54,4 +79,8 @@ const list = [...Array(100)].map(() => random(1, 10))
 
 // ...
 // 问： 以上方式都会生成 很多个套选择器，有一套选择器能实现的方式吗？
+
+// :scope > div {
+//   background: blue;
+// }
 </style>

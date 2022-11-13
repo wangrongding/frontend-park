@@ -1,16 +1,10 @@
 <script setup lang="ts">
+// import adapter from 'webrtc-adapter'
+import 'webrtc-adapter'
+
 // 创建
 const peerConnection = new RTCPeerConnection({
-  iceServers: [
-    // { urls: 'stun:stun.l.google.com:19302' },
-    // { urls: 'stun:stun1.l.google.com:19302' },
-    // { urls: 'stun:stun2.l.google.com:19302' },
-    // { urls: 'stun:stun3.l.google.com:19302' },
-    // { urls: 'stun:stun4.l.google.com:19302' },
-    // { urls: 'stun:stun.ideasip.com' },
-    // { urls: 'stun:stun.schlund.de' },
-    { urls: 'stun:stun.voipbuster.com ' },
-  ],
+  iceServers: [{ urls: 'stun:stun.voipbuster.com ' }],
 })
 let localStream: MediaStream
 let remoteStream: MediaStream
@@ -65,11 +59,11 @@ const createOffer = async () => {
   await peerConnection.setLocalDescription(offer)
   // await peerConnection.setLocalDescription()
 }
+
 // 创建 answer
 const createAnswer = async () => {
   // 解析字符串
   const offer = JSON.parse(offerSdp.value)
-
   peerConnection.onicecandidate = async (event) => {
     // Event that fires off when a new answer ICE candidate is created
     if (event.candidate) {

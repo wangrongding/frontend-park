@@ -8,23 +8,25 @@
 
 ![](https://assets.fedtop.com/picbed/202210122032556.png)
 
-第一篇文章中，我并没有很好的介绍`WebRTC`，因为上一篇我们只是用它的一点获取媒体流等 api 来做了一些小 demo，但那都不是它的重点，`WebRTC` (Web Real-Time Communications),从名字上看，它是一项`实时通讯技术`，所以它的重点一定是`基于Web技术的`，`实时通信技术`（😅 好像说了跟没说一样），它允许网络应用或者站点，在不借助中间媒介的情况下，建立浏览器之间`点对点（Peer-to-Peer）的连接`，实现视频流和（或）音频流或者其他`任意数据`的传输。WebRTC 包含的这些标准使用户在无需安装任何插件或者第三方的软件的情况下，创建点对点（Peer-to-Peer）的数据分享和电话会议成为可能。
+第一篇文章中，我并没有很好的介绍`WebRTC`，因为上一篇我们只是用它的一点获取媒体流等 api 来做了一些小 demo，但那都不是它的重点，`WebRTC` (Web Real-Time Communications)，是一个由 Google 发起的实时通讯解决方案，其中包含视频音频采集，编解码，数据传输，音视频展示等功能，通过它，我们可以非常方便且快速地构建出一个音视频通讯应用。
+
+它允许网络应用或者站点，在不借助中间媒介的情况下，建立浏览器之间`点对点（Peer-to-Peer）的连接`，实现视频流和（或）音频流或者其他`任意数据`的传输。
 
 所以它的重点在于通信~ 上一篇主要是讲的采集和处理媒体流相关的内容，这次我们主要讲解如何使用 `WebRTC`一些 api 配合 `信令服务` 来 `建立连接`，以及如何将获取到的媒体流进行`传输`。
 
 ![](https://assets.fedtop.com/picbed/0_A2RHFnvTecnh8g7v.gif)
 
-## 一对一实时音视频通话（不通过信令服务）
+## 一对一实时音视频通话实战（不通过信令服务）
 
-我们会从最简单的 `1v1` 的`点对点连接`开始，这样可以更好帮助我们理解 `WebRTC`是怎么建立连接的，第二节中再来讲解如何通过`信令服务`来来帮助我们`建立连接`实现 `1v1` 或者`多人`的音视频通话。
+首先，我们从最简单的 `1v1` 的`"手动"` `点对点连接`开始，这样可以更好帮助我们理解 `WebRTC`是怎么建立连接的，第二节中再来讲解如何通过`信令服务`来来帮助我们`"自动"` 建立 `点对点连接`实现 `1v1` 或者`多人`的音视频通话。
 
-这样，我们就只使用了两篇文章就能让大家简单的了解到 如何从媒体流的`采集`，到建立 p2p 对等`连接`，再到数据`传输`这一个整个过程的实现方法。🥳🥳🥳
+这样，我们就只使用了两篇文章就能让大家简单的了解到 如何从媒体流的`采集`，`处理`，建立 p2p（Peer-to-Peer） 对等`连接`，再到数据`传输`这一个整个过程的实现方法。🥳🥳🥳
 
 ### 开始之前，一起来思考一个问题
 
 两个设备，在互相不知道对方的情况下，如何建立连接？
 
-我把这个问题换成更接地气一点：有一天，你在一个地方旅行，在旅行的途中，遇到了一个很喜欢的女孩子，一起拍了照片，假期结束后，你回家朝思暮想，想要再次见到她，但是你们忘记了互相留联系方式，我擦~好后悔，怎么办？后来你发的朋友圈被你同事评论了，说她认识这个女生，哇塞，你欣喜若狂，这个时候，你们是不是就可以通过你的同事来联系到对方呢？（🥲 好土，好烂的故事，😅 相信大家应该已经能理解了~）
+我把这个问题换成更接地气一点：有一天，你在一个地方旅行，在旅行的途中，遇到了一个很喜欢的女孩子，一起拍了照片，假期结束后，你回家朝思暮想，想要再次见到她，但是你们忘记了互相留联系方式，我擦~好后悔，怎么办？后来你发的朋友圈被你同事评论了，说她认识这个女生，哇塞，你欣喜若狂，这个时候，你们是不是就可以通过你的同事来联系到对方呢？（有点土味的例子 😅， 相信大家应该已经能理解了~）
 
 ![](https://assets.fedtop.com/picbed/202210122208954.png)
 
@@ -79,6 +81,115 @@ IPv6 正在逐步普及，等我们彻底用上了 IPv6，`NAT` 存在的意义�
 #### 3. ICE
 
 `ICE`：`Interactive Connectivity Establishment`，交互式连接建立协议，用于在两个主机之间建立连接，它可以在两个主机之间建立连接，即使它们之间的防火墙阻止了直接连接。
+
+### 建立连接的几个关键步骤
+
+我把 WebRTC 建立连接的几个关键步骤总结了一下，方便大家理解。主要为：采集媒体流，并创建本地的 `RTCPeerConnection` 对象，建立连接，传输媒体流。
+
+ok，我们来逐一分解：
+
+#### 1. 并创建本地的 `RTCPeerConnection` 对象
+
+在 WebRTC 中 ，由`RTCPeerConnection` api 负责创建，保持，监控，关闭连接。我认为它是 WebRTC 的核心 api。
+
+为了让 WebRTC 的相关 api 在各个浏览器中都能够正常的运行，强烈推荐使用 [adapter.js](https://www.npmjs.com/package/webrtc-adapter),adapter.js 是一个垫片，用于将应用程序与 WebRTC 中的规范更改和前缀差异隔离开来。如今，前缀差异大多消失了，但浏览器之间的行为差异仍然存在。 而且，WebRTC 仍在快速发展，因此 adapter.js 是非常有用的。
+
+```typescript
+// 你只需要引入它即可，不需要做任何配置。
+import 'webrtc-adapter'
+```
+
+1. 首先我们需要创建一条由本地计算机到远端的 WebRTC 连接。
+
+```typescript
+// 内网中使用
+const pc = new RTCPeerConnection()
+// 公网中使用
+const pc = new RTCPeerConnection({
+  iceServers: [
+    {
+      urls: 'stun:stun.l.google.com:19302',
+    },
+  ],
+})
+
+// 创建本地/远程 SDP 描述, 用于描述本地/远程的媒体流
+let offerSdp = ''
+let answerSdp = ''
+```
+
+```typescript
+
+```
+
+然后我们再创建好 `RTCPeerConnection` 对象之后，就可以通过 `RTCPeerConnection` 对象的 `addTrack` 方法来添加媒体流了。
+
+所以我们下面需要做的就是采集媒体流。
+
+2. 采集媒体流
+
+设置好媒体流需要挂载的音视频元素。
+
+```html
+<!-- 给自己本地的视频播放设置静音，防止产生回音 -->
+<video id="local" autoplay playsinline muted></video>
+<video id="remote" autoplay playsinline></video>
+```
+
+然后通过 `navigator.mediaDevices.getUserMedia` 方法来获取媒体流。
+
+一般这里的逻辑都是在我们项目加载完成的时候，或者让用户自己手动点击按钮来采集媒体流。
+
+采集完后，我们就可以通过 `RTCPeerConnection` 对象的 `addTrack` 方法来添加媒体流。
+
+```typescript
+// 初始化
+async function init(params: type) {
+  // 获取本地端视频标签
+  const localVideo = document.getElementById('local') as HTMLVideoElement
+  // 获取远程端视频标签
+  const remoteVideo = document.getElementById('remote') as HTMLVideoElement
+
+  // 采集本地媒体流
+  const localStream = await navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: true,
+  })
+  // 设置本地视频流
+  localVideo.srcObject = localStream
+
+  // 已经过时的方法 [addStream API](https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/addStream)
+  // pc.addStream(localStream);
+
+  // 添加本地媒体流的轨道都添加到 RTCPeerConnection 中
+  localStream.getTracks().forEach((track) => {
+    pc.addTrack(track, localStream)
+  })
+
+  // 创建远程空媒体流
+  const remoteStream: MediaStream = new MediaStream()
+  // 监听远程流, 并将收到的远程流添加到远程视频标签中
+  pc.ontrack = (event) => {
+    event.streams[0].getTracks().forEach((track) => {
+      // 将轨道添加到远程媒体流中
+      remoteStream.addTrack(track)
+    })
+    // 设置远程视频流
+    remoteVideo.srcObject = remoteStream
+  }
+}
+```
+
+1. 建立连接
+
+2. 传输媒体流
+
+```typescript
+// 创建本地的 `RTCPeerConnection` 对象
+const peerConnection = new RTCPeerConnection({
+  iceServers: [{ urls: 'stun:stun.voipbuster.com ' }],
+})
+```
 
 ### 建立连接的几个关键步骤
 

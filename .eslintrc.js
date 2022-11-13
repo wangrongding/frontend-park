@@ -53,6 +53,7 @@ module.exports = {
     'import/extensions': 0, // 使用文件扩展名
     'no-underscore-dangle': 0, // 禁止使用下划线
     'no-multi-assign': 0, // 禁止连续赋值
+    // 'eol-last': ['error', 'never'], // 文件末尾强制换行
   },
 }
 
