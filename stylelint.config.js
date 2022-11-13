@@ -15,9 +15,19 @@ module.exports = {
     'at-rule-no-unknown': [
       true,
       {
-        ignoreAtRules: ['function', 'if', 'each', 'include', 'mixin', 'for'],
+        ignoreAtRules: [
+          'tailwind',
+          'forward',
+          'function',
+          'if',
+          'each',
+          'include',
+          'mixin',
+          'for',
+        ],
       },
     ],
+    'scss/at-rule-no-unknown': null,
   },
   ignoreFiles: [
     '**/*.js',

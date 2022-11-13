@@ -11,8 +11,10 @@ const peerConnection = new RTCPeerConnection({
     },
   ],
 })
+
 const userId = Math.random().toString(36).substring(2)
-const roomId = ref('222')
+// const roomId = ref('3333')
+const roomId = ref('')
 let socket: Socket
 let localStream: MediaStream
 let remoteStream: MediaStream
@@ -75,6 +77,7 @@ function handleConnect() {
 }
 // 离开房间
 function handleLeave() {
+  peerConnection.close()
   socket.emit('leave', { userId, roomId: roomId.value })
 }
 
@@ -148,6 +151,24 @@ async function addAnswer(answerSdp: string) {
   }
 }
 
+// 打开、关闭摄像头
+const isVideoOpen = ref(true)
+function handleCamera() {
+  localStream.getVideoTracks().forEach((track) => {
+    track.stop()
+  })
+  isVideoOpen.value = !isVideoOpen.value
+}
+
+// // 关闭、关闭麦克风
+// const isAudioOpen = ref(true)
+// function handleMic() {
+//   localStream.getAudioTracks().forEach((track) => {
+//     track.stop()
+//   })
+//   isAudioOpen.value = !isAudioOpen.value
+// }
+
 onMounted(async () => {
   await init()
   // await initConnect()
@@ -165,9 +186,13 @@ onMounted(async () => {
           autoplay
           playsinline
         ></video>
+        <div class="video-title">远程视频</div>
       </div>
       <div class="video-list">
-        <video id="local" autoplay playsinline></video>
+        <div class="video-box">
+          <video id="local" autoplay playsinline></video>
+          <div class="video-title">我</div>
+        </div>
       </div>
     </div>
     <div class="operation">
@@ -180,9 +205,16 @@ onMounted(async () => {
       ></el-input>
 
       <el-button type="primary" @click="initConnect">加入</el-button>
+      <el-button
+        :type="isVideoOpen ? 'warning' : 'primary'"
+        @click="handleCamera"
+      >
+        {{ isVideoOpen ? '关闭' : '打开' }}视频
+      </el-button>
       <el-button type="danger" @click="handleLeave">离开</el-button>
-      <el-button type="primary" @click="createOffer">关闭视频</el-button>
-      <el-button type="primary" @click="createOffer">关闭音频</el-button>
+      <!-- <el-button :type="isVideoOpen ? 'warning' : 'primary'" @click="handleMic">
+        {{ isVideoOpen ? '关闭' : '打开' }}麦克风
+      </el-button> -->
       <!--   <el-button type="primary" @click="createAnswer(offerSdp)">
         创建answer
       </el-button>
@@ -210,7 +242,6 @@ onMounted(async () => {
       margin: 0 auto;
       border: 4px solid #048ff2;
       background-color: #363739;
-      border-radius: 30px;
       widows: 100%;
       height: 100%;
     }
@@ -220,6 +251,18 @@ onMounted(async () => {
       height: 100%;
       border-radius: 30px;
       background-color: #3f4044;
+      position: relative;
+    }
+
+    .video-title {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: rgb(0 0 0 / 50%);
+      color: #fff;
+      text-align: center;
+      padding: 5px 0;
     }
 
     .video-list {
@@ -227,6 +270,10 @@ onMounted(async () => {
       padding: 20px;
       height: 100%;
       background-color: #405982;
+
+      .video-box {
+        position: relative;
+      }
 
       video {
         width: 100%;
