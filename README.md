@@ -69,7 +69,7 @@
 通过信令服务器实现 P2P 的音视频通话，支持内/外网连接，可以在不同网络环境下进行通话
 
 <img
-  src="https://assets.fedtop.com/picbed/202210080816161.png"
+  src="https://assets.fedtop.com/picbed/202211132359202.png"
   alt=""
   style="width:400px"
 />
