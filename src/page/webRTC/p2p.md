@@ -363,8 +363,11 @@ const addAnswer = async () => {
 
 ## 最后
 
-本文是 WebRTC 系列的第二篇，后续还会有很多篇文章，如果你觉得本文对你有帮助，可以点赞支持一下~ 如果有什么疑问，可以在评论区留言，我会尽快回复。🥳
+[👉🏻 本文示例源代码地址](https://github.com/wangrongding/frontend-park)  
+[👉🏻 本文示例在线体验地址](https://frontend-park.vercel.app/audio-and-video/webRTC/p2p)
 
-可以提前体验一下[👉🏻 下一篇文章的示例](https://frontend-park.vercel.app/audio-and-video/webRTC/signaling-p2p) ,支持内外网的 1v1 音视频通话。
+你也可以提前体验一下[👉🏻 下一篇文章的示例](https://frontend-park.vercel.app/audio-and-video/webRTC/signaling-p2p) ,支持内外网的 1v1 音视频通话。
 
 ![](https://assets.fedtop.com/picbed/202211132359202.png)
+
+本文是 WebRTC 系列的第二篇，后续还会有很多篇，如果你觉得本文对你有帮助，你的点赞支持就是我的动力 🌸 ~ 如果有什么疑问，可以在评论区留言，我会尽快回复。🥳
