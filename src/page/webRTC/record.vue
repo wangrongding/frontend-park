@@ -70,15 +70,9 @@ function getDevices() {
   navigator.mediaDevices
     .enumerateDevices()
     .then((devices) => {
-      formParams.formList.videoInput.options = devices.filter(
-        (device) => device.kind === 'videoinput',
-      )
-      formParams.formList.audioInput.options = devices.filter(
-        (device) => device.kind === 'audioinput',
-      )
-      formParams.formList.audioOutput.options = devices.filter(
-        (device) => device.kind === 'audiooutput',
-      )
+      formParams.formList.videoInput.options = devices.filter((device) => device.kind === 'videoinput')
+      formParams.formList.audioInput.options = devices.filter((device) => device.kind === 'audioinput')
+      formParams.formList.audioOutput.options = devices.filter((device) => device.kind === 'audiooutput')
     })
     .catch(handleError)
 }
@@ -167,18 +161,7 @@ function handleLocalStream() {
 // 获取支持的媒体类型
 function getSupportedMimeTypes() {
   const media = 'video'
-  const types = [
-    'webm',
-    'mp4',
-    'ogg',
-    'mov',
-    'avi',
-    'wmv',
-    'flv',
-    'mkv',
-    'ts',
-    'x-matroska',
-  ]
+  const types = ['webm', 'mp4', 'ogg', 'mov', 'avi', 'wmv', 'flv', 'mkv', 'ts', 'x-matroska']
   const codecs = ['vp9', 'vp9.0', 'vp8', 'vp8.0', 'avc1', 'av1', 'h265', 'h264']
   // codecs: "should-not-be-supported","vp9", "vp9.0", "vp8", "vp8.0", "avc1", "av1", "h265", "h.265", "h264", "h.264", "opus", "pcm", "aac", "mpeg", "mp4a"
   const isSupported = MediaRecorder.isTypeSupported
@@ -187,10 +170,7 @@ function getSupportedMimeTypes() {
     const mimeType = `${media}/${type}`
     if (isSupported(mimeType)) supported.push(mimeType)
     codecs.forEach((codec: string) =>
-      [
-        `${mimeType};codecs=${codec}`,
-        `${mimeType};codecs=${codec.toUpperCase()}`,
-      ].forEach((variation) => {
+      [`${mimeType};codecs=${codec}`, `${mimeType};codecs=${codec.toUpperCase()}`].forEach((variation) => {
         if (isSupported(variation)) supported.push(variation)
       }),
     )
@@ -259,9 +239,7 @@ function downloadBlob(blob: Blob) {
   // 设置 a 标签的 href 属性为刚刚生成的 URL 地址
   a.href = url
   // 设置 a 标签的 download 属性为文件名
-  a.download = `${new Date().getTime()}.${
-    blob.type.split('/')[1].split(';')[0]
-  }`
+  a.download = `${new Date().getTime()}.${blob.type.split('/')[1].split(';')[0]}`
   // 模拟点击 a 标签
   a.click()
   // 释放 URL 地址
@@ -281,17 +259,11 @@ onMounted(() => {
     <div class="control">
       <SuperForm :form-params="formParams" />
       <div>
-        <el-button
-          :type="isLocalStreamOpen ? 'warning' : 'primary'"
-          @click="handleLocalStream"
-        >
+        <el-button :type="isLocalStreamOpen ? 'warning' : 'primary'" @click="handleLocalStream">
           {{ isLocalStreamOpen ? '关闭摄像头' : '打开摄像头' }}
         </el-button>
         <el-button type="primary" @click="getScreenStream">分享屏幕</el-button>
-        <el-button
-          :type="timer === 0 ? 'success' : 'warning'"
-          @click="startRecord"
-        >
+        <el-button :type="timer === 0 ? 'success' : 'warning'" @click="startRecord">
           {{ timer === 0 ? ' 开始录制' : '终止录制 | ' + timer }}
         </el-button>
       </div>

@@ -25,30 +25,38 @@ function initConnect() {
     ElMessage.error('请输入房间号')
     return
   }
-  // TODO 替换为公网地址
-  // socket = io('http://192.168.1.126:3000')
-  // socket = io('https://192.168.1.126:3000')
-  socket = io('https://signaling.fedtop.com')
-  // socket = io('https://signaling.fedtop.com/proxy')
   // socket = io('https://47.95.239.198:3000')
-  // socket = io('node-park.vercel.app')
-  // socket = io('https://node-park-wangrongding.vercel.app')
+  socket = io('https://signaling.fedtop.com')
+  // socket = io('https://192.168.1.126:12345')
 
   // 连接成功时触发
   socket.on('connect', () => {
-    ElMessage.success('🦄🦄🦄连接成功')
     handleConnect()
   })
-  // ========================================
-  // 当有用户离开房间时触发
-  socket.on('disconnect', () => {})
+
+  // 断开连接时触发
+  socket.on('disconnect', (reason) => {
+    if (reason === 'io server disconnect') {
+      // 断线是由服务器发起的，重新连接。
+      socket.connect()
+    }
+    ElMessage.warning('您已断开连接')
+  })
+  // 服务端发送报错信息
+  socket.on('error', (data) => {
+    ElMessage.error(data)
+  })
   // 当有用户加入房间时触发
   socket.on('welcome', (data) => {
-    ElMessage.success(`${data.userId}加入房间`)
+    ElMessage.success(data.userId === userId ? '🦄成功加入房间' : `🦄${data.userId}加入房间`)
+  })
+  // 当有用户离开房间时触发
+  socket.on('leave', (data) => {
+    ElMessage.warning(data.userId === userId ? '🦄成功离开房间' : `🦄${data.userId}离开房间`)
   })
   // 当有用户发送消息时触发
   socket.on('message', (data) => {})
-  // 创建offer
+  // 创建offer,发送给远端
   socket.on('createOffer', (data) => {
     // 发送 offer
     if (offerSdp) {
@@ -61,11 +69,11 @@ function initConnect() {
     }
     createOffer()
   })
-  // 收到offer
+  // 收到offer,创建answer
   socket.on('offer', (data) => {
     createAnswer(data.sdp)
   })
-  // 收到answer
+  // 收到answer,设置远端sdp
   socket.on('answer', (data) => {
     addAnswer(data.sdp)
   })
@@ -75,17 +83,10 @@ function initConnect() {
 function handleConnect() {
   socket.emit('join', { userId, roomId: roomId.value })
 }
-// 离开房间
-function handleLeave() {
-  peerConnection.close()
-  socket.emit('leave', { userId, roomId: roomId.value })
-}
 
 const init = async () => {
   const localVideo = document.getElementById('local') as HTMLVideoElement
-  const remoteVideo = document.getElementById(
-    'remote-video',
-  ) as HTMLVideoElement
+  const remoteVideo = document.getElementById('remote-video') as HTMLVideoElement
   localStream = await navigator.mediaDevices.getUserMedia({
     video: true,
     audio: false,
@@ -151,16 +152,17 @@ async function addAnswer(answerSdp: string) {
   }
 }
 
-// 打开、关闭摄像头
-const isVideoOpen = ref(true)
+// 打关摄像头
+const cameraOpen = ref(true)
 function handleCamera() {
+  cameraOpen.value = !cameraOpen.value
+
   localStream.getVideoTracks().forEach((track) => {
-    track.stop()
+    track.enabled = cameraOpen.value
   })
-  isVideoOpen.value = !isVideoOpen.value
 }
 
-// // 关闭、关闭麦克风
+// // 开关麦克风
 // const isAudioOpen = ref(true)
 // function handleMic() {
 //   localStream.getAudioTracks().forEach((track) => {
@@ -169,9 +171,18 @@ function handleCamera() {
 //   isAudioOpen.value = !isAudioOpen.value
 // }
 
+// 离开房间
+function handleLeave() {
+  // 关闭对等连接
+  peerConnection.close()
+  // 发送离开的消息
+  socket.emit('leave', { userId, roomId: roomId.value })
+  // 关闭socket连接
+  socket.disconnect()
+}
+
 onMounted(async () => {
   await init()
-  // await initConnect()
   nextTick(async () => {})
 })
 </script>
@@ -180,12 +191,7 @@ onMounted(async () => {
   <div class="signaling-p2p-container">
     <div class="video-container">
       <div class="main-video">
-        <video
-          id="remote-video"
-          class="remote-video"
-          autoplay
-          playsinline
-        ></video>
+        <video id="remote-video" class="remote-video" autoplay playsinline></video>
         <div class="video-title">远程视频</div>
       </div>
       <div class="video-list">
@@ -197,23 +203,12 @@ onMounted(async () => {
     </div>
     <div class="operation">
       房间号：
-      <el-input
-        v-model="roomId"
-        style="width: 150px; margin-right: 20px"
-        placeholder="要加入的房间号"
-        clearable
-      ></el-input>
-
+      <el-input v-model="roomId" style="width: 150px; margin-right: 20px" placeholder="要加入的房间号" clearable @keyup.enter="initConnect"></el-input>
       <el-button type="primary" @click="initConnect">加入</el-button>
-      <el-button
-        :type="isVideoOpen ? 'warning' : 'primary'"
-        @click="handleCamera"
-      >
-        {{ isVideoOpen ? '关闭' : '打开' }}视频
-      </el-button>
+      <el-button :type="cameraOpen ? 'warning' : 'primary'" @click="handleCamera">{{ cameraOpen ? '关闭' : '打开' }}视频</el-button>
       <el-button type="danger" @click="handleLeave">离开</el-button>
-      <!-- <el-button :type="isVideoOpen ? 'warning' : 'primary'" @click="handleMic">
-        {{ isVideoOpen ? '关闭' : '打开' }}麦克风
+      <!-- <el-button :type="cameraOpen ? 'warning' : 'primary'" @click="handleMic">
+        {{ cameraOpen ? '关闭' : '打开' }}麦克风
       </el-button> -->
       <!--   <el-button type="primary" @click="createAnswer(offerSdp)">
         创建answer
@@ -259,10 +254,16 @@ onMounted(async () => {
       bottom: 0;
       left: 0;
       width: 100%;
-      background-color: rgb(0 0 0 / 50%);
+      background-color: #000000b3;
       color: #fff;
       text-align: center;
-      padding: 5px 0;
+      box-sizing: border-box;
+      padding: 5px;
+      border-left: 4px;
+      border-right: 4px;
+      border-bottom: 4px;
+      border-style: solid;
+      border-color: #048ff2;
     }
 
     .video-list {

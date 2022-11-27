@@ -12,7 +12,7 @@ export const audioAndVideo: RouteRecordRaw[] = [
       // },
       {
         path: '/audio-and-video/webRTC',
-        meta: { title: 'webRTC(开发中)', type: 'multiple' },
+        meta: { title: 'WebRTC', type: 'multiple' },
         children: [
           {
             path: '/audio-and-video/webRTC/take-photos',

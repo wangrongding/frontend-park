@@ -24,6 +24,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
+    "build:no-verify": "vite build",
     "preview": "vite preview",
     "format": "prettier --write src",
     "lint": "eslint \"src/**/*{.vue,.js,.ts,.jsx,.tsx}\" --fix",

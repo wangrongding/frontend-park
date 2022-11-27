@@ -91,7 +91,9 @@ IPv6 正在逐步普及，等我们彻底用上了 IPv6，`NAT` 存在的意义�
 
 #### 3. ICE
 
-`ICE`：`Interactive Connectivity Establishment`，交互式连接建立协议，用于在两个主机之间建立连接，它可以在两个主机之间建立连接，即使它们之间的防火墙阻止了直接连接。
+`ICE`：`Interactive Connectivity Establishment`，交互式连接建立协议，用于在两个主机之间建立连接，它可以在两个主机之间建立连接，即使它们之间的防火墙阻止了直接连接。(可以不借助一个公网 server 完成端到端（Peer to peer，P2P）的通信)。
+
+更多关于 WebRTC 相关协议的介绍可以看 [MDN 的详细介绍](https://developer.mozilla.org/zh-CN/docs/Web/API/WebRTC_API/Protocols)，本篇文章不做重点介绍，将会在后续文章中跟着`信令服务器`等相关内容一起进行详细的介绍。
 
 ### 建立连接的几个关键步骤
 

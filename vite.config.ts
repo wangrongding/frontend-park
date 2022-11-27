@@ -91,7 +91,7 @@ export default defineConfig((config) => ({
       cert: fs.readFileSync(`${__dirname}/localhost.pem`),
     },
     // https: true,
-    port: 12345,
+    port: 54321,
     open: false,
     proxy: {
       '/api': {
@@ -115,8 +115,7 @@ export default defineConfig((config) => ({
         // 给含有中文的scss文件添加 @charset:UTF-8;
         charset: false,
         // 在全局中使用 index.scss中预定义的变量
-        additionalData:
-          '@import "./src/styles/variable.scss";@import "./src/styles/element.scss";',
+        additionalData: '@import "./src/styles/variable.scss";@import "./src/styles/element.scss";',
       },
     },
     postcss: {
