@@ -8,6 +8,7 @@ import '@/router/permission'
 
 // 公共样式
 import '@/styles/index.scss'
+import '@/styles/style.css'
 // svg图标
 import 'virtual:svg-icons-register'
 
@@ -18,10 +19,7 @@ import 'virtual:svg-icons-register'
 const app = createApp(App)
 // 全局挂载所有图标
 Object.keys(ElementPlusIconsVue).forEach((key) => {
-  app.component(
-    key,
-    ElementPlusIconsVue[key as keyof typeof ElementPlusIconsVue],
-  )
+  app.component(key, ElementPlusIconsVue[key as keyof typeof ElementPlusIconsVue])
 })
 
 app.use(router).use(pinia).mount('#app')

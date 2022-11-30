@@ -7,6 +7,7 @@ let detector: PoseDetector
 let posenetInput: any
 let loading = $ref(false)
 
+// const model = poseDetection.SupportedModels.MoveNet
 const model = poseDetection.SupportedModels.PoseNet
 // 初始化
 const init = async () => {
@@ -99,6 +100,8 @@ onMounted(async () => {
   <div v-loading="loading" class="">
     <video id="video" autoplay playsinline muted></video>
     <canvas id="output" width="360" height="270"></canvas>
+
+    <div class="text-3xl h-[400px] text-[red] font-bold underline">Hello world!</div>
   </div>
 </template>
 <style lang="scss" scoped>

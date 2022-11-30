@@ -1,4 +1,4 @@
-## WebRTC + tensorflow.js 在运动直播中的应用
+## WebRTC + Tensorflow.js 在运动健康类 app 中的前端应用
 
 ## 前言
 
@@ -8,25 +8,52 @@
 
 首先，我们要知道的是，目前社区中已经有很多非常成熟并且已经训练好的模型，比如：`人脸识别`、`人体姿态识别`、`图像分类`、`图像分割`、`目标检测`等等等等，非常多，这些模型都是经过大量的数据训练得到的，我们只需要学会如何使用这些模型，并不需要自己去写算法，去训练模型。它就像 `npm` 的包一样，安装它，看文档，使用它，就可以了。
 
+![](https://assets.fedtop.com/picbed/202211301130179.gif)
+
 如果我们只是从`应用深度学习`的角度出发，去使用现成的模型，来解决我们现实中存在的问题。那么就像前后端分离一样，让专业的人去做专业的事，深度学习也是如此，我们并不需要去花很多时间，深入了解深度学习的原理，也不需要自己去训练复杂的算法模型。
+
+![](https://assets.fedtop.com/picbed/202211301131970.gif)
 
 而 `Tensorflow.js` 就是一扇前端开发人员进入深度学习领域最好的大门，它提供了一套完整的 API，让我们可以很方便的使用深度学习模型。它可以在浏览器中运行，也可以在 node.js 中运行。它的 API 设计非常简单，而且它的文档也非常详细，我们可以很快的上手。
 
-一些常见的深度学习模型可以看 [👉🏻 这里](https://www.tensorflow.org/js/models),它们都是开源的,可以看[👉🏻 这里](https://github.com/tensorflow/tfjs-models)
+一些常见的深度学习模型可以看 [👉🏻 开箱即用的 TensorFlow.js 预训练模型](https://www.tensorflow.org/js/models),它们都是开源的[👉🏻 Github 地址](https://github.com/tensorflow/tfjs-models)。
 
-## 人体姿态估计
+社区中所有的模型可以在这里找到 [👉🏻 TensorFlow Hub](https://tfhub.dev/)
+
+![](https://assets.fedtop.com/picbed/202211301125299.png)
+
+## 人体姿态识别
 
 在这篇文章中，我们将会介绍如何使用 WebRTC 相关 API 结合 `Tensorflow.js` 来实现一个运动直播的应用。
 
 TensorFlow.js 与 WebRTC 结合，可以实现实时的人体姿态检测，从而可以在运动健康的直播中实现人体姿态的跟踪和识别。这样“老师”，或者“学员”能够更加直观的感受到自己和他人的身体姿态是否一致，能更清晰的观察动作的准确性，一致性。
 
+![](https://assets.fedtop.com/picbed/202211301124743.png)
+
 人体姿态估计的方法有很多，如：基于深度学习的方法、基于传统机器学习的方法、基于几何的方法、基于动态规划的方法、基于粒子滤波的方法、基于模板匹配的方法、基于图像分割的方法、基于人体姿态模型的方法等。
 
 基于深度学习的方法是目前最流行的人体姿态估计方法。基于深度学习的方法可以分为两类：一类是基于 CNN 的方法，如：OpenPose、PoseNet 等；另一类是基于 RNN 的方法，如：PoseFlow 等。
 
-本文将介绍基于深度学习的方法，使用 `Tensorflow.js` 的 posenet 模型来实现人体姿态估计。
+本文将介绍基于深度学习的方法，使用 `Tensorflow.js` 的 `posenet` 模型来实现人体姿态估计。
 
-目前该项目已有 3 种可选模型:
+![](https://assets.fedtop.com/picbed/202211301132796.png)
+
+ok，相关铺垫就到这里，下面我们开始正式的实现。
+
+## 开搞
+
+### 安装相关依赖
+
+```sh
+npm i @tensorflow-models/pose-detection @tensorflow/tfjs-backend-webgl
+```
+
+### 目前该项目已有 3 种可选模型:
+
+```typescript
+const model = poseDetection.SupportedModels.PoseNet
+const detector = await poseDetection.createDetector(model)
+```
 
 - MoveNet：是一种速度快、准确率高的姿态检测模型，可检测人体的 17 个关键点，能够以 50+ fps 的速度在笔记本电脑和手机上运行。
 - BlazePose：MediaPipe BlazePose 可以检测人体 33 个关键点，除了 17 个 COCO 关键点之外，它还为脸部、手和脚提供了额外的关键点检测。
@@ -36,21 +63,19 @@ TensorFlow.js 与 WebRTC 结合，可以实现实时的人体姿态检测，从�
 
 人体姿态估计的原理是通过检测人体的关键点来估计人体的姿态。人体的关键点包括：头部、颈部、肩部、手臂、腰部、腿部等。人体的姿态包括：站立、坐着、躺着、跑步、跳跃等。
 
-人体姿态估计的关键点包括：鼻子、左眼、右眼、左耳、右耳、左肩、右肩、左肘、右肘、左手腕、右手腕、左臀、右臀、左膝、右膝、左脚踝、右脚踝。
-
-有两种：一种是 COCO 关键点，一种是 BlazePose 关键点。
+一般来说，这方面有两种：一种是 COCO 关键点，一种是 BlazePose 关键点。
 
 #### COCO 关键点
 
 COCO 关键点包括：鼻子、左眼、右眼、左耳、右耳、左肩、右肩、左肘、右肘、左手腕、右手腕、左臀、右臀、左膝、右膝、左脚踝、右脚踝。
 
+![](https://assets.fedtop.com/picbed/202211301135501.png)
+
 #### BlazePose 关键点
 
-## 安装相关依赖
+BlazePose 返回的关键点更多， 有 33 个关键点，除了 17 个 COCO 关键点之外，它还为脸部、手和脚提供了额外的关键点检测。
 
-```sh
-npm i -S @tensorflow/tfjs @tensorflow-models/posenet
-```
+![](https://assets.fedtop.com/picbed/202211301135063.png)
 
 #### 人体关键点检测
 
