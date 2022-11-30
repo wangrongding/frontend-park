@@ -55,6 +55,10 @@
 将获取到的媒体流，通过 MediaRecorder API 进行录制，然后可以下载录制的视频
 
 <img
+  src="https://assets.fedtop.com/picbed/202212010050284.png"
+  alt=""
+  style="width:400px"
+/> <img
   src="https://assets.fedtop.com/picbed/202210080230355.gif"
   alt=""
   style="width:400px"
