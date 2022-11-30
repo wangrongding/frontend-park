@@ -50,6 +50,12 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
     "@multiavatar/multiavatar": "^1.0.7",
+    "@tensorflow-models/mobilenet": "^2.1.0",
+    "@tensorflow-models/pose-detection": "^2.0.0",
+    "@tensorflow-models/posenet": "^2.2.2",
+    "@tensorflow/tfjs-backend-webgl": "^4.1.0",
+    "@tensorflow/tfjs-converter": "^4.1.0",
+    "@tensorflow/tfjs-core": "^4.1.0",
     "@types/node": "^17.0.45",
     "@types/three": "^0.143.2",
     "axios": "^0.27.2",

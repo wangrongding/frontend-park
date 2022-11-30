@@ -1,9 +1,4 @@
-import {
-  createRouter,
-  createWebHistory,
-  RouteRecordRaw,
-  Router,
-} from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw, Router } from 'vue-router'
 import Layout from '@/layout/layout.vue'
 import { formatFlatteningRoutes } from './utils'
 import { home } from './modules/home'
@@ -12,17 +7,10 @@ import { imageProcessing } from './modules/image-processing'
 import { audioAndVideo } from './modules/audio-and-video'
 import { siteMap } from './modules/site-map'
 import { three } from './modules/three'
+import { tensorflow } from './modules/tensorflow'
 import { other } from './modules/other'
 // 用于渲染菜单，面包屑，保持原始层级
-export const routerList: Array<RouteRecordRaw> = [
-  ...home,
-  ...steganography,
-  ...imageProcessing,
-  ...audioAndVideo,
-  ...three,
-  ...siteMap,
-  ...other,
-]
+export const routerList: Array<RouteRecordRaw> = [...home, ...steganography, ...imageProcessing, ...audioAndVideo, ...tensorflow, ...three, ...siteMap, ...other]
 
 // 扁平化的路由
 const flatRouters = formatFlatteningRoutes(routerList)
