@@ -118,21 +118,22 @@ export default defineConfig((config) => ({
         additionalData: '@import "./src/styles/variable.scss";@import "./src/styles/element.scss";',
       },
     },
-    postcss: {
-      plugins: [
-        {
-          // 通过postcss删除组件库中 scss 文件的 @charset:UTF-8
-          postcssPlugin: 'internal:charset-removal',
-          AtRule: {
-            charset: (atRule) => {
-              if (atRule.name === 'charset') {
-                atRule.remove()
-              }
-            },
-          },
-        },
-      ],
-    },
+    // 暂时移除，会导致 tailwind css 无法使用
+    // postcss: {
+    //   plugins: [
+    //     {
+    //       // 通过postcss删除组件库中 scss 文件的 @charset:UTF-8
+    //       postcssPlugin: 'internal:charset-removal',
+    //       AtRule: {
+    //         charset: (atRule) => {
+    //           if (atRule.name === 'charset') {
+    //             atRule.remove()
+    //           }
+    //         },
+    //       },
+    //     },
+    //   ],
+    // },
   },
   // 热更新时，清空控制台
   clearScreen: true,
