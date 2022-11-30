@@ -8,12 +8,18 @@
   // "css.lint.unknownAtRules": "ignore",
   // "scss.lint.unknownAtRules": "ignore",
   // "less.lint.unknownAtRules": "ignore",
-  // "files.associations": {
-  //   "*.css": "tailwindcss"
-  // },
-  // "editor.quickSuggestions": {
-  //   "strings": true
-  // },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "tailwindCSS.includeLanguages": {
+    // "plaintext": "html",
+    // "plaintext": "vue",
+    // "vue-html": "html",
+    // "vue": "html"
+  },
 
   // stylelint 需要检查的文件
   "stylelint.validate": ["css", "less", "postcss", "scss", "vue", "sass"],

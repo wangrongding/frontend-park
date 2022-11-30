@@ -97,7 +97,7 @@ function drawSegment([ax, ay]: number[], [bx, by]: number[], color: string, scal
   ctx.beginPath()
   ctx.moveTo(ax * scale, ay * scale)
   ctx.lineTo(bx * scale, by * scale)
-  ctx.lineWidth = 4
+  ctx.lineWidth = 6
   ctx.strokeStyle = color
   ctx.stroke()
 }

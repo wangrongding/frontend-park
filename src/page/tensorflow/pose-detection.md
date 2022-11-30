@@ -245,4 +245,38 @@ function drawSegment([ax, ay]: number[], [bx, by]: number[], color: string, scal
 
 ![](https://assets.fedtop.com/picbed/202211301455997.gif)
 
+## 将视频流传输给对端
+
+媒体流处理，创建连接和信令服务相关的逻辑，我在这个专栏前三篇文章中都有写，这里就不再赘述了。
+
+然后我们就可以通过`captureStream` API 从 canvas 中拿到视频流，然后通过 `RTCPeerConnection` 提供的 API 将视频流轨道 加到 peerConnection 中传输给对端。
+
+```typescript
+const peerConnection = new RTCPeerConnection({
+  iceServers: [
+    {
+      urls: 'stun:stun.voipbuster.com ',
+    },
+  ],
+})
+// 获取output 中的视频流
+const getVideo = () => {
+  const output = document.getElementById('output') as HTMLCanvasElement
+  const stream = output.captureStream()
+  return stream
+}
+
+// 传输视频流
+const transfer = () => {
+  const stream = getVideo()
+  stream.getTracks().forEach((track) => {
+    peerConnection.addTrack(track, stream)
+  })
+}
+```
+
 ## 最后
+
+这篇文章主要是介绍了如何使用 WebRTC 与 TensorFlow.js 的结合，实现实时的人体姿态检测。这里只是简单的做了一个 demo，实际上这方面的可玩性非常高。体感游戏，换装，语音识别，人脸识别，都可以结合这个思路来实现。
+
+好了，这篇文章就到这里了，如果你觉得这篇文章对你有帮助或者有任何疑问，欢迎点赞或者在下方评论区留言，我会及时回复的。感谢支持。
