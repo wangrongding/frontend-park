@@ -32,7 +32,7 @@
   src="https://assets.fedtop.com/picbed/202211301455997.gif"
   alt=""
   style="width:400px"
-/>   
+/>
 
 <img
   src="https://assets.fedtop.com/picbed/202211301132796.png"
@@ -60,7 +60,7 @@
   src="https://assets.fedtop.com/picbed/202212010050284.png"
   alt=""
   style="width:400px"
-/>  
+/>
 
 <img
   src="https://assets.fedtop.com/picbed/202210080230355.gif"
