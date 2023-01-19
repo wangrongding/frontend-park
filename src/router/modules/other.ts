@@ -7,6 +7,11 @@ export const other: RouteRecordRaw[] = [
     component: () => import('@/page/other/latitude-longitude.vue'),
     children: [
       {
+        path: '/other/prohibit-debugging',
+        meta: { title: '禁止调试' },
+        component: () => import('@/page/other/prohibit-debugging.vue'),
+      },
+      {
         path: '/other/lat-long',
         meta: { title: '经纬度' },
         component: () => import('@/page/other/latitude-longitude.vue'),
