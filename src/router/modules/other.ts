@@ -12,6 +12,11 @@ export const other: RouteRecordRaw[] = [
         component: () => import('@/page/other/prohibit-debugging.vue'),
       },
       {
+        path: '/other/watermark',
+        meta: { title: '水印' },
+        component: () => import('@/page/other/watermark.vue'),
+      },
+      {
         path: '/other/lat-long',
         meta: { title: '经纬度' },
         component: () => import('@/page/other/latitude-longitude.vue'),
