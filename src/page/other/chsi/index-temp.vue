@@ -1,10 +1,7 @@
 <script setup lang="ts"></script>
 <template>
   <div class="page-container">
-    <p>暂时关闭了。。。</p>
-    <p>
-      这影响到他人利益，暂时不公开了，如果有迫切需要的话，私聊我发链接给你。
-    </p>
+    <p>没用了。。。</p>
   </div>
 </template>
 <style lang="scss" scoped>
