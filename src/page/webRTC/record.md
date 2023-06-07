@@ -73,10 +73,7 @@ async function getLocalStream(constraints: MediaStreamConstraints) {
 我可以看下`constraints`参数中具体支持哪些配置项，可以通过`navigator.mediaDevices.getSupportedConstraints()`这个方法来获取。
 
 ```typescript
-console.log(
-  '🚀🚀🚀 / SupportedConstraints',
-  navigator.mediaDevices.getSupportedConstraints(),
-)
+console.log('🚀🚀🚀 / SupportedConstraints', navigator.mediaDevices.getSupportedConstraints())
 ```
 
 我们把它打印出来，可以看到它支持的配置项有：  
@@ -328,18 +325,7 @@ chrome 中 `MediaRecorder` 支持的 `mimeType` 如下：
 function getSupportedMimeTypes() {
   const media = 'video'
   // 常用的视频格式
-  const types = [
-    'webm',
-    'mp4',
-    'ogg',
-    'mov',
-    'avi',
-    'wmv',
-    'flv',
-    'mkv',
-    'ts',
-    'x-matroska',
-  ]
+  const types = ['webm', 'mp4', 'ogg', 'mov', 'avi', 'wmv', 'flv', 'mkv', 'ts', 'x-matroska']
   // 常用的视频编码
   const codecs = ['vp9', 'vp9.0', 'vp8', 'vp8.0', 'avc1', 'av1', 'h265', 'h264']
   // 支持的媒体类型
@@ -349,10 +335,7 @@ function getSupportedMimeTypes() {
   types.forEach((type: string) => {
     const mimeType = `${media}/${type}`
     codecs.forEach((codec: string) =>
-      [
-        `${mimeType};codecs=${codec}`,
-        `${mimeType};codecs=${codec.toUpperCase()}`,
-      ].forEach((variation) => {
+      [`${mimeType};codecs=${codec}`, `${mimeType};codecs=${codec.toUpperCase()}`].forEach((variation) => {
         if (isSupported(variation)) supported.push(variation)
       }),
     )
@@ -464,27 +447,14 @@ function downloadBlob(blob: Blob) {
 let backgroundImageData: ImageData
 // 获取背景图像数据
 function getBackgroundImageData() {
-  const backgroundCanvas = document.querySelector(
-    '#backgroundImg',
-  ) as HTMLCanvasElement
+  const backgroundCanvas = document.querySelector('#backgroundImg') as HTMLCanvasElement
   const backgroundCtx = backgroundCanvas.getContext('2d')!
   const img = new Image()
   img.src = 'https://xxxx.png'
   img.onload = () => {
-    backgroundCtx.drawImage(
-      img,
-      0,
-      0,
-      backgroundCanvas.width,
-      backgroundCanvas.height,
-    )
+    backgroundCtx.drawImage(img, 0, 0, backgroundCanvas.width, backgroundCanvas.height)
 
-    backgroundImageData = backgroundCtx.getImageData(
-      0,
-      0,
-      backgroundCanvas.width,
-      backgroundCanvas.height,
-    )
+    backgroundImageData = backgroundCtx.getImageData(0, 0, backgroundCanvas.width, backgroundCanvas.height)
   }
 }
 ```
@@ -557,20 +527,9 @@ function drawVideoToCanvas(realVideo: HTMLVideoElement) {
 
   // 每隔 100ms 将真实的视频写到 canvas 中，并获取视频的图像数据
   setInterval(() => {
-    realVideoCtx.drawImage(
-      realVideo,
-      0,
-      0,
-      realVideoCanvas.width,
-      realVideoCanvas.height,
-    )
+    realVideoCtx.drawImage(realVideo, 0, 0, realVideoCanvas.width, realVideoCanvas.height)
     // 获取 realVideoCanvas 中的图像数据
-    realVideoImageData = realVideoCtx.getImageData(
-      0,
-      0,
-      realVideoCanvas.width,
-      realVideoCanvas.height,
-    )
+    realVideoImageData = realVideoCtx.getImageData(0, 0, realVideoCanvas.width, realVideoCanvas.height)
     // 处理真实视频的图像数据，将其写到虚拟视频的 canvas 中
     processFrameDrawToVirtualVideo()
   }, 40)
@@ -647,8 +606,6 @@ function colorDiff(rgba1: number[], rgba2: number[]) {
 本来还想写下 1v1 视频聊天的实现，但是由于时间关系，我把它放到第二篇来写吧，demo 我已经放到了 我的[前端公园合集仓库](https://github.com/wangrongding/frontend-park)中，这两天抽空写完~
 
 ![](https://assets.fedtop.com/picbed/202210080747267.png)
-
-我是通宵写完这篇文章的，现在已经 是 10.7 号 上午 8 点半了，所以我需要休息一下，哈哈。😅
 
 ## 最后的最后 ~
 

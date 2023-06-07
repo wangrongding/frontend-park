@@ -84,203 +84,75 @@ dataChannel.onmessage = (event) => {
 
 ### WebRTC 建立 P2P 连接
 
-这一块我们仍然用专栏第三篇文章中建立连接的代码。 我把它重新整理了一下，去除了不必要的代码，只保留了建立连接的代码。 如果这块你不太懂，没有跟着我之前的文章过来的话，可以去看看专栏第三篇文章~~😀 地址：[WebRTC 实现视频通话](https://juejin.cn/post/7170767923005358094)~~
-
 ```typescript
-import io, { Socket } from 'socket.io-client'
-
-const peerConnection = new RTCPeerConnection({
-  iceServers: [
-    {
-      urls: 'stun:stun.voipbuster.com ',
-    },
-  ],
-})
-
-const userId = $ref(Math.random().toString(36).substring(2))
-const roomId = ref('')
-let socket: Socket
-let offerSdp: string
-
-// 连接并加入房间
-function initConnect() {
-  if (!roomId.value) {
-    ElMessage.error('请输入房间号')
-    return
-  }
-  socket = io('https://signaling.fedtop.com')
-
-  // 连接成功时触发
-  socket.on('connect', () => {
-    handleConnect()
-  })
-
-  // 断开连接时触发
-  socket.on('disconnect', (reason) => {
-    if (reason === 'io server disconnect') {
-      // 断线是由服务器发起的，重新连接。
-      socket.connect()
-    }
-    ElMessage.warning('您已断开连接')
-  })
-  // 服务端发送报错信息
-  socket.on('error', (data) => {
-    ElMessage.error(data)
-  })
-  // 当有用户加入房间时触发
-  socket.on('welcome', (data) => {
-    ElMessage.success(data.userId === userId ? '🦄成功加入房间' : `🦄${data.userId}加入房间`)
-  })
-  // 当有用户离开房间时触发
-  socket.on('leave', (data) => {
-    ElMessage.warning(data.userId === userId ? '🦄成功离开房间' : `🦄${data.userId}离开房间`)
-  })
-  // 当有用户发送消息时触发
-  socket.on('message', (data) => {})
-  // 创建offer,发送给远端
-  socket.on('createOffer', (data) => {
-    // 发送 offer
-    if (offerSdp) {
-      socket.emit('offer', {
-        userId,
-        roomId: roomId.value,
-        sdp: offerSdp,
-      })
-      return
-    }
-    createOffer()
-  })
-  // 收到offer,创建answer
-  socket.on('offer', (data) => {
-    createAnswer(data.sdp)
-  })
-  // 收到answer,设置远端sdp
-  socket.on('answer', (data) => {
-    addAnswer(data.sdp)
-  })
-}
-
-// 连接成功
-function handleConnect() {
-  socket.emit('join', { userId, roomId: roomId.value })
-}
-
-const init = async () => {}
-
-// 创建 offer
-async function createOffer() {
-  // 当一个新的offer ICE候选人被创建时触发事件
-  peerConnection.onicecandidate = async (event) => {
-    if (event.candidate) {
-      offerSdp = JSON.stringify(peerConnection.localDescription)
-      // 发送 offer
-      if (offerSdp) {
-        socket.emit('offer', {
-          userId,
-          roomId: roomId.value,
-          sdp: offerSdp,
-        })
-      }
-    }
-  }
-  const offer = await peerConnection.createOffer()
-  await peerConnection.setLocalDescription(offer)
-}
-
-// 创建 answer
-async function createAnswer(val: string) {
-  const offer = JSON.parse(val)
-  peerConnection.onicecandidate = async (event) => {
-    // 当一个新的 answer ICE candidate 被创建时
-    if (event.candidate) {
-      socket.emit('answer', {
-        userId,
-        roomId: roomId.value,
-        sdp: JSON.stringify(peerConnection.localDescription),
-      })
-    }
-  }
-  await peerConnection.setRemoteDescription(offer)
-  const answer = await peerConnection.createAnswer()
-  await peerConnection.setLocalDescription(answer)
-}
-
-// 添加 answer
-async function addAnswer(answerSdp: string) {
-  const answer = JSON.parse(answerSdp)
-  if (!peerConnection.currentRemoteDescription) {
-    peerConnection.setRemoteDescription(answer)
-  }
-}
-
-// 离开房间
-function handleLeave() {
-  // 关闭对等连接
-  peerConnection.close()
-  // 发送离开的消息
-  socket.emit('leave', { userId, roomId: roomId.value })
-  // 关闭socket连接
-  socket.disconnect()
-}
+import io from 'socket.io-client'
+const socket = io('https://localhost:3000')
 ```
 
-### 信令服务
+然后我们需要监听一些服务端的事件，这个我们根据具体需求来定义。
 
-这一块也和 建立连接的逻辑代码一样，使用的是第三篇中的 socket.io 实现的相关逻辑，这里就不再赘述了。
+socket.io 最主要的就是 `on` 和 `emit` 两个方法，在客户端 `on` 用来监听服务端的事件，`emit` 用来触发服务端的事件。在服务端 `on` 用来监听客户端的事件，`emit` 用来触发客户端的事件。还有一些其他的 api 我们直接对着文档来就行，所以说它使用起来非常的简单。
+
+#### 定义客户端需要监听的事件
+
+ok，我们先来看一下我们需要监听的事件。
+
+```typescript
+// 连接成功时触发
+socket.on('connect', () => {
+  handleConnect()
+})
+
+// 断开连接时触发
+socket.on('disconnect', (reason) => {
+  if (reason === 'io server disconnect') {
+    // 断线是由服务器发起的，重新连接。
+    socket.connect()
+  }
+  ElMessage.warning('您已断开连接')
+})
+// 服务端发送报错信息
+socket.on('error', (data) => {
+  ElMessage.error(data)
+})
+// 当有用户加入房间时触发
+socket.on('welcome', (data) => {
+  ElMessage.success(data.userId === userId ? '🦄成功加入房间' : `🦄${data.userId}加入房间`)
+})
+// 当有用户离开房间时触发
+socket.on('leave', (data) => {
+  ElMessage.warning(data.userId === userId ? '🦄成功离开房间' : `🦄${data.userId}离开房间`)
+})
+// 当有用户发送消息时触发
+socket.on('message', (data) => {})
+// 创建offer,发送给远端
+socket.on('createOffer', (data) => {
+  // 如果已经创建过，直接发送
+  if (offerSdp) {
+    socket.emit('offer', {
+      userId,
+      roomId: roomId.value,
+      sdp: offerSdp,
+    })
+    return
+  }
+  createOffer() // 创建 offer
+})
+// 收到offer,创建answer
+socket.on('offer', (data) => {
+  createAnswer(data.sdp)
+})
+// 收到answer,设置远端sdp
+socket.on('answer', (data) => {
+  addAnswer(data.sdp)
+})
+```
+
+当然你也可以根据自己的习惯直接把所有事件都包在 `socket.on('message',(data)=>{})` 里，data 里加好 type 就行，这样只需要保留几个关键事件，其余的都走 message 事件的逻辑。
+
+#### 定义信令服务端需要监听的事件
 
 ```javascript
-import http from 'http'
-import { Server } from 'socket.io'
-import express from 'express'
-// import cors from 'cors'
-
-const port = 3000
-const app = express()
-const httpServer = http.createServer(app)
-// 创建信令服务器
-const io = new Server(httpServer, {
-  cors: {
-    origin: '*', // 允许跨域
-    methods: ['GET', 'POST'], // 允许的请求方式
-    allowedHeaders: '*', // 允许的请求头
-    credentials: true, // 允许携带cookie
-  },
-  allowEIO3: true, // 是否启用与Socket.IO v2客户端的兼容性
-  transport: ['websocket'], // 仅允许websocket,["polling", "websocket"]
-})
-
-// 解决了所有请求头和方式设置的繁琐问题,要携带cookie时，这种方式不适合
-// app.use(cors());
-// =======
-//设置跨域访问
-app.all('*', (req, res, next) => {
-  //设置允许跨域的域名，*代表允许任意域名跨域
-  res.header('Access-Control-Allow-Origin', '*')
-  //允许的header类型
-  res.header('Access-Control-Allow-Headers', 'content-type')
-  //跨域允许的请求方式
-  res.header('Access-Control-Allow-Methods', 'DELETE,PUT,POST,GET,OPTIONS')
-  //让options尝试请求快速结束
-  if (req.method.toLowerCase() == 'options') res.send(200)
-  else next()
-})
-
-// 随便写一个接口测试一下
-app.get('/', (req, res) => {
-  res.type('application/json')
-  res.end(JSON.stringify({ status: 0, message: '测试成功~🌸' }, 'utf8'))
-})
-
-// 在指定端口启动服务器
-httpServer.listen(port, '0.0.0.0', () => {
-  console.log('\n Http server up and running at => http://%s:%s', httpServer.address().address, httpServer.address().port)
-})
-
-// 房间信息
-const ROOM_LIST = []
-// 每个房间最多容纳的人数
-const MAX_USER_COUNT = 2
-
 // 用户连接
 io.on('connection', (socket) => {
   console.log('connection~')
@@ -300,25 +172,51 @@ io.on('connection', (socket) => {
     handleUserDisconnect(socket)
   })
   //=============================
+  // 用户发送 offer
   socket.on('offer', (data) => {
-    // console.log('offer', data)
     socket.to(data.roomId).emit('offer', data)
   })
+  // 用户发送 answer
   socket.on('answer', (data) => {
-    // console.log('answer', data)
     socket.to(data.roomId).emit('answer', data)
   })
-  socket.on('candidate', (data) => {
-    console.log('candidate', data)
-  })
+  // 用户发送消息
   socket.on('message', (data) => {
-    // console.log('offer', data)
+    console.log('message', data)
   })
 })
+```
 
-// 用户连接触发
-function handleUserConnection(socket, data) {}
+#### 客户端加入房间
 
+接下来我们需要实现客户端加入房间的逻辑，这个逻辑其实就是告诉服务端，我要加入某个房间，然后服务端会把我这个房间的其他客户端的信息告诉我。
+
+```typescript
+// 随机一个用户名，后面你可以自己改成输入框让用户输入
+const userId = Math.random().toString(36).substring(2)
+// 房间号，这里随便写一个，后面你可以自己改成输入框让用户输入
+const roomId = 123
+
+// 加入房间
+function joinRoom() {
+  socket.emit('join', { userId, roomId })
+}
+```
+
+#### 服务端接手客户端加入房间的逻辑
+
+服务端接手客户端加入房间的逻辑，其实就是把客户端的信息保存到服务端的内存中，然后把这个房间的其他客户端的信息告诉客户端。
+
+```js
+// 服务端，当用户加入房间
+socket.on('join', (data) => {
+  handleUserJoin(socket, data)
+})
+
+// 房间信息
+const ROOM_LIST = []
+// 每个房间最多容纳的人数
+const MAX_USER_COUNT = 2
 // 用户加入房间
 function handleUserJoin(socket, data) {
   const filterRoom = ROOM_LIST.filter((item) => item.roomId === data.roomId)[0]
@@ -340,61 +238,139 @@ function handleUserJoin(socket, data) {
   // 当房间里的人数为0且管理员还没有设置，设置管理员
   if (room.userList.length === 0) {
     room.admin = data.userId
-    // 通知自己创建 offer
-    // socket.emit('createOffer', data)
   }
 
   // 判断用户是否已经在房间里
-  const filterUser = room.userList.some((item) => item.userId === data.userId)
-  if (filterUser) {
+  if (room.userList.some((item) => item.userId === data.userId)) {
     socket.emit('error', '用户已在房间里')
     return
   }
+  // 把用户信息保存到房间里
+  room.userList.push(data)
+  console.log(data.userId, '加入房间')
 
-  // 将用户信息保存到 socket 对象中
   socket.userId = data.userId
   socket.roomId = data.roomId
 
-  // 将用户保存到 room 中
-  room.userList.push(data)
-  console.log(data.userId, '加入房间')
   // 将用户加入房间
   socket.join(data.roomId)
-  // 通知房间内的所有人
-  io.to(data.roomId).emit('welcome', data)
-  // 通知房间内的其他用户创建 offer
-  socket.to(data.roomId).emit('createOffer', data)
-
-  console.log(
-    '🚀🚀🚀userList',
-    room.userList.map((item) => item.userId),
-  )
+  // 通知房间内的其他用户
+  socket.to(data.roomId).emit('welcome', data)
+  // 通知自己加入房间成功，
+  socket.emit('joined', data)
 }
+```
 
-// 用户断开连接或离开房间，清除房间内的用户信息，关闭房间，通知房间内的其他用户
-function handleUserDisconnect(socket) {
-  console.log('🚀🚀🚀 / handleUserDisconnect', socket.userId, socket.roomId)
-  const roomId = socket.roomId
-  const userId = socket.userId
-  const room = ROOM_LIST.filter((item) => item.roomId === roomId)[0]
-  if (room) {
-    const userList = room.userList
-    const filterUser = userList.filter((item) => item.userId === userId)[0]
-    if (filterUser) {
-      // 通知房间内的其他用户
-      socket.to(roomId).emit('leave', filterUser)
-      console.log(userId, '离开房间')
-      // 清除房间内的用户信息
-      room.userList = userList.filter((item) => item.userId !== userId)
-      // 关闭房间
-      if (room.userList.length === 0) {
-        ROOM_LIST.splice(ROOM_LIST.indexOf(room), 1)
+#### 客户端创建提案
+
+这里，我们主要对上一篇创建提案的代码中添加 socket 发送的逻辑，我们需要在当有 ICE 候选改变时，将这些 本地的 SDP 描述发送到服务端，服务端再将这些信息转发给远程的客户端。这里我们先写发送逻辑，后面再去服务端写好接收逻辑就行。
+
+```typescript
+// 成功加入房间
+socket.on('joined', (room, id) => {
+  ElMessage.success('🦄🦄🦄成功加入房间')
+  createOffer()
+})
+
+// 创建 offer
+async function createOffer() {
+  // 当一个新的offer ICE候选人被创建时触发事件
+  peerConnection.onicecandidate = async (event) => {
+    if (event.candidate) {
+      offerSdp = JSON.stringify(peerConnection.localDescription)
+      // 发送 offer
+      if (offerSdp) {
+        socket.emit('offer', {
+          userId,
+          roomId: roomId.value,
+          sdp: offerSdp,
+        })
       }
     }
   }
+  const offer = await peerConnection.createOffer()
+  await peerConnection.setLocalDescription(offer)
 }
+```
 
-//socket.io中文文档：  https://socket.io/zh-CN/docs/v4/server-api/
+其中的 `onicecandidate` 事件，是用来监听 ICE 服务器返回的候选地址，当 ICE 服务器返回一个新的候选地址时，就会触发该事件，这里我们通过 `socket.emit` 将这个候选地址发送给信令服务。
+
+当你在后期连接成功的时候，其实可以把 候选人信息(candidate) 打印出来可以看看，当两个设备在同一个内网中连接的时候， candidate 的地址为一个 ipv6 长格式的内网地址和一个 ipv4 的内网地址。
+
+![](https://assets.fedtop.com/picbed/202211272320557.png)
+
+当两个设备不在同一个内网中连接的时候，可以看到 candidate 的地址最后为一个 ipv4 的外网地址,说明它尝试了两次连接，第一次是内网连接，第二次是外网连接。证明了前面说的三种类型的先后连接方式。
+
+![](https://assets.fedtop.com/picbed/202211272328473.png)
+
+#### 信令服务端接收提案
+
+接下来我们需要在服务端接收到客户端发送的提案后，将这个提案转发给远端的客户端。
+
+```typescript
+// 接收 offer
+socket.on('offer', (data) => {
+  // console.log('offer', data)
+  socket.to(data.roomId).emit('offer', data)
+})
+```
+
+#### 客户端接收远程的提案
+
+接下来我们需要在客户端接收到远程的提案后，将这个提案设置成 RemoteDescription。然后创建应答，将应答设置成本地描述，在候选人信息改变时，将应答发送给服务端。
+
+```typescript
+// 创建 answer
+async function createAnswer(val: string) {
+  const offer = JSON.parse(val)
+  peerConnection.onicecandidate = async (event) => {
+    // 当一个新的 answer ICE candidate 被创建时
+    if (event.candidate) {
+      socket.emit('answer', {
+        userId,
+        roomId: roomId.value,
+        sdp: JSON.stringify(peerConnection.localDescription),
+      })
+    }
+  }
+  await peerConnection.setRemoteDescription(offer)
+  const answer = await peerConnection.createAnswer()
+  await peerConnection.setLocalDescription(answer)
+}
+```
+
+#### 客户端创建 answer 的逻辑
+
+作为接收方，在拿到 offer 后，我们就可以创建 answer 并设置到本地描述中，然后通过信令服务器发送 answer 给对端。
+
+```typescript
+const createAnswer = async () => {
+  // 解析字符串
+  const offer = JSON.parse(offerSdp)
+  pc.onicecandidate = async (event) => {
+    // Event that fires off when a new answer ICE candidate is created
+    if (event.candidate) {
+      answerSdp = JSON.stringify(pc.localDescription)
+    }
+  }
+  await pc.setRemoteDescription(offer)
+  const answer = await pc.createAnswer()
+  await pc.setLocalDescription(answer)
+}
+```
+
+#### 客户端最后再添加 answer 的逻辑
+
+作为发起方，接下来我们需要在客户端接收到 接收方的应答后，将这个应答设置成 RemoteDescription。这样，一个最简单的 WebRTC 通信流程就完成了。
+
+```typescript
+// 添加 answer(应答)
+const addAnswer = async () => {
+  const answer = JSON.parse(answerSdp)
+  if (!pc.currentRemoteDescription) {
+    pc.setRemoteDescription(answer)
+  }
+}
 ```
 
 ### 发送文件

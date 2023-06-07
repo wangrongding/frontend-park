@@ -67,6 +67,20 @@ const observer = new MutationObserver(callback)
 onMounted(() => {
   observer.observe(targetNode, options)
 })
+
+// ============ 稿定
+
+// 稿定无法删除水印，但可以通过将其他元素的 z-index 提高来遮挡水印
+// const editorDomList = [...document.querySelector('.editor-canvas .editor-layout')?.children]
+// editorDomList.forEach((item, index) => {
+//   if (index === editorDomList.length - 1) return
+//   item.style.zIndex = 999999
+// })
+
+// ============ 创客
+
+// 创客可以通过以下方法直接删除水印，需要优化
+// document.querySelector('.water-mark').remove()
 </script>
 <template>
   <div class="grid content-center gap-10 h-full">
