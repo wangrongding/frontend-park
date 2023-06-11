@@ -28,8 +28,8 @@ async function createFaceLandmarker() {
     {
       wasmBinaryPath,
       // wasmBinaryPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm/vision_wasm_internal.wasm',
-      // wasmLoaderPath,
-      wasmLoaderPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm/vision_wasm_internal.js',
+      wasmLoaderPath,
+      // wasmLoaderPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm/vision_wasm_internal.js',
     },
     {
       baseOptions: {
@@ -81,7 +81,7 @@ async function predictWebcam() {
     drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_RIGHT_IRIS, { color: '#FF3030' })
     drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_LEFT_IRIS, { color: '#30FF30' })
   })
-  if (faceLandmarkerResult.faceLandmarks) faceLandmarks.value = faceLandmarkerResult.faceBlendshapes[0].categories
+  if (faceLandmarkerResult && faceLandmarkerResult.faceLandmarks) faceLandmarks.value = faceLandmarkerResult.faceBlendshapes[0].categories
   window.requestAnimationFrame(predictWebcam)
 }
 

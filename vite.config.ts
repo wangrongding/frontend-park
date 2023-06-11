@@ -56,6 +56,7 @@ export default defineConfig((config) => ({
           extension: 'vue',
         }),
       ],
+      exclude: config.mode === 'development' ? [/vision\/vision_wasm_internal\.js/] : null,
       // eslint报错解决方案
       eslintrc: {
         enabled: true, // Default `false`

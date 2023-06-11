@@ -36,8 +36,8 @@ async function createFaceLandmarker() {
     {
       wasmBinaryPath,
       // wasmBinaryPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm/vision_wasm_internal.wasm',
-      // wasmLoaderPath,
-      wasmLoaderPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm/vision_wasm_internal.js',
+      wasmLoaderPath,
+      // wasmLoaderPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm/vision_wasm_internal.js',
     },
     {
       baseOptions: {
