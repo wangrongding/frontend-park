@@ -26,5 +26,7 @@ auto-imports.d.ts
 components.d.ts
 .eslintrc-auto-import.json
 
-src/page/tensorflow/*.png
-src/page/tensorflow/*.gif
+src/page/tensorflow/**/*.png
+src/page/tensorflow/**/*.gif
+src/page/tensorflow/**/*.jpg
+src/page/tensorflow/**/*.jpeg

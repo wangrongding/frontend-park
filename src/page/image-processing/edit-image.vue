@@ -193,16 +193,14 @@ function operations(type: string) {
 }
 
 function flipX() {
-  let activeObject = canvas?.getActiveObject()
-  activeObject = canvas?.getActiveObject()
+  const activeObject = canvas!.getActiveObject()!
   activeObject.set({
     flipX: !activeObject.get('flipX'),
   })
   canvas?.renderAll()
 }
 function flipY() {
-  let activeObject = canvas?.getActiveObject()
-  activeObject = canvas?.getActiveObject()
+  const activeObject = canvas!.getActiveObject()!
   activeObject.set({
     flipY: !activeObject.get('flipY'),
   })
@@ -242,29 +240,15 @@ onMounted((): void => {
         }"
         class="context-menu"
       />
-      <canvas
-        id="canvas"
-        ref="canvas"
-        :width="initWidth"
-        :height="initHeight"
-      ></canvas>
+      <canvas id="canvas" ref="canvas" :width="initWidth" :height="initHeight"></canvas>
     </div>
     <div class="operations">
       <p>右键点击图片可以选择操作菜单</p>
       <el-row>
-        <el-button
-          type="primary"
-          icon="UploadFilled"
-          color="#626aef"
-          @click="getFile"
-        >
-          选择要编辑的图片
-        </el-button>
+        <el-button type="primary" icon="UploadFilled" color="#626aef" @click="getFile">选择要编辑的图片</el-button>
       </el-row>
       <el-row>
-        <el-button type="primary" size="default" @click="getCanvasInfo">
-          获取画布数据
-        </el-button>
+        <el-button type="primary" size="default" @click="getCanvasInfo">获取画布数据</el-button>
       </el-row>
     </div>
   </div>
