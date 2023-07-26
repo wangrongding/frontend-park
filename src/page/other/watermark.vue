@@ -3,7 +3,7 @@ let targetNode: HTMLElement
 
 const childrenDom = `
 <div class="childrenDom">
-  <h1>尝试在控制台中删改水印👇</h1>
+  <h1>尝试在控制台中删改我🌸</h1>
   <div 
     class="watermark"
     style="
@@ -85,8 +85,9 @@ onMounted(() => {
 <template>
   <div class="grid content-center gap-10 h-full">
     <div class="text-center bg-orange-200">
-      <p>删改下面的水印后，会重新恢复(但是用户通过 Event Listeners 删除对应的事件即可)</p>
-      <p>思考🤔：稿定是怎么做到怎么都删不掉的</p>
+      <!-- <p>删改下面的水印后，会重新恢复(但是用户通过 Event Listeners 删除对应的事件即可)</p>
+      <p>思考🤔：稿定是怎么做到怎么都删不掉的</p> -->
+      <p>请尝试使用任意方法删除色块中的水印或文本</p>
     </div>
     <div class="test-dom grid place-content-center m-auto w-[500px] h-[500px] relative bg-[coral]"></div>
   </div>
