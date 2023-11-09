@@ -32,7 +32,7 @@ module.exports = {
   // 添加vue和@typescript-eslint插件，增强eslint的能力
   plugins: ['vue', '@typescript-eslint'],
   rules: {
-    'no-console': 2, //
+    'no-console': ['error', { allow: ['warn', 'error'] }], // 禁止提交 log
     'import/no-extraneous-dependencies': 0, // 禁止使用无关的包
     'import/no-unresolved': 0, // 关闭检查未解析的模块
     'vue/multi-word-component-names': 0, // 禁止使用多单词组件名
