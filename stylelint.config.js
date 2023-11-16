@@ -1,10 +1,6 @@
 module.exports = {
   defaultSeverity: 'error',
-  extends: [
-    'stylelint-config-standard-scss',
-    'stylelint-config-recommended-vue',
-    'stylelint-config-prettier',
-  ],
+  extends: ['stylelint-config-standard-scss', 'stylelint-config-recommended-vue', 'stylelint-config-prettier'],
   plugins: ['stylelint-order'],
   rules: {
     'max-empty-lines': 1,
@@ -15,16 +11,7 @@ module.exports = {
     'at-rule-no-unknown': [
       true,
       {
-        ignoreAtRules: [
-          'tailwind',
-          'forward',
-          'function',
-          'if',
-          'each',
-          'include',
-          'mixin',
-          'for',
-        ],
+        ignoreAtRules: ['tailwind', 'forward', 'function', 'if', 'each', 'include', 'mixin', 'for'],
       },
     ],
     'scss/at-rule-no-unknown': null,
