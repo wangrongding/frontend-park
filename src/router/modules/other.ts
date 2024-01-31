@@ -7,6 +7,11 @@ export const other: RouteRecordRaw[] = [
     component: () => import('@/page/other/latitude-longitude.vue'),
     children: [
       {
+        path: '/other/communication-between-tabs',
+        meta: { title: 'tab间通信' },
+        component: () => import('@/page/other/communication-between-tabs.vue'),
+      },
+      {
         path: '/other/prohibit-debugging',
         meta: { title: '禁止调试' },
         component: () => import('@/page/other/prohibit-debugging.vue'),
