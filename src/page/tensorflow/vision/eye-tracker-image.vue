@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import vision from '@mediapipe/tasks-vision'
+import * as vision from '@mediapipe/tasks-vision'
 import { ElMessage, genFileId } from 'element-plus'
 import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 import Pic7 from './eye.jpg'

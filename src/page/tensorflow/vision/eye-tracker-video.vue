@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import vision from '@mediapipe/tasks-vision'
+import * as vision from '@mediapipe/tasks-vision'
 import { ElMessage } from 'element-plus'
 
 const { FaceLandmarker, FilesetResolver, DrawingUtils } = vision
