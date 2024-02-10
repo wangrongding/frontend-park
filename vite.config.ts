@@ -22,8 +22,6 @@ export default defineConfig((config) => ({
       // 开启响应式语法糖
       reactivityTransform: true,
     }),
-    // TODO vue3.3的时候去除，3.2目前不支持definedProp使用引入的Type。⬇️
-    VueTypeImports(),
     viteCompression(), // gzip压缩
     vueJsx(), // 引入 svg
     createSvgIconsPlugin({
