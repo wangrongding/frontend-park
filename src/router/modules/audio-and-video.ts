@@ -46,6 +46,22 @@ export const audioAndVideo: RouteRecordRaw[] = [
           },
         ],
       },
+      {
+        path: '/audio-and-video/web-audio-video',
+        meta: { title: '音视频处理', type: 'multiple' },
+        children: [
+          {
+            path: '/audio-and-video/web-audio-video/m3u8-player',
+            meta: { title: 'm3u8-player' },
+            component: () => import('@/page/web-audio-video/m3u8-player.vue'),
+          },
+          // {
+          //   path: '/audio-and-video/web-audio-video/m3u8-downloader',
+          //   meta: { title: 'm3u8-downloader' },
+          //   component: () => import('@/page/web-audio-video/m3u8-downloader.vue'),
+          // },
+        ],
+      },
     ],
   },
 ]
