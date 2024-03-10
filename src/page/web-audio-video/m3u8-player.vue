@@ -30,13 +30,13 @@ function destroy() {
 }
 </script>
 <template>
-  <div class="flex items-center justify-center flex-col">
+  <div class="flex items-center justify-center flex-col gap-10 mt-10">
     <div class="w-[900px] flex">
       <el-input v-model="videoSource" placeholder="Please input"></el-input>
       <el-button @click="initPlayer">播放</el-button>
     </div>
-    <p class="bg-emerald-300">可以播放 m3u8 文件，也可以将m3u8的视频文件转为 mp4 下载到本地</p>
-    <div id="tiny-player"></div>
+    <p class="bg-emerald-300">播放 m3u8 文件, 可以填入你要播放的 m3u8 地址</p>
+    <div id="tiny-player" class="border-2 border-teal-200 w-[900px] text-center">请点击播放</div>
   </div>
 </template>
 <style lang="scss" scoped>
