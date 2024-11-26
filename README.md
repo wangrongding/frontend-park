@@ -28,7 +28,7 @@
   </a>
 </p>
 
-> 302.AI 是一个按需付费的一站式 AI 应用平台，为用户解决 AI 用于实践的最后一公里问题。 [产品链接](https://gpt302.saaslink.net/hqRIfk) | [网站介绍](https://help.302.ai)
+> 302.AI 是一个按需付费的一站式 AI 应用平台，为用户解决 AI 用于实践的最后一公里问题。 [产品链接](https://gpt302.saaslink.net/hqRIfk) | [网站介绍](https://gpt302.saaslink.net/hqRIfk)
 
 ## 包含项目
 
