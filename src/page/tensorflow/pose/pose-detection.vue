@@ -2,6 +2,7 @@
 import { PoseDetector } from '@tensorflow-models/pose-detection'
 import * as poseDetection from '@tensorflow-models/pose-detection'
 import '@tensorflow/tfjs-backend-webgl'
+import * as tf from '@tensorflow/tfjs-core';
 
 let loading = $ref(false)
 let posenetInput: HTMLVideoElement | HTMLImageElement | HTMLCanvasElement
@@ -13,6 +14,8 @@ let model: poseDetection.SupportedModels.PoseNet
 // const model = poseDetection.SupportedModels.MoveNet
 // 初始化
 const init = async () => {
+  await tf.setBackend('webgl');
+  await tf.ready();
   loading = true
   // 获取 canvas 元素
   posenetOutput = document.getElementById('output') as HTMLCanvasElement
